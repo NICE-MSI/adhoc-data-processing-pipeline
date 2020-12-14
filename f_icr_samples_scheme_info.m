@@ -3,6 +3,118 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+    case "neg desi 3d pdx & primary"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = {'*pdx_br*','*35_1*','*35_2*','*35_3*','*35_e*','*23_1*','*23_2*'};
+        
+        filesToProcess = []; for i = 1:length(data_folders); for ii = 1:length(dataset_name); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name{ii} '.imzML']) ]; end; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess = filesToProcess(3:10,:);
+            smaller_masks_list = [
+                "t-1458-2";
+                "t-1282-4";
+                "t-1282-5";
+                "t-1458-4";
+                "t-1458-3";
+                "t-1282-3";
+                "t-1458-5";
+                "t-1282-2";
+                ];
+            extensive_filesToProcess(8+(1:4),1) = filesToProcess(11,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-35-1-18";
+                "pt-35-1-20";
+                "pt-35-1-28";
+                "pt-35-1-33";
+                ];
+            extensive_filesToProcess(8+4+(1:5),1) = filesToProcess(12,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-35-2-25";
+                "pt-35-2-32";
+                "pt-35-2-55";
+                "pt-35-2-80";
+                "pt-35-2-81";
+                ];
+            extensive_filesToProcess(8+4+5+(1:4),1) = filesToProcess(13,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-35-3-12";
+                "pt-35-3-36";
+                "pt-35-3-70";
+                "pt-35-3-78";
+                ];
+            extensive_filesToProcess(8+4+5+4+(1:11),1) = filesToProcess(14,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-35-e-4";
+                "pt-35-e-6";
+                "pt-35-e-7";
+                "pt-35-e-8";
+                "pt-35-e-9";
+                "pt-35-e-11";
+                "pt-35-e-12";
+                "pt-35-e-17";
+                "pt-35-e-18";
+                "pt-35-e-19";
+                "pt-35-e-21";
+                ];
+            extensive_filesToProcess(8+4+5+4+11+(1:13),1) = filesToProcess(15,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-23-1-1";
+                "pt-23-1-2";
+                "pt-23-1-3";
+                "pt-23-1-4";
+                "pt-23-1-6";
+                "pt-23-1-7";
+                "pt-23-1-8";
+                "pt-23-1-9";
+                "pt-23-1-10";
+                "pt-23-1-11";
+                "pt-23-1-12";
+                "pt-23-1-13";
+                "pt-23-1-14";
+                ];
+            extensive_filesToProcess(8+4+5+4+11+13+(1:5),1) = filesToProcess(16,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-23-2-15";
+                "pt-23-2-18";
+                "pt-23-2-19";
+                "pt-23-2-21";
+                "pt-23-2-22";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 1; 2 3; 2 4; 1 3; 1 2; 2 2; 1 4; 2 1;
+            3 1; 3 2; 3 3; 3 4; 3 5; 3 6; 3 7; 3 8; 3 9; 3 10; 3 11; 3 12; 3 13;
+            4 1; 4 2; 4 3; 4 4; 4 5; 4 6; 4 7; 4 8; 4 9; 4 10; 4 11;
+            5 1; 5 2; 5 3; 5 4; 5 5; 5 6; 5 7; 5 8; 5 9; 5 10; 5 11; 5 12; 5 13;
+            6 1; 6 2; 6 3; 6 4; 6 5;
+            ];
+    
     case "pos desi pdx & primary"
         
         data_folders = { 'X:\ICR Breast PDX\Data\pos DESI\' };

@@ -2,7 +2,7 @@ function [ idx, C, optimal_numComponents ] = f_kmeans( data, numComponents, dist
 
 if ~isnan(numComponents)
     
-    [ idx, C, ~, ~ ] = kmeans( data, numComponents, 'distance', distance_metric );
+    [ idx, C, ~, ~ ] = kmeans( data, numComponents, 'distance', distance_metric, 'replicates', 10, 'display', 'final' );
     
     optimal_numComponents = NaN;
     

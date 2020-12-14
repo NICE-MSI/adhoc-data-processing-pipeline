@@ -21,9 +21,9 @@ for k = 1:3
 end
 
 if isnan(clusters_num)
-    [ idx, C, ~, ~ ] = kmeans_elbow( reduced_x, 30 );
+    [ idx, C, ~, ~ ] = kmeans_elbow( reduced_x, 30, 'replicates', 10, 'display', 'final' );
 else
-    [ idx, C ] = kmeans( reduced_x, clusters_num, 'Distance', 'cosine' );
+    [ idx, C ] = kmeans( reduced_x, clusters_num, 'Distance', 'cosine', 'replicates', 10, 'display', 'final' );
 end
 
 C(C<0) = 0;

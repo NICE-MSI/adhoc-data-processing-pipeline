@@ -32,11 +32,11 @@ if nargin>3, Repeats=cell2mat(varargin(3)); else, Repeats=3; end
 
 D=zeros(ToTest,1); %initialize the results matrix
 for c=1:ToTest %for each sample
-    [~,~,dist]=kmeans(X,c,'emptyaction','drop'); %compute the sum of intra-cluster distances
+    [~,~,dist]=kmeans(X,c,'emptyaction','drop', 'replicates',10,'display','final'); %compute the sum of intra-cluster distances
     tmp=sum(dist); %best so far
     
     for cc=2:Repeats %repeat the algo
-        [~,~,dist]=kmeans(X,c,'emptyaction','drop');
+        [~,~,dist]=kmeans(X,c,'emptyaction','drop', 'replicates',10,'display','final');
         tmp=min(sum(dist),tmp);
     end
     D(c,1)=tmp; %collect the best so far in the results vector

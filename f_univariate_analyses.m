@@ -145,8 +145,13 @@ if univtests.roc || univtests.ttest
                         
                         data4ttest1 = data4stats(pixels_per_model(:,groups.pairs{groupi}(1))==maski,mzi);
                         data4ttest1(data4ttest1==0)=[];
-                        mean4ttest1(maski,groupi) = mean(data4ttest1,1,'omitnan');
-                        median4ttest1(maski,groupi) = median(data4ttest1,1,'omitnan');
+                        if ~isempty(data4ttest1)
+                            mean4ttest1(maski,groupi) = mean(data4ttest1,1,'omitnan');
+                            median4ttest1(maski,groupi) = median(data4ttest1,1,'omitnan');
+                        else
+                            mean4ttest1(maski,groupi) = -1;
+                            median4ttest1(maski,groupi) = -1;
+                        end
                         
                     end
                     
@@ -156,8 +161,13 @@ if univtests.roc || univtests.ttest
                         
                         data4ttest2 = data4stats(pixels_per_model(:,groups.pairs{groupi}(2))==maski,mzi);
                         data4ttest2(data4ttest2==0)=[];
-                        mean4ttest2(maski,groupi) = mean(data4ttest2,1,'omitnan');
-                        median4ttest2(maski,groupi) = median(data4ttest2,1,'omitnan');
+                        if ~isempty(data4ttest2)
+                            mean4ttest2(maski,groupi) = mean(data4ttest2,1,'omitnan');
+                            median4ttest2(maski,groupi) = median(data4ttest2,1,'omitnan');
+                        else
+                            mean4ttest2(maski,groupi) = -1;
+                            median4ttest2(maski,groupi) = -1;
+                        end
                         
                     end
                         
