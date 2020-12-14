@@ -53,7 +53,7 @@ if isnan(clusters_num)
 
 else
     
-    [ IDX, C ] = kmeans(rgbData,clusters_num,'Distance','cosine');
+    [ IDX, C ] = kmeans(rgbData,clusters_num,'Distance','cosine','replicates',10,'display','final');
     
 end
 
