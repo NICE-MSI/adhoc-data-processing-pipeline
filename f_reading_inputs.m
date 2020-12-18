@@ -278,6 +278,18 @@ for i = 1:length(inputs_info_reshaped)
                     break
                 end
             end
+        case "Hierarchical Clustering"
+            if strcmpi(inputs_info_reshaped(i+2),"yes")
+                % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];
+                aux_vector = [ str2num(char(inputs_info_reshaped(i+4))) ];
+                mva_list = [ mva_list, repmat("hierarclustering",1,size(aux_vector,2)) ];
+                numComponents_array = [ numComponents_array, aux_vector ];
+                numLoadings_array = [ numLoadings_array, repmat(10,1,size(aux_vector,2)) ];
+                if isnan(str2num(char(inputs_info_reshaped(i+4))))
+                    disp("Undefined number of nodes for Hierarchical Clustering!")
+                    break
+                end
+            end
         case "NN t-sne"
             if strcmpi(inputs_info_reshaped(i+2),"yes")
                 % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];

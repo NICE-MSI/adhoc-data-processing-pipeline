@@ -135,7 +135,7 @@ if sum(datacube_mzvalues_indexes) > 0
             if ( componenti == 1 )
                 
                 if isequal(char(mva_type),'kmeans') || isequal(char(mva_type),'fdc')
-                    
+                                        
                     if isnan(o_numComponents)
                         cd([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\'])
                     elseif o_numComponents>0
@@ -143,6 +143,8 @@ if sum(datacube_mzvalues_indexes) > 0
                     elseif o_numComponents<0
                         cd([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' manual\' char(norm_type) '\'])
                     end
+                    
+                    %  Clustering maps
                     
                     fig0 = figure('units','normalized','outerposition',[0 0 .7 .7]); % set(gcf,'Visible', 'off');
                     
@@ -170,6 +172,8 @@ if sum(datacube_mzvalues_indexes) > 0
                     close all
                     clear fig0
                     
+                    % Loadings table
+                    
                     [ clusters_table, distributionsM ] = f_mva_output_table( idx, data_cell );
                     
                     txt_row = strcat(repmat('%s\t',1,size(clusters_table,2)-1),'%s\n');
@@ -178,7 +182,26 @@ if sum(datacube_mzvalues_indexes) > 0
                     fprintf(fileID,txt_row, clusters_table');
                     fclose(fileID);
                     
-                    % Clusters versus ROIs
+                    % Spectral correlation between clusters pairs
+                    
+                    corr_matrix = corr(C');
+                    
+                    fig0 = figure('units','normalized','outerposition',[0 0 .3 .3]); % set(gcf,'Visible', 'off');
+
+                    h = heatmap(round(corr_matrix,2),'Colormap',jet); caxis([0 1]);
+                    
+                    h.Title = 'Spectral Correlation';
+                    h.XLabel = 'Cluster ID';
+                    h.YLabel = 'Cluster ID';
+                    
+                    figname_char = 'correlation between clusters pairs.fig'; savefig(fig0,figname_char,'compact')
+                    tifname_char = 'correlation between clusters pairs.tif'; saveas(fig0,tifname_char)
+                    svgname_char = 'correlation between clusters pairs.svg'; saveas(fig0,svgname_char)
+                    
+                    close all
+                    clear fig0
+                    
+                    % Clusters & ROIs
                     
                     % Image / table
                     

@@ -15,7 +15,8 @@ csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
 
 spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
 peak_assignments_path   = [ char(outputs_path) '\peak assignments\' ];
-results_path           	= [ char(outputs_path) '\uva\' ]; if ~exist(results_path, 'dir'); mkdir(results_path); end
+if ~exist([ char(outputs_path) '\uva\' ], 'dir'); mkdir([ char(outputs_path) '\uva\' ]); end
+results_path            = [ char(outputs_path) '\uva\' char(sii.dataset_name) '\' ]; if ~exist(results_path, 'dir'); mkdir(results_path); end
 rois_path               = [ char(outputs_path) '\rois\' ];
 
 if univtests.roc || univtests.ttest

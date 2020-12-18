@@ -115,7 +115,61 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             if ~isnan(optimal_numComponents)
                 save('optimal_numComponents','optimal_numComponents','-v7.3')
             end
-                        
+            
+%         case 'hierarclustering'
+%             
+%             if exist('clustTreeEuc') ~= 2
+%                 
+%                 eucD = pdist(data4mva,'euclidean');
+%                 cosD = pdist(data4mva,'cosine');
+%                 Corr = pdist(data4mva,'correlation');
+%                 
+%                 clustTreeEuc = linkage(eucD,'single');
+%                 clustTreeCos = linkage(cosD,'single');
+%                 clustTreeCorr = linkage(Corr,'single');
+%                 clustTreeEucWPGMA = linkage(eucD,'weighted');
+%                 clustTreeCosWPGMA = linkage(cosD,'weighted');
+%                 clustTreeCorrWPGMA = linkage(Corr,'weighted');
+%                 
+%                 save('clustTreeEuc','clustTreeEuc','-v7.3')
+%                 save('clustTreeCos','clustTreeCos','-v7.3')
+%                 save('clustTreeCorr','clustTreeCorr','-v7.3')
+%                 save('clustTreeEucWPGMA','clustTreeEucWPGMA','-v7.3')
+%                 save('clustTreeCosWPGMA','clustTreeCosWPGMA','-v7.3')
+%                 save('clustTreeCorrWPGMA','clustTreeCorrWPGMA','-v7.3')
+%                 
+%                 cophenet(clustTreeEuc,eucD)
+%                 cophenet(clustTreeCos,cosD)
+%                 cophenet(clustTreeCorr,Corr)
+%                 cophenet(clustTreeEucWPGMA,eucD)
+%                 cophenet(clustTreeCosWPGMA,cosD)
+%                 cophenet(clustTreeCorrWPGMA,Corr)
+%                 
+%                 figure;
+%                 subplot(2,3,1); dendrogram(clustTreeEuc,30);
+%                 subplot(2,3,2); dendrogram(clustTreeCos,30);
+%                 subplot(2,3,3); dendrogram(clustTreeCorr,30);
+%                 subplot(2,3,4); dendrogram(clustTreeEucWPGMA,30);
+%                 subplot(2,3,5); dendrogram(clustTreeCosWPGMA,30);
+%                 subplot(2,3,6); dendrogram(clustTreeCorrWPGMA,30);
+%                 
+%             else
+%                 
+%                 load('clustTreeEuc')
+%                 load('clustTreeCos')
+%                 load('clustTreeCorr')
+%                 load('clustTreeEucWPGMA')
+%                 load('clustTreeCosWPGMA')
+%                 load('clustTreeCorrWPGMA')
+%                 
+%             end
+%             
+%             idx0 = cluster(Z,'maxclust',30);
+%             
+%             h_gca = gca;
+%             h_gca.TickDir = 'out';
+%             h_gca.TickLength = [.002 0];
+%             h_gca.XTickLabel = [];
             
         case 'nntsne'
             
