@@ -84,7 +84,7 @@ if sum(datacube_mzvalues_indexes) > 0
             numComponentsSaved = max(idx);
             o_numComponents = numComponents;
             numComponents = numComponentsSaved;
-            
+                        
         case 'nntsne'
             
             load('datacube_mzvalues_indexes')
@@ -121,6 +121,26 @@ if sum(datacube_mzvalues_indexes) > 0
             o_numComponents = numComponents;
             numComponents = numComponentsSaved;
             
+        case 'hierarclustering'
+            
+            load('datacube_mzvalues_indexes')
+            
+            trees_cell.id = { 'EucD_UPGMA', 'EucD_WPGMA', 'EucD_ward', 'cosD_UPGMA', 'cosD_WPGMA', 'Corr_UPGMA', 'Corr_WPGMA' };
+            
+            for treei = 4 % cosD_UPGMA
+                
+                tree_path = [ path filesep trees_cell.id{treei} ];
+                cd(tree_path)
+                
+                load('C')
+                load('idx')
+                
+            end
+            
+            numComponentsSaved = max(idx);
+            o_numComponents = numComponents;
+            numComponents = numComponentsSaved;
+            
     end
     
     if numComponents > numComponentsSaved
@@ -134,7 +154,7 @@ if sum(datacube_mzvalues_indexes) > 0
             
             if ( componenti == 1 )
                 
-                if isequal(char(mva_type),'kmeans') || isequal(char(mva_type),'fdc')
+                if isequal(char(mva_type),'kmeans') || isequal(char(mva_type),'fdc') || isequal(char(mva_type),'hierarclustering')
                                         
                     if isnan(o_numComponents)
                         cd([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\'])
@@ -172,23 +192,31 @@ if sum(datacube_mzvalues_indexes) > 0
                     close all
                     clear fig0
                     
-                    % Loadings table
+                    % Clusters versus ROIs
                     
                     [ clusters_table, distributionsM ] = f_mva_output_table( idx, data_cell );
+                    
+                    % Sort clusters_table and distributionsM columns by ROI alphabetic order
+                    
+                    [~, roi_indicies] = sort(clusters_table(1,2:end));
+                    clusters_table(:,2:end) = clusters_table(:,roi_indicies+1);
+                    distributionsM = distributionsM(:,roi_indicies);
+                    
+                    % Save clusters_table
                     
                     txt_row = strcat(repmat('%s\t',1,size(clusters_table,2)-1),'%s\n');
                     
                     fileID = fopen('clusters_table.txt','w');
-                    fprintf(fileID,txt_row, clusters_table');
+                    fprintf(fileID, txt_row, clusters_table');
                     fclose(fileID);
                     
-                    % Spectral correlation between clusters pairs
+                    % Spectral correlation between clusters
                     
                     corr_matrix = corr(C');
                     
                     fig0 = figure('units','normalized','outerposition',[0 0 .3 .3]); % set(gcf,'Visible', 'off');
 
-                    h = heatmap(round(corr_matrix,2),'Colormap',jet); caxis([0 1]);
+                    h = heatmap(round(corr_matrix,2),'Colormap',bone); caxis([0 1]);
                     
                     h.Title = 'Spectral Correlation';
                     h.XLabel = 'Cluster ID';
@@ -200,10 +228,8 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     close all
                     clear fig0
-                    
-                    % Clusters & ROIs
-                    
-                    % Image / table
+                                        
+                    % Simple clusters vs ROIs figure
                     
                     fig00 = figure('units','normalized','outerposition',[0 0 .7 .7]);
                     image2plot00 = double(clusters_table(2:end-1,2:end));
@@ -233,25 +259,49 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     save('distributionsM','distributionsM')
                     
-                    % Scatter plot
+                    % More complex clusters vs ROIs figure
                     
-                    % Percentage of occupancy
+                    % Scatter plot                    
+                                       
+                    fig0000 = figure('units','normalized','outerposition',[0 0 .7 .7]);
+                    
+                    % Estimate similarity between representative clusters
+                    % representative spectra (ie C)
+                    
+                    linkage_output = linkage(C, 'weighted', 'cosine'); % tree
+                    
+                    % Dendogram plot of C similarity
+
+                    h1 = subplot(1,4,1);
+                    
+                    [ H, ~, outperm ] = dendrogram(linkage_output, 'Orientation', 'left');
+                    set(H,'color',[0 0 0])
+                    title('Dendrogram (weighted linkage, cosine metric)');
+                    grid on
+                    % axis square
+                     
+                    % ROI percentage occupied by cluster 
                     
                     kpercentage = zeros(length(unique(distributionsM(~isnan(distributionsM)))'),size(distributionsM,2));
                     for k = unique(distributionsM(~isnan(distributionsM)))'
                         kpercentage(k,:) = sum(distributionsM == k,1)./sum(~isnan(distributionsM),1);
                     end
                     
-                    % Plotting
+                    % Reorganise kpercentage (dendogram axis cluster id used to reorganise clusters ids in the roi percentage occupation table)
+
+                    kpercentage = kpercentage(outperm,:);
+                    
+                    % Bubble plot
                     
                     x = repmat(1:size(kpercentage,2),size(kpercentage,1),1); x = x(:);
                     y = repmat((1:size(kpercentage,1))',1,size(kpercentage,2)); y = y(:);
                     sz = kpercentage; sz = sz(:).*5000;
-                    c = repmat(clustmap(2:end,:),size(kpercentage,2),1);
+                    c = repmat(clustmap(outperm+1,:),size(kpercentage,2),1); % clustmap is reorganised (dendogram axis cluster id used to reorganise clusters ids in the roi percentage occupation table)
                     
-                    fig0000 = figure('units','normalized','outerposition',[0 0 .7 .7]);
-                    hold on;
+                    subplot(1,4,2:4);
+                    
                     stem([0:size(kpercentage,2)+1]-0.5,size(kpercentage,2)*ones(1,size(kpercentage,2)+2),'w')
+                    hold on
                     plot(0:size(kpercentage,2)+1,repmat([1:size(kpercentage,1)+1]'-0.5,1,size(0:size(kpercentage,2)+1,2)),'w')
                     scatter(x(sz>0),y(sz>0),sz(sz>0),c(sz>0,:),'Marker','.');
                     set(gca,'Color','k')
@@ -265,6 +315,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     xticklabels(aux_xticklabels)
                     xtickangle(90)
                     set(gca, 'fontsize', 12)
+                    set(gca,'ytick',[])
                     
                     figname_char = 'clusters vs samples bubbles.fig'; savefig(fig0000,figname_char,'compact')
                     tifname_char = 'clusters vs samples bubbles.tif'; saveas(fig0000,tifname_char)
@@ -583,6 +634,33 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     colormap(clustmap([1 componenti+1],:)); title({['cluster ' num2str(componenti) ' image ' ]})
                     
+                case 'hierarclustering'
+                    
+                    if isnan(o_numComponents)
+                        mkdir([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\cluster ' num2str(componenti) '\'])
+                        cd([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\cluster ' num2str(componenti) '\'])
+                        outputs_path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\cluster ' num2str(componenti) '\top loadings images\'];
+                        mkdir(outputs_path)
+                    elseif o_numComponents>0
+                        mkdir([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\cluster ' num2str(componenti) '\'])
+                        cd([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\cluster ' num2str(componenti) '\'])
+                        outputs_path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\cluster ' num2str(componenti) '\top loadings images\'];
+                        mkdir(outputs_path)
+                    elseif o_numComponents<0
+                        mkdir([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' manual\' char(norm_type) '\cluster ' num2str(componenti) '\'])
+                        cd([ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' manual\' char(norm_type) '\cluster ' num2str(componenti) '\'])
+                        outputs_path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' manual\' char(norm_type) '\cluster ' num2str(componenti) '\top loadings images\'];
+                        mkdir(outputs_path)
+                    end
+                    
+                    image_component = f_mva_output_collage( logical(idx.*(idx==componenti)), data_cell, outputs_xy_pairs );
+                    
+                    spectral_component = C(componenti,:);
+                    
+                    imagesc(image_component); axis off; axis image; colorbar; set(gca, 'fontsize', 12);
+                    
+                    colormap(clustmap([1 componenti+1],:)); title({['cluster ' num2str(componenti) ' image ' ]})
+                    
             end
             
             subplot(1,2,2)
@@ -651,6 +729,14 @@ if sum(datacube_mzvalues_indexes) > 0
                     tifname_char = [ 'cluster ' num2str(componenti) ' image and spectrum.tif'];
                     svgname_char = [ 'cluster ' num2str(componenti) ' image and spectrum.svg'];
                     
+                case 'hierarclustering'
+                    
+                    title({['Cluster ' num2str(componenti) ' spectrum' ]})
+                    
+                    figname_char = [ 'cluster ' num2str(componenti) ' image and spectrum.fig'];
+                    tifname_char = [ 'cluster ' num2str(componenti) ' image and spectrum.tif'];
+                    svgname_char = [ 'cluster ' num2str(componenti) ' image and spectrum.svg'];
+                    
             end
             
             savefig(fig,figname_char,'compact')
@@ -660,7 +746,7 @@ if sum(datacube_mzvalues_indexes) > 0
             close all
             clear fig
             
-            if ~strcmpi(main_mask,'no mask') && ~strcmpi(mva_type,'tsne')
+            if 0 % ~strcmpi(main_mask,'no mask') && ~strcmpi(mva_type,'tsne')
                 
                 % saving single ion images of the highest loadings
                 

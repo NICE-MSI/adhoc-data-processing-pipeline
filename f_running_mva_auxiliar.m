@@ -20,7 +20,7 @@ function f_running_mva_auxiliar( mva_type, mva_path, dataset_name, main_mask, no
 % ica - z, model
 % kmeans - idx, C, optimal_numComponents
 % tsne - rgbData, idx, cmap, loss, tsne_parameters
-% nntsne - rgbData, idx, cmap, outputSpectralContriubtion  
+% nntsne - rgbData, idx, cmap, outputSpectralContriubtion
 % See the help of each function for details on its outputs. With the
 % exception of nntsne, Matlab functions are called.
 
@@ -40,7 +40,7 @@ elseif numComponents < 0
     
 end
 
-mkdir(path)
+if ~exist(path, 'dir'); mkdir(path); end
 cd(path)
 
 % Save the indicies of peaks selected to be used in the MVA in the datacube
@@ -66,7 +66,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             save('firstCoeffs','firstCoeffs','-v7.3')
             save('firstScores','firstScores','-v7.3')
             save('explainedVariance','explainedVariance','-v7.3')
-                        
+            
         case 'nnmf'
             
             [ W0, H ] = nnmf(data4mva, numComponents);
@@ -98,7 +98,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             z0 = transform(model,data4mva); % transforms the data into the features z via the model
             
             z = zeros(length(mask4mva),min(numComponents,size(z0,2))); z(mask4mva,:) = z0(:,1:min(numComponents,size(z0,2)));
-                       
+            
             save('z','z','-v7.3')
             save('model','model','-v7.3')
             
@@ -116,61 +116,87 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 save('optimal_numComponents','optimal_numComponents','-v7.3')
             end
             
-%         case 'hierarclustering'
-%             
-%             if exist('clustTreeEuc') ~= 2
-%                 
-%                 eucD = pdist(data4mva,'euclidean');
-%                 cosD = pdist(data4mva,'cosine');
-%                 Corr = pdist(data4mva,'correlation');
-%                 
-%                 clustTreeEuc = linkage(eucD,'single');
-%                 clustTreeCos = linkage(cosD,'single');
-%                 clustTreeCorr = linkage(Corr,'single');
-%                 clustTreeEucWPGMA = linkage(eucD,'weighted');
-%                 clustTreeCosWPGMA = linkage(cosD,'weighted');
-%                 clustTreeCorrWPGMA = linkage(Corr,'weighted');
-%                 
-%                 save('clustTreeEuc','clustTreeEuc','-v7.3')
-%                 save('clustTreeCos','clustTreeCos','-v7.3')
-%                 save('clustTreeCorr','clustTreeCorr','-v7.3')
-%                 save('clustTreeEucWPGMA','clustTreeEucWPGMA','-v7.3')
-%                 save('clustTreeCosWPGMA','clustTreeCosWPGMA','-v7.3')
-%                 save('clustTreeCorrWPGMA','clustTreeCorrWPGMA','-v7.3')
-%                 
-%                 cophenet(clustTreeEuc,eucD)
-%                 cophenet(clustTreeCos,cosD)
-%                 cophenet(clustTreeCorr,Corr)
-%                 cophenet(clustTreeEucWPGMA,eucD)
-%                 cophenet(clustTreeCosWPGMA,cosD)
-%                 cophenet(clustTreeCorrWPGMA,Corr)
-%                 
-%                 figure;
-%                 subplot(2,3,1); dendrogram(clustTreeEuc,30);
-%                 subplot(2,3,2); dendrogram(clustTreeCos,30);
-%                 subplot(2,3,3); dendrogram(clustTreeCorr,30);
-%                 subplot(2,3,4); dendrogram(clustTreeEucWPGMA,30);
-%                 subplot(2,3,5); dendrogram(clustTreeCosWPGMA,30);
-%                 subplot(2,3,6); dendrogram(clustTreeCorrWPGMA,30);
-%                 
-%             else
-%                 
-%                 load('clustTreeEuc')
-%                 load('clustTreeCos')
-%                 load('clustTreeCorr')
-%                 load('clustTreeEucWPGMA')
-%                 load('clustTreeCosWPGMA')
-%                 load('clustTreeCorrWPGMA')
-%                 
-%             end
-%             
-%             idx0 = cluster(Z,'maxclust',30);
-%             
-%             h_gca = gca;
-%             h_gca.TickDir = 'out';
-%             h_gca.TickLength = [.002 0];
-%             h_gca.XTickLabel = [];
+        case 'hierarclustering'
             
+            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\hierarclustering trees\'];
+            
+            if ~exist(dist_path, 'dir')
+                
+                % Create directory
+                
+                mkdir(dist_path)
+                
+                cd(dist_path)
+                
+                % Compute distances and save trees (linkage output)
+                
+                eucD = pdist(data4mva,'euclidean');
+
+                Tree_EucD_UPGMA = linkage(eucD,'average'); save('Tree_EucD_UPGMA','Tree_EucD_UPGMA','-v7.3'); clear Tree_EucD_UPGMA
+                Tree_EucD_WPGMA = linkage(eucD,'weighted'); save('Tree_EucD_WPGMA','Tree_EucD_WPGMA','-v7.3'); clear Tree_EucD_WPGMA
+                Tree_EucD_ward = linkage(eucD,'ward'); save('Tree_EucD_ward','Tree_EucD_ward','-v7.3'); clear Tree_EucD_ward
+                
+                clear eucD
+                
+                cosD = pdist(data4mva,'cosine');
+                
+                Tree_cosD_UPGMA = linkage(cosD,'average'); save('Tree_cosD_UPGMA','Tree_cosD_UPGMA','-v7.3'); clear Tree_cosD_UPGMA
+                Tree_cosD_WPGMA = linkage(cosD,'weighted'); save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3'); clear Tree_cosD_WPGMA
+                
+                clear cosD
+
+                Corr = pdist(data4mva,'correlation');
+                
+                Tree_Corr_UPGMA = linkage(Corr,'average'); save('Tree_Corr_UPGMA','Tree_Corr_UPGMA','-v7.3'); clear Tree_Corr_UPGMA
+                Tree_Corr_WPGMA = linkage(Corr,'weighted'); save('Tree_Corr_WPGMA','Tree_Corr_WPGMA','-v7.3'); clear Tree_Corr_WPGMA
+                
+                clear Corr
+                
+            else
+                
+                cd(dist_path)
+                
+                % Load trees (linkage output)
+                
+                load('Tree_EucD_UPGMA')
+                load('Tree_EucD_WPGMA')
+                load('Tree_EucD_ward')
+                
+                load('Tree_cosD_UPGMA')
+                load('Tree_cosD_WPGMA')
+                
+                load('Tree_Corr_UPGMA')
+                load('Tree_Corr_WPGMA')
+                
+            end
+                        
+            % Hierachical Clustering
+            
+            trees_cell.id = { 'EucD_UPGMA', 'EucD_WPGMA', 'EucD_ward', 'cosD_UPGMA', 'cosD_WPGMA', 'Corr_UPGMA', 'Corr_WPGMA' };
+            trees_cell.tree = { Tree_EucD_UPGMA, Tree_EucD_WPGMA, Tree_EucD_ward, Tree_cosD_UPGMA, Tree_cosD_WPGMA, Tree_Corr_UPGMA, Tree_Corr_WPGMA };
+            
+            for treei = 1:length(trees_cell.id)
+                            
+                idx0 = cluster(trees_cell.tree{treei}, 'maxclust', numComponents);
+                
+                C = zeros(size(unique(idx0),1),size(data4mva,2));
+                for k = unique(idx0)'
+                    C(k,:) = mean(data4mva(idx0==k,:),1);
+                end
+                
+                idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
+                
+                tree_path = [ path filesep trees_cell.id{treei} ];
+            
+                if ~exist(tree_path, 'dir'); mkdir(tree_path); end
+                
+                cd(tree_path)
+            
+                save('idx','idx','-v7.3')
+                save('C','C','-v7.3')
+                
+            end
+                                    
         case 'nntsne'
             
             [ rgbData, idx0, cmap, outputSpectralContriubtion  ] = nnTsneFull( data4mva, numComponents );
@@ -209,7 +235,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 isAutoSelect = 0;
                 topK = numComponents;
             end
-                
+            
             [ idx0, C, rho, delta, centInd ]  = f_LC_FDC( data4mva, 'correlation', 0.1, 500, isManualSelect, isAutoSelect, topK, path );
             
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;

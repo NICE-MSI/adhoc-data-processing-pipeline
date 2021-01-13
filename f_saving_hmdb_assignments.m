@@ -169,7 +169,7 @@ for file_index = 1:length(filesToProcess)
         txt_row = strcat(repmat('%s\t',1,size(table,2)-1),'%s\n');
         
         fileID = fopen('hmdb_assignments.txt','w');
-        fprintf(fileID,txt_row, table');
+        fprintf(fileID, txt_row, table');
         fclose(fileID);
 
     end
