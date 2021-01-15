@@ -1,4 +1,4 @@
-function [IDX,C,SUMD,K]=kmeans_elbow(X,varargin)
+function [ IDX, C, SUMD, K, Var, PC, Cutoff ]=kmeans_elbow(X, ToTest, distance_metric)
 %%% [IDX,C,SUMD,K]=kmeans_elbow(X,varargin) returns the output of the k-means
 %%% algorithm with the optimal number of clusters, as determined by the ELBOW
 %%% method. 
@@ -26,13 +26,15 @@ function [IDX,C,SUMD,K]=kmeans_elbow(X,varargin)
 
 [m,~]=size(X); % getting the number of samples
 
-if nargin>1, ToTest=cell2mat(varargin(1)); else, ToTest=ceil(sqrt(m)); end
-if nargin>2, Cutoff=cell2mat(varargin(2)); else, Cutoff=0.95; end
+Cutoff=0.95;
+
+% if nargin>1, ToTest=cell2mat(varargin(1)); else, ToTest=ceil(sqrt(m)); end
+% if nargin>2, Cutoff=cell2mat(varargin(2)); else, Cutoff=0.95; end
 % if nargin>3, Repeats=cell2mat(varargin(3)); else, Repeats=3; end
 
 D = zeros(ToTest,1); % initialize the results matrix
 for c=1:ToTest % for each sample
-    [ ~, ~, dist ] = kmeans(X, c, 'emptyaction', 'drop', 'replicates', 10, 'display', 'final'); % compute the sum of intra-cluster distances (returns the best of 10 runs)
+    [ ~, ~, dist ] = kmeans(X, c, 'Distance', distance_metric, 'emptyaction', 'drop', 'replicates', 10, 'display', 'final'); % compute the sum of intra-cluster distances (returns the best of 10 runs)
     D(c,1) = sum(dist);
     % tmp=sum(dist); %best so far
     % for cc=2:Repeats %repeat the algo
@@ -47,6 +49,6 @@ PC = cumsum(Var)/(D(1)-D(end));
 
 [ r, ~ ] = find( PC > Cutoff ); % find the best index
 K = 1 + r(1,1); % get the optimal number of clusters
-[ IDX, C, SUMD ] = kmeans(X, K, 'emptyaction', 'drop', 'replicates', 10, 'display', 'final'); % rerun kmeans with the optimal number of clusters (returns the best of 10 runs)
+[ IDX, C, SUMD ] = kmeans(X, K, 'Distance', distance_metric, 'emptyaction', 'drop', 'replicates', 10, 'display', 'final'); % rerun kmeans with the optimal number of clusters (returns the best of 10 runs)
  
 end

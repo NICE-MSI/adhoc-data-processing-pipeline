@@ -1,4 +1,4 @@
-function [ rgbData, IDX, cmap, outputSpectralContriubtion  ] = nnTsneFull( data, clusters_num )
+function [ rgbData, IDX, cmap, outputSpectralContriubtion, var, pc, cutoff  ] = nnTsneFull( data, clusters_num )
 
 subsetSize = ceil(size(data,1) ./ 2500);
 
@@ -49,11 +49,14 @@ end
 
 if isnan(clusters_num)
 
-    [ IDX, C, ~, ~ ] = kmeans_elbow(rgbData,30);
+    [ IDX, C, ~, ~, var, pc, cutoff ] = kmeans_elbow(rgbData,24, 'sqeuclidean');
 
 else
     
-    [ IDX, C ] = kmeans(rgbData,clusters_num,'Distance','cosine','replicates',10,'display','final');
+    [ IDX, C ] = kmeans(rgbData, clusters_num, 'Distance', 'sqeuclidean', 'replicates', 10, 'display', 'final');
+    var = NaN;
+    pc = NaN;
+    cutoff = NaN;
     
 end
 

@@ -104,7 +104,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             
         case 'kmeans'
             
-            [ idx0, C, optimal_numComponents ] = f_kmeans( data4mva, numComponents, 'cosine' );
+            [ idx0, C, optimal_numComponents, var, pc, cutoff ] = f_kmeans( data4mva, numComponents, 'cosine' );
             % [ idx0, C, optimal_numComponents ] = f_kmeans( data4mva, numComponents, 'correlation' );
             
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
@@ -114,6 +114,9 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             
             if ~isnan(optimal_numComponents)
                 save('optimal_numComponents','optimal_numComponents','-v7.3')
+                save('var','var','-v7.3')
+                save('pc','pc','-v7.3')
+                save('cutoff','cutoff','-v7.3')
             end
             
         case 'hierarclustering'
@@ -199,7 +202,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                                     
         case 'nntsne'
             
-            [ rgbData, idx0, cmap, outputSpectralContriubtion  ] = nnTsneFull( data4mva, numComponents );
+            [ rgbData, idx0, cmap, outputSpectralContriubtion, var, pc, cutoff  ] = nnTsneFull( data4mva, numComponents );
             
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
             
@@ -208,9 +211,15 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             save('cmap','cmap','-v7.3')
             save('outputSpectralContriubtion','outputSpectralContriubtion','-v7.3')
             
+            if isnan(numComponents)
+                save('var','var','-v7.3')
+                save('pc','pc','-v7.3')
+                save('cutoff','cutoff','-v7.3')
+            end
+            
         case 'tsne'
             
-            [ rgbData, idx0, cmap, loss, tsne_parameters ] = f_tsne( data4mva, numComponents );
+            [ rgbData, idx0, cmap, loss, tsne_parameters, var, pc, cutoff ] = f_tsne( data4mva, numComponents );
             
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
             
@@ -219,6 +228,12 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             save('cmap','cmap','-v7.3')
             save('loss','-v7.3')
             save('tsne_parameters','-v7.3')
+            
+            if isnan(numComponents)
+                save('var','var','-v7.3')
+                save('pc','pc','-v7.3')
+                save('cutoff','cutoff','-v7.3')
+            end
             
         case 'fdc'
             
