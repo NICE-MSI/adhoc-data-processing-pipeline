@@ -104,7 +104,9 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             
         case 'kmeans'
             
-            [ idx0, C, optimal_numComponents, var, pc, cutoff ] = f_kmeans( data4mva, numComponents, 'cosine' );
+            [ idx0, C, optimal_numComponents, evaluation ] = f_kmeans( data4mva, numComponents, 'cosine' );
+            
+            % [ idx0, C, optimal_numComponents, var, pc, cutoff ] = f_kmeans( data4mva, numComponents, 'cosine' );
             % [ idx0, C, optimal_numComponents ] = f_kmeans( data4mva, numComponents, 'correlation' );
             
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
@@ -113,10 +115,11 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             save('C','C','-v7.3')
             
             if ~isnan(optimal_numComponents)
-                save('optimal_numComponents','optimal_numComponents','-v7.3')
-                save('var','var','-v7.3')
-                save('pc','pc','-v7.3')
-                save('cutoff','cutoff','-v7.3')
+                % save('optimal_numComponents','optimal_numComponents','-v7.3')
+                save('evaluation','evaluation','-v7.3')
+                % save('var','var','-v7.3')
+                % save('pc','pc','-v7.3')
+                % save('cutoff','cutoff','-v7.3')
             end
             
         case 'hierarclustering'
