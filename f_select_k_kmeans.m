@@ -53,7 +53,7 @@ eva.silhouette.OptimalK = eva0.OptimalK;
 eva.silhouette.OptimalY = all_idx(:,eva.silhouette.OptimalK);
 eva.silhouette.CriterionValues = eva0.CriterionValues;
 
-eva0 = evalclusters( data, myfunc, 'gap', 'Distance', distance_metric, 'klist', 1:max_clusters_num); % To compute the Gap criterion, you must pass CLUST as a character vector or a function handle representing a clustering algorithm and provide KLIST.
+eva0 = evalclusters( data, myfunc, 'gap', 'Distance', distance_metric, 'klist', [1:max_clusters_num]); % To compute the Gap criterion, you must pass CLUST as a character vector or a function handle representing a clustering algorithm and provide KLIST.
 
 eva.gap.OptimalK = eva0.OptimalK;
 eva.gap.OptimalY = eva0.OptimalY;
