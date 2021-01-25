@@ -49,25 +49,25 @@ switch dataset_name
                 "b2s18_vehicle"; "b2s18_2014"; "b2s18_8186"; "b2s18_6244"; "b2s18_6244_8186"; "b2s18_6244_2014"
                 ];
             
-            extensive_filesToProcess(27:32,:) = filesToProcess(2,:);
+            extensive_filesToProcess(26:31,:) = filesToProcess(2,:);
             smaller_masks_list = [ 
                 smaller_masks_list
                 "b3s17_vehicle"; "b3s17_2014"; "b3s17_8186"; "b3s17_6244"; "b3s17_6244_8186"; "b3s17_6244_2014"
                 ];
             
-            extensive_filesToProcess(33:38,:) = filesToProcess(7,:);
+            extensive_filesToProcess(30:35,:) = filesToProcess(6,:);
             smaller_masks_list = [ 
                 smaller_masks_list
                 "b3s18_vehicle"; "b3s18_2014"; "b3s18_8186"; "b3s18_6244"; "b3s18_6244_8186"; "b3s18_6244_2014"
                 ];
             
-            extensive_filesToProcess(39:45,:) = filesToProcess(5,:);
+            extensive_filesToProcess(36:42,:) = filesToProcess(7,:);
             smaller_masks_list = [ 
                 smaller_masks_list
                 "b4s17_vehicle"; "b4s17_2014"; "b4s17_8186"; "b4s17_6244"; "b4s17_6244_8186"; "b4s17_6244_2014"; "b4s17_2014_8186"
                 ];
             
-            extensive_filesToProcess(46:52,:) = filesToProcess(8,:);
+            extensive_filesToProcess(43:45,:) = filesToProcess(8,:);
             smaller_masks_list = [ 
                 smaller_masks_list
                 "b4s18_vehicle"; "b4s18_2014"; "b4s18_8186"; "b4s18_6244"; "b4s18_6244_8186"; "b4s18_6244_2014"; "b4s18_2014_8186"
@@ -76,14 +76,16 @@ switch dataset_name
         end
         
         outputs_xy_pairs = [
-            1 1; 1 2; 1 3; 1 4; 1 5; 1 6; 1 7;
-            2 1; 2 2; 2 3; 2 4; 2 5; 2 6; 2 7;
-            3 1; 3 2; 3 3; 3 4; 3 5; 3 6;
-            4 1; 4 2; 4 3; 4 4; 4 5; 4 6;
-            5 1; 5 2; 5 3; 5 4; 5 5; 5 6;
-            6 1; 6 2; 6 3; 6 4; 6 5; 6 6;
-            7 1; 7 2; 7 3; 7 4; 7 5; 7 6; 7 7;
-            8 1; 8 2; 8 3; 8 4; 8 5; 8 6; 8 7;
+            1 1; 1 3; 1 5; 1 6; 1 4; 1 7; 1 2;
+            3 1; 3 3; 3 5; 3 6; 3 4;      3 2;
+            5 1; 5 3; 5 5; 5 6; 5 4; 5 7; 5 2;
+            8 3;           8 4;
+            2 1; 2 3; 2 5; 2 6; 2 4; 2 7; 2 2;
+            4 1; 4 3; 4 5; 4 6; 4 4;      4 2;
+            6 1; 6 3; 6 5; 6 6; 6 4; 6 7; 6 2;
+            9 1; 9 3; 9 4;
+            10 1; 10 3; 10 5; 10 4; 10 7; 10 2;
+            7 1; 7 3; 7 5; 7 6; 7 4; 7 7 ; 7 2;
             ];
     
     case "PI3K SI DESI Negative epithelium only"
