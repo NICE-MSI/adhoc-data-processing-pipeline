@@ -88,6 +88,7 @@ for file_index = 1:length(filesToProcess)
             
             hmdb_sample_info = string([]);
             g_index = 0;
+            i_vector = [];
             for i = 1:length(sample_peaks_mzvalues)
                 
                 % Compute ppm error
@@ -133,7 +134,7 @@ for file_index = 1:length(filesToProcess)
                         hmdb_sample_info(g_index,9)     = modality;
                         hmdb_sample_info(g_index,10)    = polarity;
                         hmdb_sample_info(g_index,11)    = sample_peaks_intensities(i)./pixels_num; % mean peak intensity
-                        hmdb_sample_info(g_index,12)    = molecules_hmdb_info_strings(matchesR(j),3); % monoisotopic mass
+                        hmdb_sample_info(g_index,12)    = molecules_hmdb_info_strings(matchesR(j),3);% monoisotopic mass
                         
                         if ~ismissing(hmdb_other(matchesR(j),1))
                             hmdb_sample_info(g_index,13) = hmdb_other(matchesR(j),1);
@@ -150,6 +151,8 @@ for file_index = 1:length(filesToProcess)
                             end
                             
                         end
+                        
+                        i_vector(g_index,1) = i;
                         
                     end
                 end
