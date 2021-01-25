@@ -1,7 +1,6 @@
 
-function [ eva ] = f_select_k_kmeans(data, max_clusters_num, distance_metric)
+function eva = f_select_k_kmeans(data, max_clusters_num, distance_metric)
 
-pool = parpool;                      % Invokes workers
 stream = RandStream('mlfg6331_64');  % Random number stream
 options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);
 
@@ -76,8 +75,6 @@ eva.DaviesBouldin.CriterionValues = eva0.CriterionValues;
 % optimalK = mode([eva.elbowMethod.OptimalK, eva_CalinskiHarabasz.OptimalK, eva_DaviesBouldin.OptimalK, eva_gap.OptimalK, eva_silhouette.OptimalK]);
 % 
 % [ idx, C, ~, ~ ] = myfunc(data, optimalK);
-
-delete(gcp('nocreate'))
 
 disp('! Finished running k-means Clustering.')
 
