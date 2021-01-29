@@ -136,27 +136,31 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 
                 % Compute distances and save trees (linkage output)
                 
-                eucD = pdist(data4mva,'euclidean');
-
-                Tree_EucD_UPGMA = linkage(eucD,'average'); save('Tree_EucD_UPGMA','Tree_EucD_UPGMA','-v7.3'); clear Tree_EucD_UPGMA
-                Tree_EucD_WPGMA = linkage(eucD,'weighted'); save('Tree_EucD_WPGMA','Tree_EucD_WPGMA','-v7.3'); clear Tree_EucD_WPGMA
-                Tree_EucD_ward = linkage(eucD,'ward'); save('Tree_EucD_ward','Tree_EucD_ward','-v7.3'); clear Tree_EucD_ward
-                
-                clear eucD
-                
+%                 eucD = pdist(data4mva,'euclidean');
+%                 
+%                 disp('! Computing trees: ...')
+%                 disp('* Eucledian Distance UPGMA Linkage')
+%                 Tree_EucD_UPGMA = linkage(eucD,'average'); save('Tree_EucD_UPGMA','Tree_EucD_UPGMA','-v7.3'); clear Tree_EucD_UPGMA
+%                 disp('* Eucledian Distance WPGMA Linkage')
+%                 Tree_EucD_WPGMA = linkage(eucD,'weighted'); save('Tree_EucD_WPGMA','Tree_EucD_WPGMA','-v7.3'); clear Tree_EucD_WPGMA
+%                 disp('* Eucledian Distance Ward Linkage')
+%                 Tree_EucD_ward = linkage(eucD,'ward'); clear eucD; save('Tree_EucD_ward','Tree_EucD_ward','-v7.3'); clear Tree_EucD_ward
+                                
                 cosD = pdist(data4mva,'cosine');
                 
-                Tree_cosD_UPGMA = linkage(cosD,'average'); save('Tree_cosD_UPGMA','Tree_cosD_UPGMA','-v7.3'); clear Tree_cosD_UPGMA
-                Tree_cosD_WPGMA = linkage(cosD,'weighted'); save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3'); clear Tree_cosD_WPGMA
+%                 disp('* Cosine Distance UPGMA Linkage')
+%                 Tree_cosD_UPGMA = linkage(cosD,'average'); save('Tree_cosD_UPGMA','Tree_cosD_UPGMA','-v7.3'); clear Tree_cosD_UPGMA
+                disp('* Cosine Distance WPGMA Linkage')
+                Tree_cosD_WPGMA = linkage(cosD,'weighted'); clear cosD; save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3'); clear Tree_cosD_WPGMA
                 
-                clear cosD
-
-                Corr = pdist(data4mva,'correlation');
-                
-                Tree_Corr_UPGMA = linkage(Corr,'average'); save('Tree_Corr_UPGMA','Tree_Corr_UPGMA','-v7.3'); clear Tree_Corr_UPGMA
-                Tree_Corr_WPGMA = linkage(Corr,'weighted'); save('Tree_Corr_WPGMA','Tree_Corr_WPGMA','-v7.3'); clear Tree_Corr_WPGMA
-                
-                clear Corr
+%                 Corr = pdist(data4mva,'correlation');
+%                 
+%                 disp('* Correlation Distance UPGMA Linkage')
+%                 Tree_Corr_UPGMA = linkage(Corr,'average'); save('Tree_Corr_UPGMA','Tree_Corr_UPGMA','-v7.3'); clear Tree_Corr_UPGMA
+%                 disp('* Correlation Distance WPGMA Linkage')
+%                 Tree_Corr_WPGMA = linkage(Corr,'weighted'); clear Corr; save('Tree_Corr_WPGMA','Tree_Corr_WPGMA','-v7.3'); clear Tree_Corr_WPGMA
+                                
+                disp('! Trees saved.')
                 
             else
                 
@@ -164,44 +168,62 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 
                 % Load trees (linkage output)
                 
-                load('Tree_EucD_UPGMA')
-                load('Tree_EucD_WPGMA')
-                load('Tree_EucD_ward')
-                
-                load('Tree_cosD_UPGMA')
+%                 load('Tree_EucD_UPGMA')
+%                 load('Tree_EucD_WPGMA')
+%                 load('Tree_EucD_ward')
+%                 
+%                 load('Tree_cosD_UPGMA')
                 load('Tree_cosD_WPGMA')
                 
-                load('Tree_Corr_UPGMA')
-                load('Tree_Corr_WPGMA')
+%                 load('Tree_Corr_UPGMA')
+%                 load('Tree_Corr_WPGMA')
                 
             end
                         
             % Hierachical Clustering
             
-            trees_cell.id = { 'EucD_UPGMA', 'EucD_WPGMA', 'EucD_ward', 'cosD_UPGMA', 'cosD_WPGMA', 'Corr_UPGMA', 'Corr_WPGMA' };
-            trees_cell.tree = { Tree_EucD_UPGMA, Tree_EucD_WPGMA, Tree_EucD_ward, Tree_cosD_UPGMA, Tree_cosD_WPGMA, Tree_Corr_UPGMA, Tree_Corr_WPGMA };
+            idx0 = cluster(Tree_cosD_WPGMA, 'maxclust', numComponents);
             
-            for treei = 1:length(trees_cell.id)
-                            
-                idx0 = cluster(trees_cell.tree{treei}, 'maxclust', numComponents);
-                
-                C = zeros(size(unique(idx0),1),size(data4mva,2));
-                for k = unique(idx0)'
-                    C(k,:) = mean(data4mva(idx0==k,:),1);
-                end
-                
-                idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
-                
-                tree_path = [ path filesep trees_cell.id{treei} ];
-            
-                if ~exist(tree_path, 'dir'); mkdir(tree_path); end
-                
-                cd(tree_path)
-            
-                save('idx','idx','-v7.3')
-                save('C','C','-v7.3')
-                
+            C = zeros(size(unique(idx0),1),size(data4mva,2));
+            for k = unique(idx0)'
+                C(k,:) = mean(data4mva(idx0==k,:),1);
             end
+            
+            idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
+            
+            tree_path = [ path filesep 'cosD_WPGMA' ];
+            
+            if ~exist(tree_path, 'dir'); mkdir(tree_path); end
+            
+            cd(tree_path)
+            
+            save('idx','idx','-v7.3')
+            save('C','C','-v7.3')
+            
+%             trees_cell.id = { 'EucD_UPGMA', 'EucD_WPGMA', 'EucD_ward', 'cosD_UPGMA', 'cosD_WPGMA', 'Corr_UPGMA', 'Corr_WPGMA' };
+%             trees_cell.tree = { Tree_EucD_UPGMA, Tree_EucD_WPGMA, Tree_EucD_ward, Tree_cosD_UPGMA, Tree_cosD_WPGMA, Tree_Corr_UPGMA, Tree_Corr_WPGMA };
+%             
+%             for treei = 1:length(trees_cell.id)
+%                             
+%                 idx0 = cluster(trees_cell.tree{treei}, 'maxclust', numComponents);
+%                 
+%                 C = zeros(size(unique(idx0),1),size(data4mva,2));
+%                 for k = unique(idx0)'
+%                     C(k,:) = mean(data4mva(idx0==k,:),1);
+%                 end
+%                 
+%                 idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
+%                 
+%                 tree_path = [ path filesep trees_cell.id{treei} ];
+%             
+%                 if ~exist(tree_path, 'dir'); mkdir(tree_path); end
+%                 
+%                 cd(tree_path)
+%             
+%                 save('idx','idx','-v7.3')
+%                 save('C','C','-v7.3')
+%                 
+%             end
                                     
         case 'nntsne'
             

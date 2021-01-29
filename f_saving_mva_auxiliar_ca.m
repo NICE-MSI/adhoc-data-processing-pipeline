@@ -127,7 +127,7 @@ if sum(datacube_mzvalues_indexes) > 0
             
             trees_cell.id = { 'EucD_UPGMA', 'EucD_WPGMA', 'EucD_ward', 'cosD_UPGMA', 'cosD_WPGMA', 'Corr_UPGMA', 'Corr_WPGMA' };
             
-            for treei = 4 % cosD_UPGMA
+            for treei = 5 % cosD_WPGMA
                 
                 tree_path = [ path filesep trees_cell.id{treei} ];
                 cd(tree_path)
