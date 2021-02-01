@@ -126,14 +126,14 @@ for i = 1:length(inputs_info_reshaped)
                 perc4mva_array = [ perc4mva_array, aux_vector ];
                 if isempty(numPeaks4mva_array) && isempty(perc4mva_array); disp("Undefined number and percentile of highest intensity peaks!"); end
             end
-        case "Ratio of Amplitudes Threshold"
-            if strcmpi(inputs_info_reshaped(i+2),"yes")
-                % Amplitudes ratio
-                aux_vector = str2num(char(inputs_info_reshaped(i+4)));
-                amplratio4mva_array = [ amplratio4mva_array, aux_vector ];
-                amplratio4mva = aux_vector(1);
-                if isnan(amplratio4mva); amplratio4mva_array = []; disp("Undefined amplitudes ration threshold!"); end
-            end
+%         case "Ratio of Amplitudes Threshold"
+%             if strcmpi(inputs_info_reshaped(i+2),"yes")
+%                 % Amplitudes ratio
+%                 aux_vector = str2num(char(inputs_info_reshaped(i+4)));
+%                 amplratio4mva_array = [ amplratio4mva_array, aux_vector ];
+%                 amplratio4mva = aux_vector(1);
+%                 if isnan(amplratio4mva); amplratio4mva_array = []; disp("Undefined amplitudes ration threshold!"); end
+%             end
             
         case "CRUK metabolites"
             list_path = strcat( metabolite_lists_path, "114_Metabolite_List.xlsx" );
