@@ -280,7 +280,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     grid on
                     % axis square
                      
-                    % ROI percentage occupied by cluster 
+                    % ROI percentage occupied by cluster
                     
                     k_list = unique(distributionsM(~isnan(distributionsM)))';
                     kpercentage = zeros(length(k_list(k_list>0)),size(distributionsM,2));
