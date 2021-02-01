@@ -282,8 +282,9 @@ if sum(datacube_mzvalues_indexes) > 0
                      
                     % ROI percentage occupied by cluster 
                     
-                    kpercentage = zeros(length(unique(distributionsM(~isnan(distributionsM)))'),size(distributionsM,2));
-                    for k = unique(distributionsM(~isnan(distributionsM)))'
+                    k_list = unique(distributionsM(~isnan(distributionsM)))';
+                    kpercentage = zeros(length(k_list(k_list>0)),size(distributionsM,2));
+                    for k = k_list(k_list>0)
                         kpercentage(k,:) = sum(distributionsM == k,1)./sum(~isnan(distributionsM),1);
                     end
                     
@@ -746,7 +747,7 @@ if sum(datacube_mzvalues_indexes) > 0
             close all
             clear fig
             
-            if 0 % ~strcmpi(main_mask,'no mask') && ~strcmpi(mva_type,'tsne')
+            if ~strcmpi(main_mask,'no mask') && ~strcmpi(mva_type,'tsne')
                 
                 % saving single ion images of the highest loadings
                 
