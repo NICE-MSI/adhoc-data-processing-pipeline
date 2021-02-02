@@ -1,4 +1,4 @@
-function [ reduced_x, idx, tsne_colomap, loss, tsne_parameters, var, pc, cutoff ] = f_tsne( x, clusters_num )
+function [ reduced_x, idx, tsne_colomap, loss, tsne_parameters, optimal_numComponents, evaluation ] = f_tsne( x, clusters_num )
 
 % This function performs t-sne (using the Matlab function "tsne") using a
 % variety of perplexities, distances, exaggerations, and principal
@@ -20,14 +20,7 @@ for k = 1:3
     reduced_x(:,k) = (reduced_x0(:,k) - min(reduced_x0(:,k))) ./ max(reduced_x0(:,k) - min(reduced_x0(:,k)));
 end
 
-if isnan(clusters_num)
-    [ idx, C, ~, ~, var, pc, cutoff ] = kmeans_elbow( reduced_x, 24, 'sqeuclidean' ); % Run the elbow method
-else
-    [ idx, C ] = kmeans( reduced_x, clusters_num, 'Distance', 'sqeuclidean', 'replicates', 10, 'display', 'final' );
-    var = NaN;
-    pc = NaN;
-    cutoff = NaN;
-end
+[ idx, C, optimal_numComponents, evaluation ] = f_kmeans( reduced_x, clusters_num, 'sqeuclidean' );
 
 C(C<0) = 0;
 C(C>1) = 1;
