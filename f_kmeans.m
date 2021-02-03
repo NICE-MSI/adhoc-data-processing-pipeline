@@ -13,20 +13,14 @@ if ~isnan(numComponents)
     optimal_numComponents = NaN;
     
     evaluation = [];
-    
-    %     var = NaN;
-    %     pc = NaN;
-    %     cutoff = NaN;
-    
+        
 else
     
-    % [ idx, C , ~, optimal_numComponents, var, pc, cutoff ] = kmeans_elbow( data, min(size(data,1),24), distance_metric );
-   
     evaluation = f_select_k_kmeans(data, 24, distance_metric);
 
-    optimal_numComponents = evaluation.elbowMethod.OptimalK;
+    optimal_numComponents = evaluation.elbowMethod.OptimalK; % Elbow method
     
-    [ idx, C, ~, ~ ] = myfunc(data, optimal_numComponents);
+    [ idx, C, ~, ~ ] = myfunc(data, optimal_numComponents); % Run k-means for selected k
     
 end
 
