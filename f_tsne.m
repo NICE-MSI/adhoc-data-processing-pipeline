@@ -1,32 +1,19 @@
-function [ reduced_x, idx, tsne_colomap, loss, tsne_parameters, optimal_numComponents, evaluation ] = f_tsne( x, clusters_num )
+function [ reduced_x, loss, tsne_parameters ] = f_tsne( x )
 
-% This function performs t-sne (using the Matlab function "tsne") using a
+% This function runs t-sne (using the Matlab function "tsne") using a
 % variety of perplexities, distances, exaggerations, and principal
-% component number. This function also clusters the t-sne embedding space
-% using k-means and the number of clusters selected by the elbow method.
+% component number.
 % 
 % x - data
-% clusters_num - maximum number of clusters to consider when searching for 
-% the best number of clusters using the elbow method
 
 % Run t-sne for a set of different combinations of parameters
 
 [ reduced_x0, loss, tsne_parameters ] = f_tsne_with_diff_parameters( x );
 
-% Clustering the t-sne space
-
 reduced_x = reduced_x0;
-for k = 1:3
+for k = 1:3 % 3D space
     reduced_x(:,k) = (reduced_x0(:,k) - min(reduced_x0(:,k))) ./ max(reduced_x0(:,k) - min(reduced_x0(:,k)));
 end
-
-[ idx, C, optimal_numComponents, evaluation ] = f_kmeans( reduced_x, clusters_num, 'sqeuclidean' );
-
-C(C<0) = 0;
-C(C>1) = 1;
-
-tsne_colomap(1,1:3) = 0;
-tsne_colomap(2:max(idx)+1,:) = C;
 
 end
 
@@ -41,7 +28,7 @@ loss0 = Inf;
 for Perplexity = [ 30, 50, 100 ]
     for Distance = [ "cosine" , "correlation" ]
         for Exaggeration = [ 4, 8, 16, 32 ] % size of natural clusters in data
-            for NumDimensions = 3
+            for NumDimensions = 3 % 3D space
                 for NumPCAComponents = [ 3, 10, 50, 0 ]
                     
                     if NumPCAComponents > size(x,2)
