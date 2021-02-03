@@ -105,22 +105,12 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
         case 'kmeans'
             
             [ idx0, C, optimal_numComponents, evaluation ] = f_kmeans( data4mva, numComponents, 'cosine' );
-            
-            % [ idx0, C, optimal_numComponents, var, pc, cutoff ] = f_kmeans( data4mva, numComponents, 'cosine' );
-            % [ idx0, C, optimal_numComponents ] = f_kmeans( data4mva, numComponents, 'correlation' );
-            
+                        
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
             
             save('idx','idx','-v7.3')
             save('C','C','-v7.3')
-            
-            if ~isnan(optimal_numComponents)
-                % save('optimal_numComponents','optimal_numComponents','-v7.3')
-                save('evaluation','evaluation','-v7.3')
-                % save('var','var','-v7.3')
-                % save('pc','pc','-v7.3')
-                % save('cutoff','cutoff','-v7.3')
-            end
+            save('evaluation','evaluation','-v7.3')
             
         case 'hierarclustering'
             
@@ -131,52 +121,20 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 % Create directory
                 
                 mkdir(dist_path)
-                
                 cd(dist_path)
                 
-                % Compute distances and save trees (linkage output)
-                
-%                 eucD = pdist(data4mva,'euclidean');
-%                 
-%                 disp('! Computing trees: ...')
-%                 disp('* Eucledian Distance UPGMA Linkage')
-%                 Tree_EucD_UPGMA = linkage(eucD,'average'); save('Tree_EucD_UPGMA','Tree_EucD_UPGMA','-v7.3'); clear Tree_EucD_UPGMA
-%                 disp('* Eucledian Distance WPGMA Linkage')
-%                 Tree_EucD_WPGMA = linkage(eucD,'weighted'); save('Tree_EucD_WPGMA','Tree_EucD_WPGMA','-v7.3'); clear Tree_EucD_WPGMA
-%                 disp('* Eucledian Distance Ward Linkage')
-%                 Tree_EucD_ward = linkage(eucD,'ward'); clear eucD; save('Tree_EucD_ward','Tree_EucD_ward','-v7.3'); clear Tree_EucD_ward
-                                
+                % Compute distances, linkage trees and saving the later
+                           
+                disp('! Computing cosine distances...')
                 cosD = pdist(data4mva,'cosine');
-                
-%                 disp('* Cosine Distance UPGMA Linkage')
-%                 Tree_cosD_UPGMA = linkage(cosD,'average'); save('Tree_cosD_UPGMA','Tree_cosD_UPGMA','-v7.3'); clear Tree_cosD_UPGMA
-                disp('* Cosine Distance WPGMA Linkage')
-                Tree_cosD_WPGMA = linkage(cosD,'weighted'); clear cosD; save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3'); clear Tree_cosD_WPGMA
-                
-%                 Corr = pdist(data4mva,'correlation');
-%                 
-%                 disp('* Correlation Distance UPGMA Linkage')
-%                 Tree_Corr_UPGMA = linkage(Corr,'average'); save('Tree_Corr_UPGMA','Tree_Corr_UPGMA','-v7.3'); clear Tree_Corr_UPGMA
-%                 disp('* Correlation Distance WPGMA Linkage')
-%                 Tree_Corr_WPGMA = linkage(Corr,'weighted'); clear Corr; save('Tree_Corr_WPGMA','Tree_Corr_WPGMA','-v7.3'); clear Tree_Corr_WPGMA
-                                
-                disp('! Trees saved.')
+                disp('! Computing WPGMA linkages...')
+                Tree_cosD_WPGMA = linkage(cosD,'weighted'); clear cosD; save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3'); clear Tree_cosD_WPGMA                               
+                disp('! Linkage trees saved.')
                 
             else
                 
                 cd(dist_path)
-                
-                % Load trees (linkage output)
-                
-%                 load('Tree_EucD_UPGMA')
-%                 load('Tree_EucD_WPGMA')
-%                 load('Tree_EucD_ward')
-%                 
-%                 load('Tree_cosD_UPGMA')
                 load('Tree_cosD_WPGMA')
-                
-%                 load('Tree_Corr_UPGMA')
-%                 load('Tree_Corr_WPGMA')
                 
             end
                         
@@ -193,38 +151,55 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             
             tree_path = [ path filesep 'cosD_WPGMA' ];
             
-            if ~exist(tree_path, 'dir'); mkdir(tree_path); end
+            if ~exist(tree_path, 'dir')
+                mkdir(tree_path)
+            end
             
             cd(tree_path)
             
             save('idx','idx','-v7.3')
             save('C','C','-v7.3')
+                                                
+        case 'tsne'
             
-%             trees_cell.id = { 'EucD_UPGMA', 'EucD_WPGMA', 'EucD_ward', 'cosD_UPGMA', 'cosD_WPGMA', 'Corr_UPGMA', 'Corr_WPGMA' };
-%             trees_cell.tree = { Tree_EucD_UPGMA, Tree_EucD_WPGMA, Tree_EucD_ward, Tree_cosD_UPGMA, Tree_cosD_WPGMA, Tree_Corr_UPGMA, Tree_Corr_WPGMA };
-%             
-%             for treei = 1:length(trees_cell.id)
-%                             
-%                 idx0 = cluster(trees_cell.tree{treei}, 'maxclust', numComponents);
-%                 
-%                 C = zeros(size(unique(idx0),1),size(data4mva,2));
-%                 for k = unique(idx0)'
-%                     C(k,:) = mean(data4mva(idx0==k,:),1);
-%                 end
-%                 
-%                 idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
-%                 
-%                 tree_path = [ path filesep trees_cell.id{treei} ];
-%             
-%                 if ~exist(tree_path, 'dir'); mkdir(tree_path); end
-%                 
-%                 cd(tree_path)
-%             
-%                 save('idx','idx','-v7.3')
-%                 save('C','C','-v7.3')
-%                 
-%             end
-                                    
+            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\'];
+            
+            if ~exist(dist_path, 'dir')
+                
+                % Create directory
+                
+                mkdir(dist_path)
+                cd(dist_path)
+                                 
+                disp('! Running t-SNE...')        
+                [ rgbData, loss, tsne_parameters ] = f_tsne( data4mva );
+                save('rgbData','rgbData','-v7.3')
+                save('loss','-v7.3')
+                save('tsne_parameters','-v7.3')
+                disp('! t-SNE reduced data and other model details saved.')
+                
+            else
+                
+                cd(dist_path)
+                load('rgbData')
+                
+            end
+            
+            % Clustering t-SNE space
+            
+            disp('! Clustering t-SNE reduced data...')   
+            
+            [ idx, cmap, optimal_numComponents, evaluation ] = f_tsne_space_clustering( rgbData, numComponents );
+            
+            idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
+            
+            cd(path)
+            
+            save('idx','idx','-v7.3')
+            save('cmap','cmap','-v7.3')
+            save('optimal_numComponents','optimal_numComponents','-v7.3')
+            save('evaluation','evaluation','-v7.3')
+            
         case 'nntsne'
             
             [ rgbData, idx0, cmap, outputSpectralContriubtion, var, pc, cutoff  ] = nnTsneFull( data4mva, numComponents );
@@ -240,23 +215,6 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 save('var','var','-v7.3')
                 save('pc','pc','-v7.3')
                 save('cutoff','cutoff','-v7.3')
-            end
-            
-        case 'tsne'
-            
-            [ rgbData, idx0, cmap, loss, tsne_parameters, optimal_numComponents, evaluation ] = f_tsne( data4mva, numComponents );
-            
-            idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
-            
-            save('rgbData','rgbData','-v7.3')
-            save('idx','idx','-v7.3')
-            save('cmap','cmap','-v7.3')
-            save('loss','-v7.3')
-            save('tsne_parameters','-v7.3')
-            
-            if isnan(numComponents)
-                save('optimal_numComponents','optimal_numComponents','-v7.3')
-                save('evaluation','evaluation','-v7.3')
             end
             
         case 'fdc'
