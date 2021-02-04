@@ -174,8 +174,8 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 disp('! Running t-SNE...')        
                 [ rgbData, loss, tsne_parameters ] = f_tsne( data4mva );
                 save('rgbData','rgbData','-v7.3')
-                save('loss','-v7.3')
-                save('tsne_parameters','-v7.3')
+                save('loss','loss','-v7.3')
+                save('tsne_parameters','tsne_parameters','-v7.3')
                 disp('! t-SNE reduced data and other model details saved.')
                 
             else
