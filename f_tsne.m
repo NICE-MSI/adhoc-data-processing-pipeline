@@ -4,7 +4,11 @@ function [ reduced_x, loss, tsne_parameters ] = f_tsne( x )
 % variety of perplexities, distances, exaggerations, and principal
 % component number.
 % 
+% Inputs:
 % x - data
+% Outputs:
+% reduced_x - data in the 3D space (in the reduced space)
+% loss - m
 
 % Run t-sne for a set of different combinations of parameters
 
@@ -26,29 +30,25 @@ small_x = x(step:step:(end-step),:);
 loss0 = Inf;
 
 for Perplexity = [ 30, 50, 100 ]
-    for Distance = [ "cosine" , "correlation" ]
+    for Distance = [ "euclidean", "cosine" , "correlation" ]
         for Exaggeration = [ 4, 8, 16, 32 ] % size of natural clusters in data
             for NumDimensions = 3 % 3D space
                 for NumPCAComponents = [ 3, 10, 50, 0 ]
                     
-                    if NumPCAComponents > size(x,2)
-                        NumPCAComponents = size(x,2);
-                    end
+                    if NumPCAComponents > size(x,2); NumPCAComponents = size(x,2); end
                     
                     for Standardize = 0 % logical([ 0, 1 ])
                         
-                        % description = join([ '!!! Distance ' , Distance, ' - Exaggeration ', num2str(Exaggeration), ' - NumDimensions ' , num2str(NumDimensions), ' - NumPCAComponents ', num2str(NumPCAComponents), ' - Perplexity ', num2str(Perplexity), ' - Standardize ', num2str(Standardize) ]);
-                        
-                        % disp(description)
+                        description = join([ '! Distance: ' , Distance, ' Exaggeration: ', num2str(Exaggeration), ' NumDimensions: ' , num2str(NumDimensions), ' NumPCAComponents: ', num2str(NumPCAComponents), ' Perplexity: ', num2str(Perplexity), ' Standardize: ', num2str(Standardize) ]);
+                        disp(description)
                         
                         [ ~, loss1 ] = tsne( small_x, 'Distance' , char(Distance), 'Exaggeration', Exaggeration, 'NumDimensions' , NumDimensions, 'NumPCAComponents', NumPCAComponents, 'Perplexity', Perplexity, 'Standardize', Standardize );
                         
-                        % figure(); scatter3(y1(:,1),y1(:,2),y1(:,3),'.k'); title({description})
+                        disp([ '* Loss: ' num2str(loss1) ])                        
                         
                         if loss1<loss0
                             
-                            % y = y1;
-                            % loss = loss1;
+                            loss0 = loss1;
                             
                             tsne_parameters.distance = Distance;
                             tsne_parameters.exaggeration = Exaggeration;
@@ -58,9 +58,6 @@ for Perplexity = [ 30, 50, 100 ]
                             tsne_parameters.standardize = Standardize;
                             
                         end
-                        
-                        % disp(num2str(loss1))
-                        
                     end
                 end
             end
@@ -75,8 +72,11 @@ NumPCAComponents = tsne_parameters.numPCAcomponents;
 Perplexity = tsne_parameters.perplexity;
 Standardize = tsne_parameters.standardize;
 
-disp(join([ '!!! tsne parameters - Distance ' , Distance, ' - Exaggeration ', num2str(Exaggeration), ' - NumDimensions ' , num2str(NumDimensions), ' - NumPCAComponents ', num2str(NumPCAComponents), ' - Perplexity ', num2str(Perplexity), ' - Standardize ', num2str(Standardize) ]))
+description = join([ '! Distance: ' , Distance, ' Exaggeration: ', num2str(Exaggeration), ' NumDimensions: ' , num2str(NumDimensions), ' NumPCAComponents: ', num2str(NumPCAComponents), ' Perplexity: ', num2str(Perplexity), ' Standardize: ', num2str(Standardize) ]);
+disp(description)
 
 [ y, loss ] = tsne( x, 'Distance' , char(Distance), 'Exaggeration', Exaggeration, 'NumDimensions' , NumDimensions, 'NumPCAComponents', NumPCAComponents, 'Perplexity', Perplexity, 'Standardize', Standardize );
+
+disp([ '* Loss: ' num2str(loss) ]) 
 
 end
