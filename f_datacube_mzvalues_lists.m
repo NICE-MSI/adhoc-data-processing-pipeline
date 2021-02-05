@@ -11,4 +11,4 @@ mzvalues2keep1 = double(unique(sample_info(logical(mini_sample_info_mzvalues_ind
 
 mzvalues2keep = unique(mzvalues2keep1);
 
-[~, datacube_mzvalues_indexes] = ismembertol(mzvalues2keep,datacubeonly_peakDetails(:,2),1e-12);
+[~, datacube_mzvalues_indexes] = ismembertol(mzvalues2keep,datacubeonly_peakDetails(:,2),1e-10);
