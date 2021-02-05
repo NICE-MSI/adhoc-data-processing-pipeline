@@ -72,7 +72,7 @@ NumPCAComponents = tsne_parameters.numPCAcomponents;
 Perplexity = tsne_parameters.perplexity;
 Standardize = tsne_parameters.standardize;
 
-description = join([ '! Distance: ' , Distance, ' Exaggeration: ', num2str(Exaggeration), ' NumDimensions: ' , num2str(NumDimensions), ' NumPCAComponents: ', num2str(NumPCAComponents), ' Perplexity: ', num2str(Perplexity), ' Standardize: ', num2str(Standardize) ]);
+description = join([ '! Selected parameters: Distance: ' , Distance, ' Exaggeration: ', num2str(Exaggeration), ' NumDimensions: ' , num2str(NumDimensions), ' NumPCAComponents: ', num2str(NumPCAComponents), ' Perplexity: ', num2str(Perplexity), ' Standardize: ', num2str(Standardize) ]);
 disp(description)
 
 [ y, loss ] = tsne( x, 'Distance' , char(Distance), 'Exaggeration', Exaggeration, 'NumDimensions' , NumDimensions, 'NumPCAComponents', NumPCAComponents, 'Perplexity', Perplexity, 'Standardize', Standardize );
