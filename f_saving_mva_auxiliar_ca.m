@@ -102,7 +102,7 @@ if sum(datacube_mzvalues_indexes) > 0
             load('datacube_mzvalues_indexes')
             load('idx')
             load('cmap')
-            load('rgbData')
+            load([ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\rgbData' ])
             
             numComponentsSaved = max(idx);
             o_numComponents = numComponents;
@@ -446,10 +446,11 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     % Scatter plot
                     
-                    % Percentage of occupancy
+                    % ROI percentage occupied by cluster
                     
-                    kpercentage = zeros(length(unique(distributionsM(~isnan(distributionsM)))'),size(distributionsM,2));
-                    for k = unique(distributionsM(~isnan(distributionsM)))'
+                    k_list = unique(distributionsM(~isnan(distributionsM)))';
+                    kpercentage = zeros(length(k_list(k_list>0)),size(distributionsM,2));
+                    for k = k_list(k_list>0)
                         kpercentage(k,:) = sum(distributionsM == k,1)./sum(~isnan(distributionsM),1);
                     end
                     

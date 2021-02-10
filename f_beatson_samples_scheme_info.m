@@ -2562,7 +2562,7 @@ switch dataset_name
         
     case "negative DESI small intestine"
         
-        data_folders = { 'X:\Beatson\pre-tumour models study\negative DESI ibds and imzMLs\' };
+        data_folders = { 'X:\Beatson\Pre-tumour models study\negative DESI ibds and imzMLs\Round 1\' };
         
         dataset_name = '*S*';
         
