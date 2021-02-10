@@ -206,10 +206,11 @@ for peak_i = 1:size(peak_details,1)
                     'Units','normalized','fontsize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle')
             end
             text(.5,h2,...
-                {strjoin([...
-                'theo mz ' num2str(round(double(sample_info(sample_info_i,2)),6)) ...
-                ' - meas mz ', num2str(round(double(sample_info(sample_info_i,4)),6)) ...
-                ' - ppm ' num2str(round(double(sample_info(sample_info_i,5))))])},...
+                {[...
+                'theo mz ' char(num2str(round(double(sample_info(sample_info_i,2)),6))) ...
+                ' - meas mz ', char(num2str(round(double(sample_info(sample_info_i,4)),6))) ...
+                ' - ppm ' char(num2str(round(double(sample_info(sample_info_i,5))))) ...
+                ]},...
                 'Units','normalized','fontsize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle')
             
             theo_mz = str2double(sample_info(sample_info_i,2));
@@ -259,16 +260,15 @@ for peak_i = 1:size(peak_details,1)
             
             if ~isnan(str2double(sample_info(sample_info_i,6)))
                 
-                
                 if length(name_adduct_2plot)>2
-                    name = reshape(char(strcat(sample_info(sample_info_i,4), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
+                    name = reshape(char(strcat(char(num2str(round(double(sample_info(sample_info_i,2)),6))), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
                 else
-                    name = reshape(char(strcat(sample_info(sample_info_i,4), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
+                    name = reshape(char(strcat(char(num2str(round(double(sample_info(sample_info_i,2)),6))), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
                 end
                 
             else
                 
-                name = reshape([char(sample_info(sample_info_i,1)) '_' char(sample_info(sample_info_i,4))],[],1);
+                name = reshape([char(sample_info(sample_info_i,1)) '_' char(num2str(round(double(sample_info(sample_info_i,2)),6)))],[],1);
                 
             end
             
