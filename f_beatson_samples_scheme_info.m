@@ -154,7 +154,7 @@ switch dataset_name
             smaller_masks_list = [ smaller_masks_list; "apc-kras-7-R1-B1-S30" ];
             dataset_name = '*R2B1_S16*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
             extensive_filesToProcess(16:18,:) = filesToProcess(1,:);
-            smaller_masks_list = [ smaller_masks_list; "apc-2-R2-B1-S16"; "apc-3-R2-B1-S160"; "apc-kras-1-R2-B1-S16" ];
+            smaller_masks_list = [ smaller_masks_list; "apc-2-R2-B1-S16"; "apc-3-R2-B1-S16"; "apc-kras-1-R2-B1-S16" ];
             extensive_filesToProcess(19:20,:) = filesToProcess(2,:);
             smaller_masks_list = [ smaller_masks_list; "apc-kras-4-R2-B1-S16"; "apc-kras-5-R2-B1-S16" ];
             dataset_name = '*R2B1_S38*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
@@ -171,7 +171,7 @@ switch dataset_name
             extensive_filesToProcess(32:33,:) = filesToProcess(2,:);
             smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S20"; "apc-kras-3-R2-B2-S20" ];
             extensive_filesToProcess(34,:) = filesToProcess(3,:);
-            smaller_masks_list = [ smaller_masks_list; " apc-kras-5-R2-B2-S20" ];
+            smaller_masks_list = [ smaller_masks_list; "apc-kras-5-R2-B2-S20" ];
             dataset_name = '*R2B2_S21*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
             extensive_filesToProcess(35:36,:) = filesToProcess(1,:);
             smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S21"; "apc-kras-2-R2-B2-S21" ];
@@ -182,8 +182,12 @@ switch dataset_name
             extensive_filesToProcess(40,:) = filesToProcess(4,:);
             smaller_masks_list = [ smaller_masks_list; "apc-kras-6-R2-B2-S21" ];
             dataset_name = '*R2B3_S5*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
-            extensive_filesToProcess(41:44,:) = filesToProcess(1,:);
-            smaller_masks_list = [ smaller_masks_list; "wt-1-R2-B3-S5"; "wt-2-R2-B3-S5"; "wt-3-R2-B3-S5"; "wt-4-R2-B3-S5" ];            
+            extensive_filesToProcess(41:42,:) = filesToProcess(1,:);
+            smaller_masks_list = [ smaller_masks_list; "wt-1-R2-B3-S5"; "wt-2-R2-B3-S5" ];
+            extensive_filesToProcess(43,:) = filesToProcess(2,:);
+            smaller_masks_list = [ smaller_masks_list; "wt-3-R2-B3-S5" ];
+            extensive_filesToProcess(44,:) = filesToProcess(3,:);
+            smaller_masks_list = [ smaller_masks_list; "wt-4-R2-B3-S5" ];
             dataset_name = '*R2B3_S6*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
             extensive_filesToProcess(45:48,:) = filesToProcess(1,:);
             smaller_masks_list = [ smaller_masks_list; "wt-1-R2-B3-S6"; "wt-2-R2-B3-S6"; "wt-3-R2-B3-S6"; "wt-4-R2-B3-S6" ];
