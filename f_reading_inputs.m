@@ -93,6 +93,9 @@ for i = 1:length(inputs_info_reshaped)
             gen_info = 1;
         case "Multivariate Analyses"
             mva_info = 1;
+            adducts_info = 0;
+%             peak_assign_info = 0;
+%             logical_list_path = 0;
         case "Peak Assignments"
             peak_assign_info = 1;
             logical_list_path = 1;
