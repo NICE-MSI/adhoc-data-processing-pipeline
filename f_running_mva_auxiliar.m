@@ -114,7 +114,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             
         case 'hierarclustering'
             
-            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\hierarclustering trees\'];
+            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\hierarclustering trees\' char(norm_type) '\'];
             
             if ~exist(dist_path, 'dir')
                 
@@ -162,7 +162,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                                                 
         case 'tsne'
             
-            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\'];
+            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\' char(norm_type) '\'];
             
             if ~exist(dist_path, 'dir')
                 
