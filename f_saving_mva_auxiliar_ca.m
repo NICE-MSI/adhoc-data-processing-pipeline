@@ -102,7 +102,7 @@ if sum(datacube_mzvalues_indexes) > 0
             load('datacube_mzvalues_indexes')
             load('idx')
             load('cmap')
-            load([ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\rgbData' ])
+            load([ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\' char(norm_type) '\rgbData\'])
             
             numComponentsSaved = max(idx);
             o_numComponents = numComponents;
@@ -355,7 +355,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     rgb_image_component = zeros(size(image_component,1),size(image_component,2),size(rgbData,2));
                     for ci = 1:size(rgbData,2); aux_rgbData = 0*idx; aux_rgbData(idx>0) = rgbData(:,ci); rgb_image_component(:,:,ci) = f_mva_output_collage( aux_rgbData, data_cell, outputs_xy_pairs ); end
                     
-                    subplot(1,4,1:3)
+                    subplot(3,4,[1:3 5:7 9:11])
                     imagesc(image_component)
                     colormap(cmap)
                     axis off; axis image; colorbar; set(gca, 'fontsize', 12);
@@ -368,7 +368,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     scatter3_colour_vector = []; for cii = min(idx)+1:max(idx); scatter3_colour_vector(idx(idx>0)==cii,1:3) = repmat(cmap(cii+1,:),sum(idx(idx>0)==cii),1); end
                     
-                    subplot(1,4,4)
+                    subplot(3,4,4)
                     scatter3(rgbData(:,1),rgbData(:,2),rgbData(:,3),1,scatter3_colour_vector); colorbar;
                     title({'t-sne space'})
                     
@@ -389,12 +389,12 @@ if sum(datacube_mzvalues_indexes) > 0
                         rgb_image_component(:,:,ci) = image_component;
                     end
                     
-                    subplot(1,4,1:3)
+                    subplot(3,4,[1:3 5:7 9:11])
                     image(rgb_image_component)
                     axis off; axis image; set(gca, 'fontsize', 12);
                     title({'t-sne space colours'})
                     
-                    subplot(1,4,4)
+                    subplot(3,4,4)
                     scatter3(rgbData(:,1),rgbData(:,2),rgbData(:,3),2,rgbData,'filled');
                     title({'t-sne space colours'})
                     
