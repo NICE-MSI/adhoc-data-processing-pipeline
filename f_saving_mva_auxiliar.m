@@ -71,7 +71,7 @@ if sum(datacube_mzvalues_indexes) > 0
             
             load('idx')
             load('cmap')
-            load('rgbData')
+            load([ mva_path char(file_name) '\' char(main_mask) '\tsne reduced data\' char(norm_type) '\rgbData' ])
             
             numComponentsSaved = max(idx);
             o_numComponents = numComponents;
