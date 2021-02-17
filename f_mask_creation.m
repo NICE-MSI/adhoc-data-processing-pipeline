@@ -21,20 +21,10 @@ load([ spectra_details_path filesToProcess(file_index).name(1,1:end-6) '\' char(
 
 mva_type = char(mva_type);
 
-switch mva_type
-    
-    case 'nntsne'
-        
-        cd([ mva_path filesToProcess(file_index).name(1,1:end-6) '\' char(input_mask) '\' char(mva_type) '\' char(norm_type) '\' char(dataset_name) '\'])
-        
-    case 'kmeans'
-        
-        if isnan(numComponents)
-            cd([ mva_path filesToProcess(file_index).name(1,1:end-6) '\' char(input_mask) '\' char(mva_type) '\' char(norm_type) '\' char(dataset_name) '\'])
-        else
-            cd([ mva_path filesToProcess(file_index).name(1,1:end-6) '\' char(input_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\' char(dataset_name) '\'])
-        end
-        
+if isnan(numComponents)
+    cd([ mva_path filesToProcess(file_index).name(1,1:end-6) '\' char(input_mask) '\' char(mva_type) '\' char(norm_type) '\' char(dataset_name) '\'])
+else
+    cd([ mva_path filesToProcess(file_index).name(1,1:end-6) '\' char(input_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\' char(dataset_name) '\'])
 end
 
 load('idx')
@@ -96,5 +86,5 @@ if isequal(output_mask,"tissue only")
     cd([ rois_path filesToProcess(file_index).name(1,1:end-6) '\background\'])
     
     save('roi','roi')
-
+    
 end
