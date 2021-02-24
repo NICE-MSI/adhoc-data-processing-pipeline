@@ -191,6 +191,15 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             
             [ idx0, cmap, optimal_numComponents, evaluation ] = f_tsne_space_clustering( rgbData, numComponents );
             
+            % Computing cluster's representative spectra
+            
+            representative_spectra = zeros(length(unique(idx0)),size(data4mva,2));
+            for clusteri = unique(idx0)'
+                representative_spectra(clusteri,:) = mean(data4mva(idx0 == clusteri,:),1);
+            end
+            
+            % Reshaping idx
+            
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
             
             cd(path)
@@ -199,7 +208,8 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             save('cmap','cmap','-v7.3')
             save('optimal_numComponents','optimal_numComponents','-v7.3')
             save('evaluation','evaluation','-v7.3')
-            
+            save('representative_spectra','representative_spectra','-v7.3')
+                        
         case 'nntsne'
             
             [ rgbData, idx0, cmap, outputSpectralContriubtion, var, pc, cutoff  ] = nnTsneFull( data4mva, numComponents );
