@@ -103,6 +103,7 @@ if sum(datacube_mzvalues_indexes) > 0
             load('idx')
             load('cmap')
             load([ mva_path char(dataset_name) '\' char(main_mask) '\tsne reduced data\' char(norm_type) '\rgbData\'])
+            load('representative_spectra')
             
             numComponentsSaved = max(idx);
             o_numComponents = numComponents;
@@ -603,7 +604,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     image_component = f_mva_output_collage( logical(idx.*(idx==componenti)), data_cell, outputs_xy_pairs );
                     
-                    spectral_component = 1:sum(datacube_mzvalues_indexes>0);
+                    spectral_component = representative_spectra(componenti,:);
                     
                     imagesc(image_component); axis off; axis image; colorbar; set(gca, 'fontsize', 12);
                     
@@ -748,7 +749,7 @@ if sum(datacube_mzvalues_indexes) > 0
             close all
             clear fig
             
-            if ~strcmpi(main_mask,'no mask') && ~strcmpi(mva_type,'tsne')
+            if ~strcmpi(main_mask,'no mask') % && ~strcmpi(mva_type,'tsne')
                 
                 % saving single ion images of the highest loadings
                 
