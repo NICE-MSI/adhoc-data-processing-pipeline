@@ -224,7 +224,7 @@ if univtests.roc || univtests.ttest
                         else
                             
                             aux_row = repmat("not assigned", 1, size(extended_hmdb_sample_info,2));
-                            aux_row(:,4) = datacubeonly_peakDetails(mzi,2);
+                            aux_row(:,4) = num2str(datacubeonly_peakDetails(mzi,2),'%1.12f');
                             
                             sii_sample_info = [ sii_sample_info; aux_row ]; % just one sii per peak
                             
