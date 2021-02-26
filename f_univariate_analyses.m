@@ -25,9 +25,9 @@ if univtests.roc || univtests.ttest
         
         for norm_type = norm_list
             
+            small_mask_names_list = string([]);
             col_mean = string([]);
             col_median = string([]);
-            small_mask_1 = 0;
             data4stats = [];
             pixels_per_model = [];
             
@@ -54,20 +54,29 @@ if univtests.roc || univtests.ttest
                     
                     [ common1, all_folders_names_i1, ~ ] = intersect(all_folders_names, groups.masks{groupi});
                     
-                    if ~isempty(common1)
-                        
-                        for aux_i = all_folders_names_i1'
-                            small_mask_1 = small_mask_1 + 1;
-                            disp([' . ' char(all_folders_names(aux_i)) ])
+                    for small_mask_name = common1
+                                               
+                        if isempty(intersect(small_mask_name,small_mask_names_list))
                             
-                            col_mean(1,small_mask_1) = string([ char(all_folders_names(aux_i)), ' mean']);
-                            col_median(1,small_mask_1) = string([ char(all_folders_names(aux_i)), ' median']);
+                            disp([' . ' char(small_mask_name) ])
                             
-                            load([ rois_path filesToProcess(file_index).name(1,1:end-6) filesep char(all_folders_names(aux_i)) filesep 'roi' ])
+                            small_mask_names_list = [ small_mask_names_list; small_mask_name ];
+                            small_mask_i = length(small_mask_names_list);
                             
-                            model_mask = reshape(roi.pixelSelection',[],1);
-                            pixels_per_model0(:,groupi) = pixels_per_model0(:,groupi) + small_mask_1*model_mask.*~pixels_per_model0(:,groupi);
+                            col_mean(1,small_mask_i) = string([ char(small_mask_name), ' mean']);
+                            col_median(1,small_mask_i) = string([ char(small_mask_name), ' median']);
+                            
+                        else
+                            
+                            [ ~, small_mask_i, ~ ] = intersect(small_mask_names_list, small_mask_name);
+                            
                         end
+                        
+                        
+                        load([ rois_path filesToProcess(file_index).name(1,1:end-6) filesep char(small_mask_name) filesep 'roi' ])
+                        
+                        model_mask = reshape(roi.pixelSelection',[],1);
+                        pixels_per_model0(:,groupi) = pixels_per_model0(:,groupi) + small_mask_i*model_mask.*~pixels_per_model0(:,groupi);
                         
                     end
                     
