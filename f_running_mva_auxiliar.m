@@ -128,7 +128,7 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
                 disp('! Computing cosine distances...')
                 cosD = pdist(data4mva,'cosine');
                 disp('! Computing WPGMA linkages...')
-                Tree_cosD_WPGMA = linkage(cosD,'weighted'); clear cosD; save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3'); clear Tree_cosD_WPGMA                               
+                Tree_cosD_WPGMA = linkage(cosD,'weighted'); clear cosD; save('Tree_cosD_WPGMA','Tree_cosD_WPGMA','-v7.3');                               
                 disp('! Linkage trees saved.')
                 
             else
