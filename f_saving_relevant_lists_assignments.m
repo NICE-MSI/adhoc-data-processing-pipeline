@@ -139,8 +139,12 @@ for file_index = 1:length(filesToProcess)
             end
         end
         
-        t = toc; disp(['Peak matching time elapsed: ' num2str(t)])
-        
+        if ~isempty(relevant_lists_sample_info)
+            t = toc; disp(['Peak matching time elapsed: ' num2str(t)])
+        else
+            disp('! No peaks were assigned to the relevant lists. You might want to update the inputs file.')
+        end
+                
         % Create peak assigments folder
         
         mkdir([ peak_assignments_path filesToProcess(file_index).name(1,1:end-6) '\' char(mask_type) '\'])

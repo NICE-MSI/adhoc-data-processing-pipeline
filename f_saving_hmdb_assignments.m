@@ -150,7 +150,11 @@ for file_index = 1:length(filesToProcess)
             end
         end
         
-        t = toc; disp(['Peak matching time elapsed: ' num2str(t)])
+        if ~isempty(hmdb_sample_info)
+            t = toc; disp(['Peak matching time elapsed: ' num2str(t)])
+        else
+            disp('! No peaks were assigned to the relevant lists. You might want to update the inputs file.')
+        end
         
         % Create peak assigments folder
         
