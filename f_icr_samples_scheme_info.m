@@ -3,6 +3,42 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+    case "neg desi wt & mt pair"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = {'*pdx*'};
+        
+        filesToProcess = []; for i = 1:length(data_folders); for ii = 1:length(dataset_name); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name{ii} '.imzML']) ]; end; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess = filesToProcess([5 9],:);
+            smaller_masks_list = [
+                "t-1282-5";
+                "t-1458-5";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 2; 1 1;
+            ];
+    
     case "neg desi pdx & primary + cell pellets"
         
         data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
