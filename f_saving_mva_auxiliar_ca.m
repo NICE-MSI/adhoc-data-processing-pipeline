@@ -27,11 +27,7 @@ if numComponents > 0
 elseif isnan(numComponents)
     
     path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\'];
-    
-elseif numComponents < 0
-    
-    path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' manual\' char(norm_type) '\'];
-    
+        
 end
 
 mkdir(path)
