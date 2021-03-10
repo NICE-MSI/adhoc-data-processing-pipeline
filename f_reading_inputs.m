@@ -81,6 +81,8 @@ for i = 1:length(inputs_info_reshaped)
             elseif ~pos_aux && ~pos_aux_2
                 adducts_i = adducts_i + 1;
                 adducts_list{1,adducts_i} = char(inputs_info_reshaped(i-1));
+            else
+                disp('! Your polarity and requested adduct forms do not match. Please update the inputs file and run peak assigments routines again.')
             end
         end
     end
