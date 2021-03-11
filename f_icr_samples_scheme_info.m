@@ -3,6 +3,119 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+    case "neg desi 3d mt pdx only"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = '*1282*';
+        
+        filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess = filesToProcess(2:end,:);
+            smaller_masks_list = [
+                "t-1282-4";
+                "t-1282-5";
+                "t-1282-3";
+                "t-1282-2";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 3; 1 4; 1 2; 1 1;
+            ];
+        
+        
+    case "neg desi 3d wt pdx only"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = '*1458*';
+        
+        filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess = filesToProcess(2:end,:);
+            smaller_masks_list = [
+                "t-1458-2";
+                "t-1458-4";
+                "t-1458-3";
+                "t-1458-5";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 1; 1 3; 1 2; 1 4;
+            ];
+        
+    case "neg desi wt & mt pair"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = {'*pdx*'};
+        
+        filesToProcess = []; for i = 1:length(data_folders); for ii = 1:length(dataset_name); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name{ii} '.imzML']) ]; end; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess = filesToProcess([5 9],:);
+            smaller_masks_list = [
+                "t-1282-5";
+                "t-1458-5";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 2; 1 1;
+            ];
+        
     case "neg desi pdx & primary + cell pellets"
         
         data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
@@ -129,7 +242,7 @@ switch dataset_name
                 "cp-TMO1273";
                 "cp-TMO0091";
                 "cp-TMO1117";
-                "cp-35-1"; 
+                "cp-35-1";
                 "cp-35-2";
                 "cp-35-3";
                 "cp-35-e";
@@ -153,7 +266,7 @@ switch dataset_name
             5+6 14-13;
             6+6 14-13;
             ];
-    
+        
     case "neg desi 3d pdx & primary"
         
         data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
@@ -265,7 +378,7 @@ switch dataset_name
             5 1; 5 2; 5 3; 5 4; 5 5; 5 6; 5 7; 5 8; 5 9; 5 10; 5 11; 5 12; 5 13;
             6 1; 6 2; 6 3; 6 4; 6 5;
             ];
-    
+        
     case "pos desi pdx & primary"
         
         data_folders = { 'X:\ICR Breast PDX\Data\pos DESI\' };
@@ -392,7 +505,7 @@ switch dataset_name
             6 1; 6 2; 6 3; 6 4; 6 5; 6 6; 6 7; 6 8; 6 9; 6 10; 6 11;
             7 1; 7 2; 7 3; 7 4; 7 5; 7 6; 7 7; 7 8;
             ];
-    
+        
     case "neg desi pdx & primary"
         
         data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
@@ -656,7 +769,7 @@ switch dataset_name
         end
         
         
-
+        
         %
         
         outputs_xy_pairs = [
@@ -677,7 +790,7 @@ switch dataset_name
             5 4;
             3 2;
             ];
-                
+        
     case "pos desi primary tumours"
         
         data_folders = { 'X:\ICR Breast PDX\Data\pos DESI\' };
@@ -922,7 +1035,7 @@ switch dataset_name
             
             1 10; 2 10; 3 10; 4 10; 5 10;
             ];
-                
+        
     case "pos desi original 3d pdx pilot"
         
         data_folders = { 'X:\ICR Breast PDX\Data\pos DESI\' };

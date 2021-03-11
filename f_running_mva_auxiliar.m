@@ -33,11 +33,7 @@ if numComponents > 0
 elseif isnan(numComponents)
     
     path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\'];
-    
-elseif numComponents < 0
-    
-    path = [ mva_path char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' manual\' char(norm_type) '\'];
-    
+        
 end
 
 if ~exist(path, 'dir'); mkdir(path); end
@@ -210,45 +206,91 @@ if sum(datacube_mzvalues_indexes) >= 3 % if there are more then 3 peaks in the c
             save('evaluation','evaluation','-v7.3')
             save('representative_spectra','representative_spectra','-v7.3')
                         
-        case 'nntsne'
-            
-            [ rgbData, idx0, cmap, outputSpectralContriubtion, var, pc, cutoff  ] = nnTsneFull( data4mva, numComponents );
-            
-            idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
-            
-            save('rgbData','rgbData','-v7.3')
-            save('idx','idx','-v7.3')
-            save('cmap','cmap','-v7.3')
-            save('outputSpectralContriubtion','outputSpectralContriubtion','-v7.3')
-            
-            if isnan(numComponents)
-                save('var','var','-v7.3')
-                save('pc','pc','-v7.3')
-                save('cutoff','cutoff','-v7.3')
-            end
+%         case 'nntsne'
+%             
+%             [ rgbData, idx0, cmap, outputSpectralContriubtion, var, pc, cutoff  ] = nnTsneFull( data4mva, numComponents );
+%             
+%             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
+%             
+%             save('rgbData','rgbData','-v7.3')
+%             save('idx','idx','-v7.3')
+%             save('cmap','cmap','-v7.3')
+%             save('outputSpectralContriubtion','outputSpectralContriubtion','-v7.3')
+%             
+%             if isnan(numComponents)
+%                 save('var','var','-v7.3')
+%                 save('pc','pc','-v7.3')
+%                 save('cutoff','cutoff','-v7.3')
+%             end
             
         case 'fdc'
             
             if isnan(numComponents)
-                isManualSelect = 0;
-                isAutoSelect = 1;
-                topK = 0;
-            elseif numComponents < 0
                 isManualSelect = 1;
-                isAutoSelect = 0;
-                topK = 0;
+                istopK = 0;
             else
                 isManualSelect = 0;
-                isAutoSelect = 0;
-                topK = numComponents;
+                istopK = numComponents;
             end
             
-            [ idx0, C, rho, delta, centInd ]  = f_LC_FDC( data4mva, 'correlation', 0.1, 500, isManualSelect, isAutoSelect, topK, path );
+            dist_path = [ mva_path char(dataset_name) '\' char(main_mask) '\pairwise distances\' char(norm_type) '\'];
+            
+            if ~exist(dist_path, 'dir')
+                
+                % Create directory
+                
+                mkdir(dist_path)
+                cd(dist_path)
+                                 
+                disp('! Computing density clustering parameters...')
+                
+                [ cosD, dc, rho, ordRho, delta, indNearNeigh ] = f_densityParam( data4mva );
+                
+                save('cosD','cosD','-v7.3')
+                save('dc','dc','-v7.3')
+                save('rho','rho','-v7.3')
+                save('ordRho','ordRho','-v7.3')
+                save('delta','delta','-v7.3')
+                save('indNearNeigh','indNearNeigh','-v7.3')
+
+                disp('! Density clustering parameters saved.')
+                
+            else
+                
+                cd(dist_path)
+                load('cosD')
+                load('dc')
+                load('rho')
+                load('ordRho')
+                load('delta')
+                load('indNearNeigh')
+                
+            end
+            
+            isHalo = 1;
+            
+            [ numClust, idx0, centInd, haloInd ] = f_densityClust(cosD, dc, rho, ordRho, delta, indNearNeigh, isManualSelect, istopK, isHalo, path); clear cosD
+            
+            idx0_halo = idx0;
+            idx0_halo(logical(haloInd)) = 0;
+            
+            C = zeros(numClust,size(data4mva,2));
+            for k = unique(idx0)
+                C(k,:) = median(data4mva(idx0==k,:),1);
+            end
+            
+            C_halo = zeros(numClust,size(data4mva,2));
+            for k = unique(idx0)
+                C_halo(k,:) = median(data4mva(idx0_halo==k,:),1);
+            end
             
             idx = zeros(length(mask4mva),1); idx(mask4mva,:) = idx0; idx(isnan(idx)) = 0;
+            idx_halo = zeros(length(mask4mva),1); idx_halo(mask4mva,:) = idx0_halo; idx_halo(isnan(idx_halo)) = 0;
             
             save('idx','idx','-v7.3')
+            save('idx0_halo','idx0_halo','-v7.3')
             save('C','C','-v7.3')
+            save('C_halo','C_halo','-v7.3')
             save('rho','rho','-v7.3')
             save('delta','delta','-v7.3')
             save('centInd','centInd','-v7.3')
