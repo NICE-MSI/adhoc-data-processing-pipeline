@@ -3,6 +3,65 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+    case "cell pellets"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = {'*pdx*','*35_1*','*35_2*','*35_3*','*35_e*','*23_1*','*23_2*'};
+        
+        filesToProcess = []; for i = 1:length(data_folders); for ii = 1:length(dataset_name); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name{ii} '.imzML']) ]; end; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess(1:21,1) = filesToProcess([3:7 9:24],1);
+            smaller_masks_list = [
+                "cp-1458-2";
+                "cp-1282-4";
+                "cp-1282-5";
+                "cp-1458-4";
+                "cp-1458-3";
+                "cp-1458-5";
+                "cp-1282-2";
+                "cp-JOOO100674";
+                "cp-TMO099";
+                "cp-TMO112";
+                "cp-JOOO104720";
+                "cp-TMO098";
+                "cp-TMO1273";
+                "cp-TMO0091";
+                "cp-TMO1117";
+                "cp-35-1";
+                "cp-35-2";
+                "cp-35-3";
+                "cp-35-e";
+                "cp-23-1";
+                "cp-23-2";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 14-13; 2 16-13; 2 17-13; 1 16-13; 1 15-13; 1 17-13; 2 14-13; 1 18-13; 1 19-13; 2 18-13; 1 20-13; 1 21-13; 2 19-13; 1 22-13; 2 20-13;
+            3 14-13; 3 15-13; 3 16-13;
+            4 14-13;
+            5 14-13;
+            6 14-13;
+            ];
+                
     case "neg desi 3d mt pdx only"
         
         data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };

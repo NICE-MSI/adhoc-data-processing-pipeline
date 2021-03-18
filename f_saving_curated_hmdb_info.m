@@ -23,7 +23,7 @@ log_diff = find(logical(diff(double(hmdb_sample_info2(:,12)))+diff(double(hmdb_s
 
 i = 1;
 starti = 1;
-new_hmdb_sample_info = strings(length(log_diff),6);
+new_hmdb_sample_info = strings(length(log_diff),10);
 for endi = log_diff
         
     % molecule
@@ -60,7 +60,22 @@ for endi = log_diff
     
     long_string0 = unique(relevant_lists_sample_info(database_rows_mono,7),'stable');
     long_string = reshape([long_string0 repmat(", ",size(long_string0,1),1)]',1,[]);
-    new_hmdb_sample_info(i,6) = strjoin(long_string(1:end-1)); 
+    new_hmdb_sample_info(i,6) = strjoin(long_string(1:end-1));
+    
+    % classes
+        
+    long_string0 = unique(hmdb_sample_info2(starti:endi,14),'stable');
+    long_string = reshape([long_string0 repmat(", ",size(long_string0,1),1)]',1,[]);
+    new_hmdb_sample_info(i,7) = strjoin(long_string(1:end-1)); 
+    long_string0 = unique(hmdb_sample_info2(starti:endi,15),'stable');
+    long_string = reshape([long_string0 repmat(", ",size(long_string0,1),1)]',1,[]);
+    new_hmdb_sample_info(i,8) = strjoin(long_string(1:end-1));
+    long_string0 = unique(hmdb_sample_info2(starti:endi,16),'stable');
+    long_string = reshape([long_string0 repmat(", ",size(long_string0,1),1)]',1,[]);
+    new_hmdb_sample_info(i,9) = strjoin(long_string(1:end-1));
+    long_string0 = unique(hmdb_sample_info2(starti:endi,17),'stable');
+    long_string = reshape([long_string0 repmat(", ",size(long_string0,1),1)]',1,[]);
+    new_hmdb_sample_info(i,10) = strjoin(long_string(1:end-1)); 
     
     i = i + 1;
     starti = endi+1;

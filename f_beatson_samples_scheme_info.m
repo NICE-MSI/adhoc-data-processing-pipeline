@@ -2,6 +2,24 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+    case "neg DESI veal brain homogenate"
+        
+        main_mask_list = "no mask"; % tissue only
+        data_folders = { 'D:\veal-brain-homogenate-study\data\' };% Datasets
+        clear extensive_filesToProcess
+        
+        dataset_name = '*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        
+        filesToProcess = filesToProcess([ 13 16 17 21 33 38 ]);
+        
+        extensive_filesToProcess = filesToProcess;
+        smaller_masks_list = [
+            "vbh-20201126", "vbh-20201127", "vbh-20201130", "vbh-20201202", "vbh-20201207", "vbh-20201209"
+            ];
+        outputs_xy_pairs = [
+            1 1; 1 2; 1 3; 1 4; 1 5; 1 6
+            ];
+    
     case "neg DESI intracolonics tumour & normal only"
         
         main_mask_list = "tissue only"; % tissue only
