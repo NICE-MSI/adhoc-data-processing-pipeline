@@ -2,6 +2,90 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+    case "neg DESI intracolonics homogenate set with background"
+        
+        main_mask_list = "tissue only"; % tissue only
+        data_folders = { 'D:\veal-brain-homogenate-study\tumours data\' };% Datasets
+        clear extensive_filesToProcess
+        
+        dataset_name = '*R1B1_s28*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(1:3,:) = filesToProcess(2,:);
+        smaller_masks_list = [ "apc-3-R1-B1-S28-bg"; "apc-5-R1-B1-S28-bg"; "apc-kras-2-R1-B1-S28-bg" ];
+        extensive_filesToProcess(4,:) = filesToProcess(3,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-6-R1-B1-S28-bg" ];
+        extensive_filesToProcess(5,:) = filesToProcess(4,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-7-R1-B1-S28-bg" ];
+        
+        dataset_name = '*R2B3_S5*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(6:7,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "wt-1-R2-B3-S5-bg"; "wt-2-R2-B3-S5-bg" ];
+        extensive_filesToProcess(8,:) = filesToProcess(2,:);
+        smaller_masks_list = [ smaller_masks_list; "wt-3-R2-B3-S5-bg" ];
+        extensive_filesToProcess(9,:) = filesToProcess(3,:);
+        smaller_masks_list = [ smaller_masks_list; "wt-4-R2-B3-S5-bg" ];
+        
+        dataset_name = '*R2B1_S16*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(10:12,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-2-R2-B1-S16-bg"; "apc-3-R2-B1-S16-bg"; "apc-kras-1-R2-B1-S16-bg" ];
+        extensive_filesToProcess(13:14,:) = filesToProcess(2,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-4-R2-B1-S16-bg"; "apc-kras-5-R2-B1-S16-bg" ];
+        
+        dataset_name = '*R2B2_S19*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(15:16,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S19-bg"; "apc-kras-2-R2-B2-S19-bg" ];
+        extensive_filesToProcess(17:20,:) = filesToProcess(2,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S19-bg"; "apc-kras-3-R2-B2-S19-bg"; "apc-kras-5-R2-B2-S19-bg"; "apc-kras-6-R2-B2-S19-bg" ];
+        
+        dataset_name = '*R2B3_S6*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(21:24,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "wt-1-R2-B3-S6-bg"; "wt-2-R2-B3-S6-bg"; "wt-3-R2-B3-S6-bg"; "wt-4-R2-B3-S6-bg" ];
+        
+        dataset_name = '*R2B1_S38*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(25:27,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-6-R2-B1-S38-bg"; "apc-kras-4-R2-B1-S38-bg"; "apc-kras-5-R2-B1-S38-bg" ];
+        
+        dataset_name = '*R2B2_S20*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(28:29,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S20-bg"; "apc-kras-2-R2-B2-S20-bg" ];
+        extensive_filesToProcess(30:31,:) = filesToProcess(2,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S20-bg"; "apc-kras-3-R2-B2-S20-bg" ];
+        extensive_filesToProcess(32,:) = filesToProcess(3,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-5-R2-B2-S20-bg" ];
+        
+        dataset_name = '*R2B2_S21*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(33:34,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S21-bg"; "apc-kras-2-R2-B2-S21-bg" ];
+        extensive_filesToProcess(35:36,:) = filesToProcess(2,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S21-bg"; "apc-kras-3-R2-B2-S21-bg" ];
+        extensive_filesToProcess(37,:) = filesToProcess(3,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-5-R2-B2-S21-bg" ];
+        extensive_filesToProcess(38,:) = filesToProcess(4,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-6-R2-B2-S21-bg" ];
+        
+        dataset_name = '*R1B1_s29*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        extensive_filesToProcess(39,:) = filesToProcess(1,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-2-R1-B1-S29-bg" ];
+        extensive_filesToProcess(40,:) = filesToProcess(2,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-3-R1-B1-S29-bg" ];
+        extensive_filesToProcess(41,:) = filesToProcess(3,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-5-R1-B1-S29-bg" ];
+        extensive_filesToProcess(42,:) = filesToProcess(4,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-kras-7-R1-B1-S29-bg" ];
+        extensive_filesToProcess(43,:) = filesToProcess(5,:);
+        smaller_masks_list = [ smaller_masks_list; "apc-6-R1-B1-S29-bg" ];
+        
+        outputs_xy_pairs = [
+            1 1; 2 1; 4 1; 3 1; 5 1;
+            1 2; 2 2; 3 2; 4 2;
+            1 3; 2 3; 4 3; 5 3; 6 3;
+            1 4; 4 4; 2 4; 5 4; 6 4; 7 4;
+            1 5; 2 5; 3 5; 4 5;
+            1 6; 4 6; 5 6;
+            1 7; 4 7; 2 7; 5 7; 6 7;
+            1 8; 4 8; 2 8; 5 8; 6 8; 7 8;
+            4 9; 1 9; 2 9; 5 9; 3 9;
+            ];
+        
     case "neg DESI veal brain homogenate"
         
         main_mask_list = "no mask"; % tissue only
@@ -19,7 +103,7 @@ switch dataset_name
         outputs_xy_pairs = [
             1 1; 1 2; 1 3; 1 4; 1 5; 1 6
             ];
-    
+        
     case "neg DESI intracolonics tumour & normal only"
         
         main_mask_list = "tissue only"; % tissue only
@@ -28,8 +112,8 @@ switch dataset_name
         
         dataset_name = '*20190815_intracolonics_neg_slide9*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
         extensive_filesToProcess(1:10,:) = filesToProcess(1,:);
-        smaller_masks_list = [ 
-            "apc-3-tumour-R1-B1-S9";        "apc-5-tumour-R1-B1-S9";    "apc-6-tumour-R1-B1-S9"; "apc-kras-2-tumour-R1-B1-S9";   "apc-kras-7-tumour-R1-B1-S9" 
+        smaller_masks_list = [
+            "apc-3-tumour-R1-B1-S9";        "apc-5-tumour-R1-B1-S9";    "apc-6-tumour-R1-B1-S9"; "apc-kras-2-tumour-R1-B1-S9";   "apc-kras-7-tumour-R1-B1-S9"
             "apc-3-normal-R1-B1-S9";        "apc-5-normal-R1-B1-S9";    "apc-6-normal-R1-B1-S9"; "apc-kras-2-normal-R1-B1-S9";   "apc-kras-7-normal-R1-B1-S9"
             ];
         
@@ -155,13 +239,13 @@ switch dataset_name
             1 6; 2 6; 4 6; 5 6; 6 6;        1+7 6;  2+7 6; 4+7 6;   6+7-1 6;
             1 7; 2 7; 4 7; 5 7; 6 7;        1+7 7;  2+7 7; 4+7 7;   6+7-1 7;
             1 8; 4 8; 2 8; 5 8; 6 8; 7 8;   1+7 8;  4+7 8;
-            1 9; 4 9; 2 9; 5 9; 6 9; 7 9;   1+7 9;  4+7 9; 2+7 9;   5+7 9; 
+            1 9; 4 9; 2 9; 5 9; 6 9; 7 9;   1+7 9;  4+7 9; 2+7 9;   5+7 9;
             8 10; 9 10; 10 10; 11 10;
             8 11; 9 11; 10 11; 11 11;
             ];
-    
+        
     case "PI3K C DESI Negative (AZ data)"
-             
+        
         main_mask_list = "tissue only"; % tissue only
         data_folders = { 'X:\Beatson\PI3K study (drug swiss)\Data\neg DESI (AZ)\' };% Datasets
         clear extensive_filesToProcess
@@ -181,7 +265,7 @@ switch dataset_name
         outputs_xy_pairs = [
             1 1; 1 2; 1 3; 1 4; 1 5; 1 6; 1 7;
             3 1; 3 2; 3 3; 3 4; 3 5; 3 6; 3 7;
-            2 1; 2 2; 2 3; 2 4; 2 5; 2 6; 
+            2 1; 2 2; 2 3; 2 4; 2 5; 2 6;
             4 1; 4 2; 4 3; 4 4; 4 5; 4 6; 4 7;
             ];
         
