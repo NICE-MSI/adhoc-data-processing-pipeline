@@ -2,6 +2,50 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
+        case "neg DESI intracolonics vbh + R2B2 set"
+            
+            main_mask_list = "tissue only"; % tissue only
+            clear extensive_filesToProcess
+            
+            data_folders = { 'D:\veal-brain-homogenate-study\vbh data\' };% Datasets
+            
+            dataset_name = '*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+            extensive_filesToProcess = filesToProcess([ 16 21 33 ]);
+            smaller_masks_list = [ "vbh-20201127"; "vbh-20201202"; "vbh-20201207" ];
+            
+            data_folders = { 'D:\veal-brain-homogenate-study\tumours data\' };% Datasets
+            
+            dataset_name = '*R2B2_S19*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+            extensive_filesToProcess(4:5,:) = filesToProcess(1,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S19-bg"; "apc-kras-2-R2-B2-S19-bg" ];
+            extensive_filesToProcess(6:9,:) = filesToProcess(2,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S19-bg"; "apc-kras-3-R2-B2-S19-bg"; "apc-kras-5-R2-B2-S19-bg"; "apc-kras-6-R2-B2-S19-bg" ];
+            
+            dataset_name = '*R2B2_S20*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+            extensive_filesToProcess(10:11,:) = filesToProcess(1,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S20-bg"; "apc-kras-2-R2-B2-S20-bg" ];
+            extensive_filesToProcess(12:13,:) = filesToProcess(2,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S20-bg"; "apc-kras-3-R2-B2-S20-bg" ];
+            extensive_filesToProcess(14,:) = filesToProcess(3,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-kras-5-R2-B2-S20-bg" ];
+            
+            dataset_name = '*R2B2_S21*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+            extensive_filesToProcess(15:16,:) = filesToProcess(1,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-1-R2-B2-S21-bg"; "apc-kras-2-R2-B2-S21-bg" ];
+            extensive_filesToProcess(17:18,:) = filesToProcess(2,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-4-R2-B2-S21-bg"; "apc-kras-3-R2-B2-S21-bg" ];
+            extensive_filesToProcess(19,:) = filesToProcess(3,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-kras-5-R2-B2-S21-bg" ];
+            extensive_filesToProcess(20,:) = filesToProcess(4,:);
+            smaller_masks_list = [ smaller_masks_list; "apc-kras-6-R2-B2-S21-bg" ];
+            
+            outputs_xy_pairs = [
+                1 1; 1 3; 1 6;
+                2 1; 4 1; 3 2; 5 2; 6 2; 7 2;
+                2 3; 4 3; 3 4; 5 4; 6 5;
+                2 6; 4 6; 3 7; 5 7; 6 8; 7 9
+                ];
+    
     case "neg DESI intracolonics homogenate set with background"
         
         main_mask_list = "tissue only"; % tissue only
