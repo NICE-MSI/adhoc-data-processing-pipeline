@@ -36,6 +36,10 @@ switch norm_type
         
         norm_data0 = f_tic_norm(data);
         
+    case 'sims tic'
+        
+        norm_data0 = f_sims_tic_norm(data);
+        
     case 'RMS' % RMS normalisation
         
         norm_data0 = f_RMS_norm(data);

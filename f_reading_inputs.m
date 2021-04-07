@@ -223,6 +223,23 @@ for i = 1:length(inputs_info_reshaped)
         case "Lysine Carnitine Intermediates"
             list_path = strcat( metabolite_lists_path, "lysine_carnitine_intermediates.xlsx" );
             
+        case "2-alkyl-4-quinolones"
+            list_path = strcat( metabolite_lists_path, "2-alkyl-4-quinolones.xlsx" );
+        case "3-alkyl-23-dihydroxy-4-quinolones"
+            list_path = strcat( metabolite_lists_path, "3-alkyl-23-dihydroxy-4-quinolones.xlsx" );
+        case "rhamnolipids"
+            list_path = strcat( metabolite_lists_path, "Rhamnolipids.xlsx" );
+        case "N-acyl-homoserine lactone"
+            list_path = strcat( metabolite_lists_path, "N-acyl-homoserine lactone.xlsx" );
+        case "nucleobases"   
+            list_path = strcat( metabolite_lists_path, "Nucleobases.xlsx" );
+        case "amino acids (bacteria)"
+            list_path = strcat( metabolite_lists_path, "Amino Acids (bacteria).xlsx" );
+        case "lipids (bacteria)"
+            list_path = strcat( metabolite_lists_path, "Lipids (bacteria).xlsx" );
+        case "miscellaneous compounds (bacteria)"
+            list_path = strcat( metabolite_lists_path, "miscellaneous compounds (bacteria).xlsx" );
+            
         case "maximum ppm error"
             if peak_assign_info == 0
                 mva_max_ppm = double(inputs_info_reshaped(i+1));
