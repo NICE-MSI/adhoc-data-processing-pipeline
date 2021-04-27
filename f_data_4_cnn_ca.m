@@ -48,7 +48,7 @@ for main_mask = main_mask_list
         % Initialising the data table
         
         if file_index==1
-            data_table = [ string(datacube.spectralChannels') "dataset" "large mask" "small mask" "x_coordinates" "y_coordinates" ];
+            data_table = [ string(round(datacube.spectralChannels,4)) "dataset" "large mask" "small mask" "x_coordinates" "y_coordinates" ];
         end
         
         % Remove rows and columns that are only "background" (using the smaller masks to reduce the big mask)
