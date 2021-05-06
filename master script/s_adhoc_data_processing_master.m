@@ -6,7 +6,7 @@
 % 3	Matching of the peaks detected in the representative spectrum against HMDB and/or a group of lists of molecules of interest defined by the user
 % 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation structure) for each imzml of interest (using SpectralAnalysis functions)
 % 5	Creating and saving a data matrix for each normalisation algorithm of interest
-% 6	Defining a new “dataset” by combining the original imzmls files. This steps involves the specification of group of original imzmls files that need to be combined, of which masks (define in 10) are to be used reduce each original imzml file to smaller group of pixels of interest, the geometric position of each small group of pixels of interest in the new “dataset” (its position in a 2D grid that will contain all the groups of pixels of interest from all the imzmls combined)
+% 6	Working with a new “dataset” which is defined as the combination the original imzmls files. This step involves the specification of the groups of original imzmls files that need to be combined, of which masks (defined in 10) are to be used to reduce each original imzml file to a smaller group of pixels of interest, the geometric position of each small group of pixels of interest in the new “dataset” (its position in a 2D grid that will contain all the groups of pixels of interest from all the imzmls combined)
 % 7	Saving single ion images for:
 % 7.1	One or more lists of molecules of interest defined by the user
 % 7.2	One or more superclass, class, or subclass of molecules (as defined by HMDB)
@@ -56,15 +56,15 @@ addpath(genpath(sdpp_path))
 % Please list the paths to all folders containing data.
 
 data_folders = { ...
-    '...',...
-    '...',...
+    'X:\Beatson\pos DESI AZ data\',%...
+    %'...',...
     };
 
 % Please list the strings that matches the names of the files to be analised. Each row should match each folder specified above. If all files need to be analised, please use '*'.
 
 dataset_name_portion = { 
-    '...',...
-    '...',...
+    '20210119_Capi_study1_pos_60um',%...
+    %'...',...
     };
 
 % ! Please don't modify the code from here till end of this cell.
@@ -93,7 +93,7 @@ filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToP
 % (and use the before and after plots to make sure that the pre-processing 
 % is working as intended).
 
-preprocessing_file = '... .sap';
+preprocessing_file = 'X:\Beatson\pos DESI AZ data\preprocessingWorkflow4AZpeakPickedData.sap';
 
 %% Data Pre-Processing (for each imzML individually)
 
