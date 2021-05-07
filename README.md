@@ -6,22 +6,22 @@ This documentation is organized as follows:
 
 - Pipeline structure
 
-General description of the pipeline
+  General description of the pipeline
 
 - Requirements
 
-Describes the software and files required to run the pipeline
+  Describes the software and files required to run the pipeline
 
-* The inputs file  
+- The inputs file  
   Describes how this workflow receives its inputs and how to to prepare your own inputs
-* The master script  
+- The master script  
   Describes how to run this workflow after you prepared your input
-* Generated files structure  
-  describes the output you will obtain from running this workflow
-* File structure  
-  describes the content of this repository that was not approached earlier. This section is of interest if you want  modify the workflow yourself
-* TODO  
-  description of the upcoming modifications for this workflow with variable priority
+- Generated files structure  
+  Describes the output you will obtain from running this workflow
+- File structure  
+  Describes the content of this repository that was not approached earlier. This section is of interest if you want  modify the workflow yourself
+- TODO  
+  Description of the upcoming modifications for this workflow with variable priority
 
 Please, notice that this repository contains a folder called `documentation`, containing the file `workflow_outlide.pptx`.
 This file is a PowerPoint presentation, describing this workflow under the form of a flowchart.
@@ -29,66 +29,87 @@ It is probably the most convenient approach to get a first idea of how this scri
 
 ## Pipeline structure
 
-This is a modular Mass Spectrometry Data (MSI) analysis pipeline. It can be used to perform the following steps:
+This is a modular, sequential Mass Spectrometry Data (MSI) analysis pipeline. It can be used to perform the following steps:
 
 #### Step 1. Data pre-processing
 
-##### Function
+##### Function name
 
-​	f_saving_spectra_details
+- f_saving_spectra_details
 
 ##### Input variables
 
-​	filesToProcess
+- filesToProcess
 
-MATLAB struct that contains the complete paths to all data files of interest. This struct is created using the MATLAB function 'dir'. and the path to the folder where all imzML and ibd files of interest are stored. MSI data needs to contain the continuum spectra or the total counts for each centroid.
+  MATLAB struct that contains the complete paths to all data files of interest. This struct is created using the MATLAB function 'dir'. and the path to the folder where all imzML and ibd files of interest are stored. MSI data needs to contain the continuum spectra or the total counts for each centroid.
 
-​	preprocessing_file
+- preprocessing_file
 
-MATLAB string that represents the path to the SpectralAnalysis pre-processing file (a .sap file).
+  MATLAB string that represents the path to the SpectralAnalysis pre-processing file (a .sap file).
 
-​	mask	
+- mask	
 
-MATLAB string that represents the name of the mask of interest (e.g. 'no mask' (often the first one to be used as it will simply include all pixels), 'tissue only', 'tumour') 
+  MATLAB string that represents the name of the mask of interest (e.g. 'no mask' (often the first one to be used as it will simply include all pixels), 'tissue only', 'tumour') 
 
 ##### Output variables
 
-​	totalSpectrum_intensities
+- totalSpectrum_intensities
 
-​	totalSpectrum_mzvalues
+MATLAB matrix that contains the total spectrum intensities. 
 
-MATLAB mat files that contain the total spectrum intensities and related m/z values. These files are saved for each imzML file of interest (i.e. listed in filesToProcess) and mask, in a folder called 'spectra details'. The folder 'spectra details' is one of the key folders within the outputs folder. Please note that the name of the outputs folder is specified by you in the 'inputs file'.
+- totalSpectrum_mzvalues
 
-#### Step 2. Peak detection on the total spectrum (using SpectralAnalysis functions)
+MATLAB matrix that contains the total spectrum m/z values (related to totalSpectrum_intensities).
 
-1. Matching of the peaks detected in the representative spectrum against HMDB and/or a group of lists of molecules of interest defined by the user
-   % 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation structure) for each imzml of interest (using SpectralAnalysis functions)
-   % 5	Creating and saving a data matrix for each normalisation algorithm of interest
-   % 6	Working with a new “dataset” which is defined as the combination the original imzmls files. This step involves the specification of the groups of original imzmls files that need to be combined, of which masks (defined in 10) are to be used to reduce each original imzml file to a smaller group of pixels of interest, the geometric position of each small group of pixels of interest in the new “dataset” (its position in a 2D grid that will contain all the groups of pixels of interest from all the imzmls combined)
-   % 7	Saving single ion images for:
-   % 7.1	One or more lists of molecules of interest defined by the user
-   % 7.2	One or more superclass, class, or subclass of molecules (as defined by HMDB)
-   % 7.3	A lists of m/z values
-   % 8	Running PCA, NMF, k-means, t-SNE, NN-SNE using:
-   % 8.1	N most intense peaks detected in the representative spectrum
-   % 8.2	Percentile P of all peaks detected in the representative spectrum
-   % 8.3	One or more lists of molecules of interest defined by the user
-   % 8.4	One or more superclass, class, or subclass of molecules (as defined by HMDB)
-   % 8.5	A lists of m/z values
-   % 9	Saving pictures (matlab figures and pngs) with the main outputs of PCA, NMF, k-means, t-SNE, NN-SNE (e.g.: principal components, representative spectra, single ion images of top drivers, cluster maps)
-   % 10	Saving user defined masks for regions of interest (SpectralAnalysis RegionsOfInterest structure), by combining the results of k-means (intersected or united) with regions of the image manually defined by the user (using Matlab).
-   % 11	Running the univariate analyses: t-test, ranksum test, and ROC analysis, which relate the (mean) ion intensities of user defined groups of regions of interest (defined in 10)
-   % 12	Running ANOVAs to define groups of ions that relate to particular “conditions” such as acquisition date, glass slide number, sample ID, tissue type, etc. Each “condition” has to be defined as a combination of regions of interest (defined in 10)
-   % 13	Discarding groups of ions defined using the ANOVA results (12) before running any of the multivariate analyses describe in 8.
-   % 14	Saving the k-means, t-SNE or NN-t-SNE clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest structure). These regions of interest can be used in any subsequent analyses together with or in place of those defined in 10.
-   % 15	Saving the data from an original imzml or a new “dataset” (defined in 6) in a csv file, which contains the intensity of all pixels of interest, the “main mask” and “small mask” of each pixel, etc.
-   % 
-   % The requirements to run this script successfully are:
-   % - The most recent version of SpectralAnalysis available at https://github.com/AlanRace/SpectralAnalysis added to the Matlab path.
-   % - The most recent version of “adhoc-data-processing-pipeline” available at https://github.com/NICE-MSI/adhoc-data-processing-pipeline added to the Matlab path.
-   % - The location of (i.e. the path to) the SpectralAnalysis pre-processing file (extension “.sap”) to be used. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The parameters of the pre-processing need to be adequate to the data. The pre-processing file can be edited in Matlab.
-   % - The location of (i.e. the path to) the imzML and ibd data files, which have to be saved in modality and polarity specific folders.
-   % - An excel file named “inputs_file” saved in the folder that contains the imzml and ibd data files. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The inputs file needs to be adjusted to the particular requirements of the analysis, dataset, study goal, etc.
+- pixels_num
+
+MATLAB matrix that contains the total number of pixels in the mask used. This is later used to compute the mean spectrum.
+
+All output variables are saved for each imzML file of interest (listed in filesToProcess) and mask, in a folder called 'spectra details'. The folder 'spectra details' is one of the key folders within the outputs folder. Please note that the name of the outputs folder is specified by you in the 'inputs file'.
+
+#### Step 2. Peak detection and characterisation
+
+Function name
+
+Input variables
+
+Output variables
+
+
+
+Matching of the peaks detected in the representative spectrum against HMDB and/or a group of lists of molecules of interest defined by the user
+
+matched against HMDB and a group of lists of molecules of interest defined by the user.
+
+
+
+% 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation structure) for each imzml of interest (using SpectralAnalysis functions)
+% 5	Creating and saving a data matrix for each normalisation algorithm of interest
+% 6	Working with a new “dataset” which is defined as the combination the original imzmls files. This step involves the specification of the groups of original imzmls files that need to be combined, of which masks (defined in 10) are to be used to reduce each original imzml file to a smaller group of pixels of interest, the geometric position of each small group of pixels of interest in the new “dataset” (its position in a 2D grid that will contain all the groups of pixels of interest from all the imzmls combined)
+% 7	Saving single ion images for:
+% 7.1	One or more lists of molecules of interest defined by the user
+% 7.2	One or more superclass, class, or subclass of molecules (as defined by HMDB)
+% 7.3	A lists of m/z values
+% 8	Running PCA, NMF, k-means, t-SNE, NN-SNE using:
+% 8.1	N most intense peaks detected in the representative spectrum
+% 8.2	Percentile P of all peaks detected in the representative spectrum
+% 8.3	One or more lists of molecules of interest defined by the user
+% 8.4	One or more superclass, class, or subclass of molecules (as defined by HMDB)
+% 8.5	A lists of m/z values
+% 9	Saving pictures (matlab figures and pngs) with the main outputs of PCA, NMF, k-means, t-SNE, NN-SNE (e.g.: principal components, representative spectra, single ion images of top drivers, cluster maps)
+% 10	Saving user defined masks for regions of interest (SpectralAnalysis RegionsOfInterest structure), by combining the results of k-means (intersected or united) with regions of the image manually defined by the user (using Matlab).
+% 11	Running the univariate analyses: t-test, ranksum test, and ROC analysis, which relate the (mean) ion intensities of user defined groups of regions of interest (defined in 10)
+% 12	Running ANOVAs to define groups of ions that relate to particular “conditions” such as acquisition date, glass slide number, sample ID, tissue type, etc. Each “condition” has to be defined as a combination of regions of interest (defined in 10)
+% 13	Discarding groups of ions defined using the ANOVA results (12) before running any of the multivariate analyses describe in 8.
+% 14	Saving the k-means, t-SNE or NN-t-SNE clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest structure). These regions of interest can be used in any subsequent analyses together with or in place of those defined in 10.
+% 15	Saving the data from an original imzml or a new “dataset” (defined in 6) in a csv file, which contains the intensity of all pixels of interest, the “main mask” and “small mask” of each pixel, etc.
+% 
+% The requirements to run this script successfully are:
+% - The most recent version of SpectralAnalysis available at https://github.com/AlanRace/SpectralAnalysis added to the Matlab path.
+% - The most recent version of “adhoc-data-processing-pipeline” available at https://github.com/NICE-MSI/adhoc-data-processing-pipeline added to the Matlab path.
+% - The location of (i.e. the path to) the SpectralAnalysis pre-processing file (extension “.sap”) to be used. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The parameters of the pre-processing need to be adequate to the data. The pre-processing file can be edited in Matlab.
+% - The location of (i.e. the path to) the imzML and ibd data files, which have to be saved in modality and polarity specific folders.
+% - An excel file named “inputs_file” saved in the folder that contains the imzml and ibd data files. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The inputs file needs to be adjusted to the particular requirements of the analysis, dataset, study goal, etc.
 
 
 
