@@ -64,7 +64,7 @@ roi.addPixels(roi_mask)
 
 figure(3000);
 imagesc(roi.pixelSelection); axis image
-colormap gray; title({'Final roi!'})
+colormap gray; title({['Final ', char(output_mask), ' mask!']})
 
 mkdir([ rois_path filesToProcess(file_index).name(1,1:end-6) '\' char(output_mask) '\'])
 cd([ rois_path filesToProcess(file_index).name(1,1:end-6) '\' char(output_mask) '\'])
@@ -80,7 +80,7 @@ if isequal(output_mask,"tissue only")
     
     figure(4000);
     imagesc(roi.pixelSelection); axis image
-    colormap gray; title({'Final roi!'})
+    colormap gray; title({'Final background mask!'})
     
     mkdir([ rois_path filesToProcess(file_index).name(1,1:end-6) '\background\'])
     cd([ rois_path filesToProcess(file_index).name(1,1:end-6) '\background\'])
