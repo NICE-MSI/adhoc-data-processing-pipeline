@@ -158,7 +158,7 @@ f_saving_sii( filesToProcess, "no mask", mask_on, norm_list, sii_peak_list );
 
 % Step 1 - Please update the variable "file_index" to match the file you need to work from.
 
-file_index = 2; disp(filesToProcess(file_index).name);
+file_index = 1; disp(filesToProcess(file_index).name);
 
 % Step 2 - Please define the name of the new mask.
 
@@ -166,17 +166,17 @@ output_mask = "tissue only"; % Name for the new mask.
 
 % Step 3 - Please update all variables bellow to match the MVA results you want to use to define the new masks.
 
-mva_reference   = "100 highest peaks";
+mva_reference   = "500 highest peaks";
 input_mask      = "no mask";
-numComponents   = 4;
+numComponents   = 2;
 mva_type        = "kmeans";
 norm_type       = "no norm";
-vector_set      = [ 1 ]; % Please list here the ids of the clusters that you want to "add" to create the new mask. For example, for "tissue only", list all clusters that overlap with the tissue.
+vector_set      = [ 2 ]; % Please list here the ids of the clusters that you want to "add" to create the new mask. For example, for "tissue only", list all clusters that overlap with the tissue.
 
 % Step 4 - Please update the number of times you would like to have to define particular regions/areas to keep, and/or to fill.
 
-regionsNum2keep = 1; % to keep
-regionsNum2fill = 1; % to fill
+regionsNum2keep = 0; % to keep
+regionsNum2fill = 0; % to fill
 
 f_mask_creation( filesToProcess(file_index), input_mask, [], mva_type, mva_reference, numComponents, norm_type, vector_set, regionsNum2keep, regionsNum2fill, output_mask ) % new mask creation
 
