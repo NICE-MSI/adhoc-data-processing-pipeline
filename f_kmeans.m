@@ -1,10 +1,12 @@
 function [ idx, C, optimal_numComponents, evaluation ] = f_kmeans( data, numComponents, distance_metric )
     
-pool = parpool; % Invokes workers
-stream = RandStream('mlfg6331_64'); % Random number stream
-options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);
+% pool = parpool; % Invokes workers
+% stream = RandStream('mlfg6331_64'); % Random number stream
+% options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);
+% 
+% myfunc = @(X,K)(kmeans(X, K, 'Distance', distance_metric, 'MaxIter', 10000, 'Replicates', 5, 'Options', options, 'emptyaction', 'singleton', 'Display', 'final'));
 
-myfunc = @(X,K)(kmeans(X, K, 'Distance', distance_metric, 'MaxIter', 10000, 'Replicates', 5, 'Options', options, 'emptyaction', 'singleton', 'Display', 'final'));
+myfunc = @(X,K)(kmeans(X, K, 'Distance', distance_metric, 'MaxIter', 10000, 'Replicates', 5, 'emptyaction', 'singleton', 'Display', 'final'));
 
 if ~isnan(numComponents)
     

@@ -1,12 +1,12 @@
 
 function eva = f_select_k_kmeans(data, max_clusters_num, distance_metric)
 
-stream = RandStream('mlfg6331_64');  % Random number stream
-options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);
+% stream = RandStream('mlfg6331_64');  % Random number stream
+% options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);
 
-% tic
+% myfunc = @(X,K)(kmeans(X, K, 'Distance', distance_metric, 'MaxIter', 10000, 'Replicates', 5, 'Options', options, 'emptyaction', 'drop', 'Display', 'final'));
 
-myfunc = @(X,K)(kmeans(X, K, 'Distance', distance_metric, 'MaxIter', 10000, 'Replicates', 5, 'Options', options, 'emptyaction', 'drop', 'Display', 'final'));
+myfunc = @(X,K)(kmeans(X, K, 'Distance', distance_metric, 'MaxIter', 10000, 'Replicates', 5, 'emptyaction', 'drop', 'Display', 'final'));
 
 disp(['! Running k-means Clustering for k=1,2,...,' num2str(max_clusters_num) ' in search of optimal k...'])
 

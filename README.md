@@ -1,22 +1,117 @@
 # adhoc data processing pipeline
 
-Semi-automated data processing pipeline developped by Teresa.
+Semi-automated data processing pipeline developed by Teresa Murta.
 
-This documentation is organised as follows:
-* The inputs file  
+This documentation is organized as follows:
+
+- Pipeline structure
+
+  General description of the pipeline
+
+- Requirements
+
+  Describes the software and files required to run the pipeline
+
+- The inputs file  
   Describes how this workflow receives its inputs and how to to prepare your own inputs
-* The master script  
+- The master script  
   Describes how to run this workflow after you prepared your input
-* Generated files structure  
-  describes the output you will obtain from running this workflow
-* File structure  
-  describes the content of this repository that was not approached earlier. This section is of interest if you want ot modify the workflow yourself
-* TODO  
-  description of the upcoming modfications for this workflow with variable priority
+- Generated files structure  
+  Describes the output you will obtain from running this workflow
+- File structure  
+  Describes the content of this repository that was not approached earlier. This section is of interest if you want  modify the workflow yourself
+- TODO  
+  Description of the upcoming modifications for this workflow with variable priority
 
-Please, notice that this repository containsa folder called `documentation`, containing the file `workflow_outlide.pptx`.
-This file is a powerpoint presentation, describing this workflow under the form of a flowchart.
+Please, notice that this repository contains a folder called `documentation`, containing the file `workflow_outlide.pptx`.
+This file is a PowerPoint presentation, describing this workflow under the form of a flowchart.
 It is probably the most convenient approach to get a first idea of how this script works before getting in depth.
+
+## Pipeline structure
+
+This is a modular, sequential Mass Spectrometry Data (MSI) analysis pipeline. It can be used to perform the following steps:
+
+#### Step 1. Data pre-processing
+
+##### Function name
+
+- f_saving_spectra_details
+
+##### Input variables
+
+- filesToProcess
+
+  MATLAB struct that contains the complete paths to all data files of interest. This struct is created using the MATLAB function 'dir'. and the path to the folder where all imzML and ibd files of interest are stored. MSI data needs to contain the continuum spectra or the total counts for each centroid.
+
+- preprocessing_file
+
+  MATLAB string that represents the path to the SpectralAnalysis pre-processing file (a .sap file).
+
+- mask	
+
+  MATLAB string that represents the name of the mask of interest (e.g. 'no mask' (often the first one to be used as it will simply include all pixels), 'tissue only', 'tumour') 
+
+##### Output variables
+
+- totalSpectrum_intensities
+
+MATLAB matrix that contains the total spectrum intensities. 
+
+- totalSpectrum_mzvalues
+
+MATLAB matrix that contains the total spectrum m/z values (related to totalSpectrum_intensities).
+
+- pixels_num
+
+MATLAB matrix that contains the total number of pixels in the mask used. This is later used to compute the mean spectrum.
+
+All output variables are saved for each imzML file of interest (listed in filesToProcess) and mask, in a folder called 'spectra details'. The folder 'spectra details' is one of the key folders within the outputs folder. Please note that the name of the outputs folder is specified by you in the 'inputs file'.
+
+#### Step 2. Peak detection and characterisation
+
+Function name
+
+Input variables
+
+Output variables
+
+
+
+Matching of the peaks detected in the representative spectrum against HMDB and/or a group of lists of molecules of interest defined by the user
+
+matched against HMDB and a group of lists of molecules of interest defined by the user.
+
+
+
+% 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation structure) for each imzml of interest (using SpectralAnalysis functions)
+% 5	Creating and saving a data matrix for each normalisation algorithm of interest
+% 6	Working with a new “dataset” which is defined as the combination the original imzmls files. This step involves the specification of the groups of original imzmls files that need to be combined, of which masks (defined in 10) are to be used to reduce each original imzml file to a smaller group of pixels of interest, the geometric position of each small group of pixels of interest in the new “dataset” (its position in a 2D grid that will contain all the groups of pixels of interest from all the imzmls combined)
+% 7	Saving single ion images for:
+% 7.1	One or more lists of molecules of interest defined by the user
+% 7.2	One or more superclass, class, or subclass of molecules (as defined by HMDB)
+% 7.3	A lists of m/z values
+% 8	Running PCA, NMF, k-means, t-SNE, NN-SNE using:
+% 8.1	N most intense peaks detected in the representative spectrum
+% 8.2	Percentile P of all peaks detected in the representative spectrum
+% 8.3	One or more lists of molecules of interest defined by the user
+% 8.4	One or more superclass, class, or subclass of molecules (as defined by HMDB)
+% 8.5	A lists of m/z values
+% 9	Saving pictures (matlab figures and pngs) with the main outputs of PCA, NMF, k-means, t-SNE, NN-SNE (e.g.: principal components, representative spectra, single ion images of top drivers, cluster maps)
+% 10	Saving user defined masks for regions of interest (SpectralAnalysis RegionsOfInterest structure), by combining the results of k-means (intersected or united) with regions of the image manually defined by the user (using Matlab).
+% 11	Running the univariate analyses: t-test, ranksum test, and ROC analysis, which relate the (mean) ion intensities of user defined groups of regions of interest (defined in 10)
+% 12	Running ANOVAs to define groups of ions that relate to particular “conditions” such as acquisition date, glass slide number, sample ID, tissue type, etc. Each “condition” has to be defined as a combination of regions of interest (defined in 10)
+% 13	Discarding groups of ions defined using the ANOVA results (12) before running any of the multivariate analyses describe in 8.
+% 14	Saving the k-means, t-SNE or NN-t-SNE clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest structure). These regions of interest can be used in any subsequent analyses together with or in place of those defined in 10.
+% 15	Saving the data from an original imzml or a new “dataset” (defined in 6) in a csv file, which contains the intensity of all pixels of interest, the “main mask” and “small mask” of each pixel, etc.
+% 
+% The requirements to run this script successfully are:
+% - The most recent version of SpectralAnalysis available at https://github.com/AlanRace/SpectralAnalysis added to the Matlab path.
+% - The most recent version of “adhoc-data-processing-pipeline” available at https://github.com/NICE-MSI/adhoc-data-processing-pipeline added to the Matlab path.
+% - The location of (i.e. the path to) the SpectralAnalysis pre-processing file (extension “.sap”) to be used. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The parameters of the pre-processing need to be adequate to the data. The pre-processing file can be edited in Matlab.
+% - The location of (i.e. the path to) the imzML and ibd data files, which have to be saved in modality and polarity specific folders.
+% - An excel file named “inputs_file” saved in the folder that contains the imzml and ibd data files. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The inputs file needs to be adjusted to the particular requirements of the analysis, dataset, study goal, etc.
+
+
 
 ## The inputs file
 
@@ -252,122 +347,12 @@ On the other hand the `.mat` files containing functions scripts will receive a w
    - `workflow_outline.pptx` 
      see introduction of this documentation
  * `master script`
-   - `Ontologies`  
-     the content of this folder is an artifact of spectral analysis and should be ignored, until these files are removed from this repository
-      + `imagingMS.obo`
-      + `pato.obo`
-      + `psi-ms.obo`
-      + `uo.obo`
+
    - `s_adhoc_data_processing_master.m`  
      see the section `The master script` of this documentation
-   
+
  * `molecule-lists`
-   - `matrix-coating`
-      + `30k_B_ratio th1.xlsx`
-      + `30k_B_ratio th3.xlsx`
-      + `30k_B_ratio th10.xlsx`
-      + `30k_S&B_ratio th1.xlsx`
-      + `30k_S&B_ratio th3.xlsx`
-      + `30k_S&B_ratio th10.xlsx`
-      + `30k_S&T&B_ratio th1.xlsx`
-      + `30k_S&T&B_ratio th3.xlsx`
-      + `30k_S&T&B_ratio th10.xlsx`
-      + `30k_S&T_ratio th1.xlsx`
-      + `30k_S&T_ratio th3.xlsx`
-      + `30k_S&T_ratio th10.xlsx`
-      + `30k_S_ratio th1.xlsx`
-      + `30k_S_ratio th3.xlsx`
-      + `30k_S_ratio th10.xlsx`
-      + `30k_T&B_ratio th1.xlsx`
-      + `30k_T&B_ratio th3.xlsx`
-      + `30k_T&B_ratio th10.xlsx`
-      + `30k_T_ratio th1.xlsx`
-      + `30k_T_ratio th3.xlsx`
-      + `30k_T_ratio th10.xlsx`
-      + `60k_dhap_B_&_no_matrix_ratio th1.xlsx`
-      + `60k_dhap_B_&_no_matrix_ratio th3.xlsx`
-      + `60k_dhap_B_&_no_matrix_ratio th10.xlsx`
-      + `60k_dhap_B_ratio th1.xlsx`
-      + `60k_dhap_B_ratio th3.xlsx`
-      + `60k_dhap_B_ratio th10.xlsx`
-      + `60k_dhap_T_&_dhap_B_&_no_matrix_ratio th1.xlsx`
-      + `60k_dhap_T_&_dhap_B_&_no_matrix_ratio th3.xlsx`
-      + `60k_dhap_T_&_dhap_B_&_no_matrix_ratio th10.xlsx`
-      + `60k_dhap_T_&_dhap_B_ratio th1.xlsx`
-      + `60k_dhap_T_&_dhap_B_ratio th3.xlsx`
-      + `60k_dhap_T_&_dhap_B_ratio th10.xlsx`
-      + `60k_dhap_T_&_no_matrix_ratio th1.xlsx`
-      + `60k_dhap_T_&_no_matrix_ratio th3.xlsx`
-      + `60k_dhap_T_&_no_matrix_ratio th10.xlsx`
-      + `60k_dhap_T_ratio th1.xlsx`
-      + `60k_dhap_T_ratio th3.xlsx`
-      + `60k_dhap_T_ratio th10.xlsx`
-      + `60k_dhb_B_ratio th1.xlsx`
-      + `60k_dhb_B_ratio th3.xlsx`
-      + `60k_dhb_B_ratio th10.xlsx`
-      + `60k_dhb_S&B_ratio th1.xlsx`
-      + `60k_dhb_S&B_ratio th3.xlsx`
-      + `60k_dhb_S&B_ratio th10.xlsx`
-      + `60k_dhb_S&T&B_ratio th1.xlsx`
-      + `60k_dhb_S&T&B_ratio th3.xlsx`
-      + `60k_dhb_S&T&B_ratio th10.xlsx`
-      + `60k_dhb_S&T_ratio th1.xlsx`
-      + `60k_dhb_S&T_ratio th3.xlsx`
-      + `60k_dhb_S&T_ratio th10.xlsx`
-      + `60k_dhb_S_ratio th1.xlsx`
-      + `60k_dhb_S_ratio th3.xlsx`
-      + `60k_dhb_S_ratio th10.xlsx`
-      + `60k_dhb_T&B_ratio th1.xlsx`
-      + `60k_dhb_T&B_ratio th3.xlsx`
-      + `60k_dhb_T&B_ratio th10.xlsx`
-      + `60k_dhb_T_ratio th1.xlsx`
-      + `60k_dhb_T_ratio th3.xlsx`
-      + `60k_dhb_T_ratio th10.xlsx`
-      + `60k_no_matrix_ratio th1.xlsx`
-      + `60k_no_matrix_ratio th3.xlsx`
-      + `60k_no_matrix_ratio th10.xlsx`
-      + `120k_dhap_B_&_dhap_S_ratio th1.xlsx`
-      + `120k_dhap_B_&_dhap_S_ratio th3.xlsx`
-      + `120k_dhap_B_&_dhap_S_ratio th10.xlsx`
-      + `120k_dhap_B_ratio th1.xlsx`
-      + `120k_dhap_B_ratio th3.xlsx`
-      + `120k_dhap_B_ratio th10.xlsx`
-      + `120k_dhap_S_ratio th1.xlsx`
-      + `120k_dhap_S_ratio th3.xlsx`
-      + `120k_dhap_S_ratio th10.xlsx`
-      + `120k_dhap_T_&_dhap_B_&_dhap_S_ratio th1.xlsx`
-      + `120k_dhap_T_&_dhap_B_&_dhap_S_ratio th3.xlsx`
-      + `120k_dhap_T_&_dhap_B_&_dhap_S_ratio th10.xlsx`
-      + `120k_dhap_T_&_dhap_B_ratio th1.xlsx`
-      + `120k_dhap_T_&_dhap_B_ratio th3.xlsx`
-      + `120k_dhap_T_&_dhap_B_ratio th10.xlsx`
-      + `120k_dhap_T_&_dhap_S_ratio th1.xlsx`
-      + `120k_dhap_T_&_dhap_S_ratio th3.xlsx`
-      + `120k_dhap_T_&_dhap_S_ratio th10.xlsx`
-      + `120k_dhap_T_ratio th1.xlsx`
-      + `120k_dhap_T_ratio th3.xlsx`
-      + `120k_dhap_T_ratio th10.xlsx`
-      + `study2_dhap_B_&_dhap_S_ratio th1.xlsx`
-      + `study2_dhap_B_&_dhap_S_ratio th3.xlsx`
-      + `study2_dhap_B_&_dhap_S_ratio th10.xlsx`
-      + `study2_dhap_B_ratio th1.xlsx`
-      + `study2_dhap_B_ratio th3.xlsx`
-      + `study2_dhap_B_ratio th10.xlsx`
-      + `study2_dhap_S_ratio th1.xlsx`
-      + `study2_dhap_S_ratio th3.xlsx`
-      + `study2_dhap_S_ratio th10.xlsx`
-      + `study2_dhap_T_&_dhap_B_&_dhap_S_ratio th1.xlsx`
-      + `study2_dhap_T_&_dhap_B_&_dhap_S_ratio th3.xlsx`
-      + `study2_dhap_T_&_dhap_B_&_dhap_S_ratio th10.xlsx`
-      + `study2_dhap_T_&_dhap_B_ratio th1.xlsx`
-      + `study2_dhap_T_&_dhap_B_ratio th3.xlsx`
-      + `study2_dhap_T_&_dhap_B_ratio th10.xlsx`
-      + `study2_dhap_T_&_dhap_S_ratio th1.xlsx`
-      + `study2_dhap_T_&_dhap_S_ratio th3.xlsx`
-      + `study2_dhap_T_&_dhap_S_ratio th10.xlsx`
-      + `study2_dhap_T_ratio th1.xlsx`
-      + `study2_dhap_T_ratio th3.xlsx`
-      + `study2_dhap_T_ratio th10.xlsx`
+
    - `1_GdDota.xlsx`
    - `3_slc7a5_ratios.xlsx`
    - `4_pdac_drugs.xlsx`
@@ -708,7 +693,7 @@ On the other hand the `.mat` files containing functions scripts will receive a w
             - `pixels_num.mat`
             - `totalSpectrum_intensities.mat`
             - `totalSpectrum_mzvalues.mat` 
-         
+    
  * `f_saving_t_tests.m`  
     + __Inputs__:  
     + __Outputs__:
@@ -724,5 +709,5 @@ On the other hand the `.mat` files containing functions scripts will receive a w
  * `f_zscore_norm.m`  
     + __Inputs__:  
     + __Outputs__:
-   
+
 ## TODO
