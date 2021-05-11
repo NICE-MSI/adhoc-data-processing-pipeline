@@ -93,8 +93,8 @@ for main_mask = main_mask_list
         mean_col_names = [];
         median_col_names = [];
         for wayi = 1:length(anova.labels)
-            mean_col_names = [ mean_col_names, string([ 'p value for ' anova.labels{wayi} ' effect (mean)' ]) ];
-            median_col_names = [ median_col_names, string([ 'p value for ' anova.labels{wayi} ' effect (median)' ]) ];
+            mean_col_names = [ mean_col_names, string([ 'p value for ' anova.labels{wayi} ' effect (mean)' ]), string([ 'F value for ' anova.labels{wayi} ' effect (mean)' ]) ];
+            median_col_names = [ median_col_names, string([ 'p value for ' anova.labels{wayi} ' effect (median)' ]), string([ 'F value for ' anova.labels{wayi} ' effect (median)' ]) ];
         end
         
         anova_analysis_table = [ ...
@@ -115,14 +115,22 @@ for main_mask = main_mask_list
             
             if sum(~isnan(mean_d))>0
                 
-                [ mean_p, ~, ~, ~ ] = anovan(mean_d, anova.effects, 'display','off');
-                [ median_p, ~, ~, ~ ] = anovan(median_d, anova.effects, 'display','off');
+                [ mean_p, mean_tbl, ~, ~ ] = anovan(mean_d, anova.effects, 'display','off');
+                [ median_p, median_tbl, ~, ~ ] = anovan(median_d, anova.effects, 'display','off');
+                
+                mean_F = NaN*mean_p; for tbli = 2:(size(mean_tbl,1)-2); mean_F(tbli-1,1) = mean_tbl{tbli,6}; end
+                median_F = NaN*median_p; for tbli = 2:(size(median_tbl,1)-2); median_F(tbli-1,1) = median_tbl{tbli,6}; end
+                
+                % [ median_p, tbl, stats, terms ] = anovan(median_d, anova.effects, 'display','off')
                 
                 indexes2add = (abs(datacubeonly_peakDetails(mzi,2)-double(new_hmdb_sample_info(:,3))) < 1e-10);
                 
                 if sum(indexes2add) >= 1
                     
-                    aux_row = string(repmat([ mean_p', mean_d, median_p', median_d ], sum(indexes2add), 1));
+                    mean_aux = reshape([ mean_p mean_F ]',[],1)';
+                    median_aux = reshape([ median_p median_F ]',[],1)';
+                    
+                    aux_row = string(repmat([ mean_aux, mean_d, median_aux, median_d ], sum(indexes2add), 1));
                     aux_row(ismissing(aux_row)) = "NaN";
                     
                     anova_analysis_table = [
@@ -132,7 +140,7 @@ for main_mask = main_mask_list
                     
                 else
                     
-                    aux_row = string(repmat([ mean_p', mean_d, median_p', median_d, datacubeonly_peakDetails(mzi,2)], 1, 1));
+                    aux_row = string(repmat([ mean_aux, mean_d, median_aux, median_d, datacubeonly_peakDetails(mzi,2)], 1, 1));
                     aux_row(ismissing(aux_row)) = "NaN";
                     
                     anova_analysis_table = [
