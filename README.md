@@ -33,11 +33,11 @@ This is a modular, sequential Mass Spectrometry Data (MSI) analysis pipeline. It
 
 #### Step 1. Data pre-processing
 
-##### Function name
+##### Function
 
 - f_saving_spectra_details
 
-##### Input variables
+##### Inputs
 
 - filesToProcess
 
@@ -51,7 +51,7 @@ This is a modular, sequential Mass Spectrometry Data (MSI) analysis pipeline. It
 
   MATLAB string that represents the name of the mask of interest (e.g. 'no mask' (often the first one to be used as it will simply include all pixels), 'tissue only', 'tumour') 
 
-##### Output variables
+##### Outputs
 
 - totalSpectrum_intensities
 
@@ -256,13 +256,13 @@ After running the master script, the output folder you have indicated will conta
         - `theo mz`: theoretical mass to charge ratio of the ion assuming all atoms are present under their most stable isotopic form
         - `adduct`: adduct for of the ion
         - `meas mz`: measured mass to charge ratio (location of the peak)
-        - `abs ppm`: absolute (unsigned) measurement error in particule per million (assuming the assignment is right)
-        - `total counts`: total intensity of this peak accross the dataset
+        - `abs ppm`: absolute (unsigned) measurement error in particle per million (assuming the assignment is right)
+        - `total counts`: total intensity of this peak across the dataset
         - `database`: database where the molecule was referenced
-        - `ppm`: signed measurement error in particule per million (assuming the assignment is right)
+        - `ppm`: signed measurement error in particle per million (assuming the assignment is right)
         - `modality`: instrument used for the experiment
-        - `polarity`: polarity of the analyser used for the experiment
-        - `mean counts`: mean count of the peak accross the dataset
+        - `polarity`: polarity of the analyzer used for the experiment
+        - `mean counts`: mean count of the peak across the dataset
         - `monoisotopic mass`: theoretical mass of the molecule assuming all atoms are present under their most stable isotopic form
       * `database1_sample_info.mat`
       * ...
@@ -508,8 +508,8 @@ On the other hand the `.mat` files containing functions scripts will receive a w
      + __Inputs__:
        - `csv_inputs`: the absolute address of the csv giving inputs for the master script
      + __Outputs__:
-       -  `modality`: `str` instrument used for aquisition (DESI, MALDI, REIMS, or SIMS)
-       - `polarity`: `str` polarity of aquisition, (positive of negative)
+       -  `modality`: `str` instrument used for acquisition (DESI, MALDI, REIMS, or SIMS)
+       - `polarity`: `str` polarity of acquisition, (positive of negative)
        - `adducts_list`: 
        - `mva_list`: 
        - `amplratio4mva_array`: `num OR NULL` signal to noise ratio threshold for peak picking
