@@ -10,8 +10,11 @@ function datacubeonly_peakDetails = f_peakdetails4datacube( sample_info, amplrat
 % -- top N peaks
 % -- top peaks whose intensities are part of X percentile
 % - beloging to a kingdom, superclass, class or subclass of molecules
-
-%
+% 
+% Outputs:
+% datacubeonly_peakDetails - a shorter peakDetails mat file that contains
+% the list of all the peaks that will need to be saved in the datacube for
+% future use (the sii for these will be generated)
 
 % Select the mz values of the molecules that belonging to the relevant lists (within a given ppm error).
 
