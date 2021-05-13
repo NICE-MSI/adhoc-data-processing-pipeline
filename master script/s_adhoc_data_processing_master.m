@@ -1,7 +1,7 @@
 % Script originally written and currently maintained by Teresa Murta.
 
 % This script contains a modular mass spectrometry data analysis pipeline, and it can be used to perform the following steps:
-% 1	DESI, MALSI, SIMS or REIMS data pre-processing (using SpectralAnalysis functions)
+% 1	DESI, MALDI, SIMS or REIMS data pre-processing (using SpectralAnalysis functions)
 % 2	Peak detection on a representative spectrum (using SpectralAnalysis functions)
 % 3	Matching of the peaks detected in the representative spectrum against HMDB and/or a group of lists of molecules of interest defined by the user
 % 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation structure) for each imzml of interest (using SpectralAnalysis functions)
@@ -36,7 +36,7 @@
 
 % Please save a copy of this file in a location of your choice.
 
-% I recomment you to save a master script for each study. You will be 
+% I recommend you to save a master script for each study. You will be 
 % able to call different modalites and polarities, but the bulk of the 
 % analysis is likely to be consitent across these data and specific to 
 % the study.
@@ -45,6 +45,7 @@
 
 % SpectralAnalysis git repository can be dowloaded / cloned from https://github.com/AlanRace/SpectralAnalysis
 % adhoc-data-processing-pipeline git repository can be dowloaded / cloned from https://github.com/NICE-MSI/adhoc-data-processing-pipeline"
+
 sa_path = '...'; % path to SpectralAnalysis folder
 sdpp_path = '...'; % path to adhoc-data-processing-pipeline
 
@@ -67,7 +68,8 @@ dataset_name_portion = {
     %'...',...
     };
 
-% ! Please don't modify the code from here till end of this cell.
+
+% !!! Please don't modify the code from here till end of this cell. !!!
 
 filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} filesep dataset_name_portion{i} '.imzML']) ]; end % Files and adducts information gathering
 
@@ -95,19 +97,28 @@ filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToP
 
 preprocessing_file = 'X:\Beatson\pos DESI AZ data\preprocessingWorkflow4AZpeakPickedData.sap';
 
-%% Data Pre-Processing (for each imzML individually)
+%% Data Pre-Processing for each imzML individually
 
-% Please specify the name of the mask that should be used to run all the
-% processing. This is also called the "main mask".
+% Please specify the name of the mask that should be used. This is also 
+% called the "main mask".
 
 mask = "no mask"; % if mask = "no mask", all pixels will be processed
 
-% Please specify which normalisation will be required. Use "no norm" to 
-% avoid normalisation.
+% Please specify the normalisation(s) that you would like to use.
+%
+% Options:
+% - "no norm" (no normalisation)
+% - "tic" (total ion count per pixel)
+% - "sims tic" (total ion count for the entire dataset) 
+% - "RMS" (root mean square) 
+% - "pqn mean"
+% - "pqn median"
+% - "zscore" (z-scoring of each pixel) 
 
-norm_list = "no norm";
+norm_list = [ "no norm", "RMS" ];
 
-% ! Please don't modify the code from here till end of this cell.
+
+% !!! Please don't modify the code from here till end of this cell. !!!
 
 % Pre-processing data and saving total spectra
 
@@ -135,21 +146,25 @@ f_saving_datacube( filesToProcess, mask )
 
 f_saving_normalised_data( filesToProcess, mask, norm_list )
 
-%% Multivariate Analysis (for each imzML individually) (MVAs)
+%% Multivariate Analysis (MVAs) for each imzML individually
 
 % Please make sure you specify which multivariate analysis to run in 
-% "inputs_file.xlsx".
+% "inputs_file.xlsx". As it is, these 2 function will run and save the
+% outputs of the MVAs using the top N peals specified in the 
+% "inputs_file.xlsx" but they can be used to run MVAs using a specific list
+% of peaks - please check the info at the start of these functions.
 
-% ! Please don't modify the code from here till end of this cell.
+
+% !!! Please don't modify the code from here till end of this cell. !!!
 
 f_running_mva( filesToProcess, mask, norm_list ) % running MVAs with the top N peaks (N is specified in "inputs_file.xlsx")
 
 f_saving_mva_outputs( filesToProcess, mask, 0, norm_list ); % saving outputs of MVAs ran with top N peaks (N is specified in "inputs_file.xlsx")
 
-%% Saving single ion images (SIIs)
+%% Saving single ion images (SIIs) for each imzML individually
 
-mask_on = 0; % 1 or 0 depending on either the sii are to be masked with the main mask or not.
-sii_peak_list = "all"; % "all" (to save all lists); an array of lists; an array of hmdb classes or subclasses; an array of m/z values (less then 1e-10 apart from those saved in the datacube).
+mask_on = 0; % Specify 1 or 0 depending on either the sii are to be masked with the main mask or not.
+sii_peak_list = "all"; % "all" (to save all lists), an array of lists, or n array of hmdb classes or subclasses, or an array of m/z values (less then 1e-10 apart from those saved in the datacube).
 norm_list = "no norm";
 
 f_saving_sii( filesToProcess, "no mask", mask_on, norm_list, sii_peak_list );
