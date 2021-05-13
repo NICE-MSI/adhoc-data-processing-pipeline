@@ -73,8 +73,10 @@ for file_index = 1:length(filesToProcess)
             pixels_num = sum(sum(roi.pixelSelection));
             
         end
+        
+        % Computing total spectrum
                 
-        totalSpectrum = spectrumGeneration.process(data); % computing total spectrum
+        totalSpectrum = spectrumGeneration.process(data);
         totalSpectrum = totalSpectrum.get(1);
         
         totalSpectrum_mzvalues      = totalSpectrum.spectralChannels;
