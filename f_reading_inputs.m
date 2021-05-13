@@ -17,20 +17,43 @@ function [ ...
     fig_ppm, ...
     outputs_path ...
     ] = f_reading_inputs(csv_inputs)
-%%
 
-% Hello!
+% This function reads the "inputs_file.xlsx" and outputs agroup of
+% variables that will be used across the entire dataprocessing pipeline.
+%
+% Inputs: 
+% csv_inputs - complete path to "inputs_file.xlsx"
+%
+% Outputs:
+% modality - e.g. MALSI, DESI
+% polarity - e.g. positive, negative (key to define the adducts)
+% adducts_list - list of adducts to use for assigments
+% mva_list - list of MVAs to run
+% numPeaks4mva_array - list of the top numbers of peaks to keep
+% numComponents_array - list of the number os components (e.g. cluster
+% number, PCs number, factor number)
+% numLoadings_array - list of the number so loading to save outputs for
+% mva_molecules_lists_csv_list - list of the complete paths to the file
+% that contain each list of molecules of interest
+% mva_molecules_lists_label_list - list of the names of the lists of 
+% molecules of interest
+% mva_max_ppm - maximum ppm for the assigments
+% pa_molecules_lists_csv_list - list of the complete paths to the file
+% that contain each list of molecules of interest
+% pa_molecules_lists_label_list - list of the names of the lists of 
+% molecules of interest
+% pa_max_ppm - maximum ppm for the assigments
+% fig_ppm - ppm error  that is highlighted by 2 vertical lines in the
+% picture
+% outputs_path - complete path to where all the outputs will be saved
 
-%%
 
 [ ~, ~, inputs_info ] = xlsread(csv_inputs);
 
 inputs_info_reshaped = string(reshape(inputs_info',[],1));
 inputs_info_reshaped(ismissing(inputs_info_reshaped)) = [];
 
-% General informations about the dataset
 gen_info = 0;
-% informations about the multivariate analysis to perform
 mva_info = 0;
 
 peak_assign_info = 0;
@@ -56,13 +79,16 @@ pa_molecules_lists_label_list   = string([]);
 pa_max_ppm = [];
 fig_ppm = [];
 
+% Path to the folder where the lists of molecules of interest are saved
+
 metabolite_lists_path = "\\datasvr1\MALDI_AMBIENT_DATA\2020_Scripts for Data Processing\Git Repository (March 2020)\molecules-lists\";
 logical_list_path = 0;
 
 pa_molecules_lists_csv_list(1,1)    = strcat(metabolite_lists_path,"4_Reference_List.xlsx");
 pa_molecules_lists_label_list(1,1)  = "reference";
 
-% going through all the input
+% Goes through the inputs file to collect all the information
+
 for i = 1:length(inputs_info_reshaped)
     
     if peak_assign_info
@@ -91,13 +117,10 @@ for i = 1:length(inputs_info_reshaped)
     switch inputs_info_reshaped(i)
         % if it is general information
         case "General Information"
-            % assign get_info to 1
             gen_info = 1;
         case "Multivariate Analyses"
             mva_info = 1;
             adducts_info = 0;
-%             peak_assign_info = 0;
-%             logical_list_path = 0;
         case "Peak Assignments"
             peak_assign_info = 1;
             logical_list_path = 1;
@@ -130,16 +153,7 @@ for i = 1:length(inputs_info_reshaped)
                 aux_vector = str2num(char(inputs_info_reshaped(i+6))); % Percentile
                 perc4mva_array = [ perc4mva_array, aux_vector ];
                 if isempty(numPeaks4mva_array) && isempty(perc4mva_array); disp("Undefined number and percentile of highest intensity peaks!"); end
-            end
-%         case "Ratio of Amplitudes Threshold"
-%             if strcmpi(inputs_info_reshaped(i+2),"yes")
-%                 % Amplitudes ratio
-%                 aux_vector = str2num(char(inputs_info_reshaped(i+4)));
-%                 amplratio4mva_array = [ amplratio4mva_array, aux_vector ];
-%                 amplratio4mva = aux_vector(1);
-%                 if isnan(amplratio4mva); amplratio4mva_array = []; disp("Undefined amplitudes ration threshold!"); end
-%             end
-            
+            end            
         case "CRUK metabolites"
             list_path = strcat( metabolite_lists_path, "114_Metabolite_List.xlsx" );
         case "Beatson lipids"
@@ -292,7 +306,6 @@ for i = 1:length(inputs_info_reshaped)
             end
         case "k-means"
             if strcmpi(inputs_info_reshaped(i+2),"yes")
-                % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];
                 aux_vector = [ str2num(char(inputs_info_reshaped(i+4))) ];
                 mva_list = [ mva_list, repmat("kmeans",1,size(aux_vector,2)) ];
                 numComponents_array = [ numComponents_array, aux_vector ];
@@ -304,7 +317,6 @@ for i = 1:length(inputs_info_reshaped)
             end
         case "Hierarchical Clustering"
             if strcmpi(inputs_info_reshaped(i+2),"yes")
-                % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];
                 aux_vector = [ str2num(char(inputs_info_reshaped(i+4))) ];
                 mva_list = [ mva_list, repmat("hierarclustering",1,size(aux_vector,2)) ];
                 numComponents_array = [ numComponents_array, aux_vector ];
@@ -316,7 +328,6 @@ for i = 1:length(inputs_info_reshaped)
             end
         case "NN t-sne"
             if strcmpi(inputs_info_reshaped(i+2),"yes")
-                % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];
                 aux_vector = [ str2num(char(inputs_info_reshaped(i+4))) ];
                 mva_list = [ mva_list, repmat("nntsne",1,size(aux_vector,2)) ];
                 numComponents_array = [ numComponents_array, aux_vector ];
@@ -324,7 +335,6 @@ for i = 1:length(inputs_info_reshaped)
             end
         case "t-sne"
             if strcmpi(inputs_info_reshaped(i+2),"yes")
-                % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];
                 aux_vector = [ str2num(char(inputs_info_reshaped(i+4))) ];
                 mva_list = [ mva_list, repmat("tsne",1,size(aux_vector,2)) ];
                 numComponents_array = [ numComponents_array, aux_vector ];
@@ -332,7 +342,6 @@ for i = 1:length(inputs_info_reshaped)
             end
         case "fdc"
             if strcmpi(inputs_info_reshaped(i+2),"yes")
-                % aux_vector = [ NaN str2num(char(inputs_info_reshaped(i+4))) ];
                 string_split = split(inputs_info_reshaped(i+4),',');
                 aux_vector = [];
                 for option=string_split'
