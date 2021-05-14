@@ -1,124 +1,151 @@
-% Script originally written and currently maintained by Teresa Murta.
+%{
 
-% This script contains a modular mass spectrometry data analysis pipeline, and it can be used to perform the following steps:
-% 1	DESI, MALDI, SIMS or REIMS data pre-processing (using SpectralAnalysis functions)
-% 2	Peak detection on a representative spectrum (using SpectralAnalysis functions)
-% 3	Matching of the peaks detected in the representative spectrum against HMDB and/or a group of lists of molecules of interest defined by the user
-% 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation structure) for each imzml of interest (using SpectralAnalysis functions)
-% 5	Creating and saving a data matrix for each normalisation algorithm of interest
-% 6	Working with a new “dataset” which is defined as the combination the original imzmls files. This step involves the specification of the groups of original imzmls files that need to be combined, of which masks (defined in 10) are to be used to reduce each original imzml file to a smaller group of pixels of interest, the geometric position of each small group of pixels of interest in the new “dataset” (its position in a 2D grid that will contain all the groups of pixels of interest from all the imzmls combined)
-% 7	Saving single ion images for:
-% 7.1	One or more lists of molecules of interest defined by the user
-% 7.2	One or more superclass, class, or subclass of molecules (as defined by HMDB)
-% 7.3	A lists of m/z values
-% 8	Running PCA, NMF, k-means, t-SNE, NN-SNE using:
-% 8.1	N most intense peaks detected in the representative spectrum
-% 8.2	Percentile P of all peaks detected in the representative spectrum
-% 8.3	One or more lists of molecules of interest defined by the user
-% 8.4	One or more superclass, class, or subclass of molecules (as defined by HMDB)
-% 8.5	A lists of m/z values
-% 9	Saving pictures (matlab figures and pngs) with the main outputs of PCA, NMF, k-means, t-SNE, NN-SNE (e.g.: principal components, representative spectra, single ion images of top drivers, cluster maps)
-% 10	Saving user defined masks for regions of interest (SpectralAnalysis RegionsOfInterest structure), by combining the results of k-means (intersected or united) with regions of the image manually defined by the user (using Matlab).
-% 11	Running the univariate analyses: t-test, ranksum test, and ROC analysis, which relate the (mean) ion intensities of user defined groups of regions of interest (defined in 10)
-% 12	Running ANOVAs to define groups of ions that relate to particular “conditions” such as acquisition date, glass slide number, sample ID, tissue type, etc. Each “condition” has to be defined as a combination of regions of interest (defined in 10)
-% 13	Discarding groups of ions defined using the ANOVA results (12) before running any of the multivariate analyses describe in 8.
-% 14	Saving the k-means, t-SNE or NN-t-SNE clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest structure). These regions of interest can be used in any subsequent analyses together with or in place of those defined in 10.
-% 15	Saving the data from an original imzml or a new “dataset” (defined in 6) in a csv file, which contains the intensity of all pixels of interest, the “main mask” and “small mask” of each pixel, etc.
-% 
-% The requirements to run this script successfully are:
-% - The most recent version of SpectralAnalysis available at https://github.com/AlanRace/SpectralAnalysis added to the Matlab path.
-% - The most recent version of “adhoc-data-processing-pipeline” available at https://github.com/NICE-MSI/adhoc-data-processing-pipeline added to the Matlab path.
-% - The location of (i.e. the path to) the SpectralAnalysis pre-processing file (extension “.sap”) to be used. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The parameters of the pre-processing need to be adequate to the data. The pre-processing file can be edited in Matlab.
-% - The location of (i.e. the path to) the imzML and ibd data files, which have to be saved in modality and polarity specific folders.
-% - An excel file named “inputs_file” saved in the folder that contains the imzml and ibd data files. An example can be found in “required-files” within the git repository “adhoc-data-processing-pipeline” specified above. The inputs file needs to be adjusted to the particular requirements of the analysis, dataset, study goal, etc.
+This script contains a modular mass spectrometry imaging (MSI) data analysis pipeline. 
+Please refer to the documentation saved in the folder "documentation" for further information regarding the overall structure and steps of this pipeline, as well as the requirements, inputs, and outputs of each function.
 
-%% Saving master script in a location of your choice
+By Teresa Murta, June 2021
 
-% Please save a copy of this file in a location of your choice.
+How to start using this script:
+•	Please read the comments in each one of the cells below (in a sequential order) and execute them as required. 
 
-% I recommend you to save a master script for each study. You will be 
-% able to call different modalites and polarities, but the bulk of the 
-% analysis is likely to be consitent across these data and specific to 
-% the study.
+Help:
+•	You can execute a selected cell (i.e. a cell you have the cursor in) by clicking "shift" followed by "enter".
+•	You can execute a group of selected code lines (i.e. a group of code lines highlighted by you) by clicking "F9".
 
-%% Adding the most recent version of SpectralAnalysis and the repository "adhoc-data-processing-pipeline" to the Matlab path
+%}
+%% Add the "adhoc-data-processing-pipeline" repository from git to the Matlab path
+%{
 
-% SpectralAnalysis git repository can be dowloaded / cloned from https://github.com/AlanRace/SpectralAnalysis
-% adhoc-data-processing-pipeline git repository can be dowloaded / cloned from https://github.com/NICE-MSI/adhoc-data-processing-pipeline"
+Info:
+The "adhoc-data-processing-pipeline" git repository can be downloaded or cloned from https://github.com/NICE-MSI/adhoc-data-processing-pipeline"
+This repository contains functions and files that you will need to process the data.
 
-sa_path = '...'; % path to SpectralAnalysis folder
-sdpp_path = '...'; % path to adhoc-data-processing-pipeline
+Actions:
+•	Download or close the repository, and save it in a location of your choice. I recommend saving a copy in your personal folder (in the T or X drive for instance).
+•	Specify below the complete path to the chosen location  (replace ... between the '').
+•	Execute this cell.
 
-addpath(genpath(sa_path)) 
+%}
+
+sdpp_path = '...'; % complete path to adhoc-data-processing-pipeline
 addpath(genpath(sdpp_path))
 
-%% Specifying the imzmls and ibds (data) location
+%% Add "SpectralAnalysis" from git to the Matlab path
+%{
 
-% Please list the paths to all folders containing data.
+Info:
+This script works with SpectralAnalysis v1.4.0 (released in Aug 2020)
+"SpectralAnalysis" can be dowloaded or cloned from https://github.com/AlanRace/SpectralAnalysis.
 
-data_folders = { ...
-    'X:\Beatson\pos DESI AZ data\',%...
-    %'...',...
-    };
+Actions:
+•	Download SpectralAnalysis v1.4.0 and save it in a location of your choice. I recommend saving it in your personal folder (in the T or X drive for instance).
+•	Specify below the complete path to the chosen location  (replace ... between the '').
+•	Execute this cell.
 
-% Please list the strings that matches the names of the files to be analised. Each row should match each folder specified above. If all files need to be analised, please use '*'.
+%}
 
-dataset_name_portion = { 
-    '20210119_Capi_study1_pos_60um',%...
-    %'...',...
-    };
+sa_path = '...'; % complete path to SpectralAnalysis folder
+addpath(genpath(sa_path))
+
+%% Save a master script in a location of your choice
+%{
+ 
+Action:
+•	Save a copy of this script (.m file) in a location of your choice.
+
+Help:
+I recommend saving a unique master script for each study. You will be able to analyse different modalities and polarities using the same master script.
+
+%}
+%% Save an inputs_file.xlsx in the folder that contains the data (ibd and imzml files)
+%{
+
+Actions:
+•	Copy the file "inputs_file.xlsx" in the folder “required-files” and paste it in the folder where your data (ibd and imzml files) are located.
+•	Update the just now saved "inputs_file.xlsx" according to the requirements of the study.
+
+Notes:
+Make sure the polarity is correct, and the adducts make sense for that polarity.
+Make sure you update the complete path to the folder where the outputs of this processing will be saved.
+Most studies start with pre-processing, peak matching, and running k-means clustering with the aim of defining the "tissue only" mask (a mask for the tissue pixels only).
+
+%}
+%% Specify the SpectralAnalysis pre-processing file location (sap file)
+%{
+
+Actions:
+•	Specify below the complete path to the SpectralAnalysis pre-processing file (.sap) (replace ... between the '')
+•	Execute this cell.
+
+Help:
+An example file can be found in “required-files”. You can save a copy of it in a location of your choice, and edit it in Matlab. 
+Make sure the parameters specified make sense for your particular dataset.
+Alternatively, you can use the SpectralAnalysis GUI to create this file. 
+Make sure you use the "before" and "after" plots available in the GUI to check that the pre-processing works as intended.
+
+%}
+
+preprocessing_file = '...';
+
+%% Specify the data (ibd and imzml files) location
+%{
+
+Actions:
+•	Specify below the complete path to the folder where the data is stored (replace ... between the '').
+•	Specify below part of the name of the files you want to process, between ** (replace ... between the '').
+If you would like to process all files within the folder, use "*".
+•	Execute this cell.
+
+Help:
+An example file can be found in “required-files”. You can save a copy of it in a location of your choice, and edit it in Matlab. 
+Make sure the parameters specified make sense for your particular dataset.
+Alternatively, you can use the SpectralAnalysis GUI to create this file. 
+Make sure you use the "before" and "after" plots available in the GUI to check that the pre-processing works as intended.
+
+%}
+
+data_folders = { '...' }; % list of the complete paths to the folders where the data is stored
+dataset_name_portion = { '*' }; % list of the strings that match the names of the files to be analised
 
 
-% !!! Please don't modify the code from here till end of this cell. !!!
+% ! Do not modify the code from here till end of this cell.
 
-filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} filesep dataset_name_portion{i} '.imzML']) ]; end % Files and adducts information gathering
+% Creating the matlab struct that contains the paths and names of the files to be analysed
 
-%% Creating a new inputs_file.xlsx
+filesToProcess = []; 
+for i = 1:length(data_folders) 
+    filesToProcess = [ filesToProcess; dir([data_folders{i} filesep dataset_name_portion{i} '.imzML']) ];
+end
 
-% Copy the file "inputs_file.xlsx" available in the folder “required-files”
-% within the git repository “adhoc-data-processing-pipeline” to the folder
-% where your data has been saved (which was specified in the previous cell).
+%% Data pre-processing of each imzML individually
+%{
 
-% Update the file "inputs_file.xlsx" saved in the  folder with the data 
-% according to the requirements of the study. The first step of any study 
-% tends to be pre-processing, peak matching, and k-means clustering with
-% the aim of defing the "tissue only" mask.
+Info:
+This cell processes each imzml individually. 
+If you would like to combine multiple imzmls (i.e. define a "new" dataset),
+please look for another cell entited "Data Pre-Processing" below. 
 
-%% Specifying SpectralAnalysis pre-processing file location
+Actions:
+•	Specify below the name of the mask (use "no mask" to analyse all pixels).
+•	Specify below the list of normalisations.
+•	Execute this cell.
 
-% Please specify the path to the SpectralAnalysis pre-processing file. 
-% An example can be found in “required-files” within the git repository
-% “adhoc-data-processing-pipeline”. You can copy this example file and save
-% it in a location of your choice. This file can be edited in Matlab. Make
-% sure the parameters specified make sense for your particular dataset.
-% Alternatively, you can use the SpectralAnalysis GUI to create this file
-% (and use the before and after plots to make sure that the pre-processing 
-% is working as intended).
+The options for normalisation are:
+- "no norm" (no normalisation)
+- "tic" (uses total ion count per pixel)
+- "sims tic" (uses total ion count of the entire dataset) 
+- "RMS" (root mean square) 
+- "pqn mean"
+- "pqn median"
+- "zscore" (z-scoring each pixel)
 
-preprocessing_file = 'X:\Beatson\pos DESI AZ data\preprocessingWorkflow4AZpeakPickedData.sap';
+%}
 
-%% Data Pre-Processing for each imzML individually
-
-% Please specify the name of the mask that should be used. This is also 
-% called the "main mask".
-
-mask = "no mask"; % if mask = "no mask", all pixels will be processed
-
-% Please specify the normalisation(s) that you would like to use.
-%
-% Options:
-% - "no norm" (no normalisation)
-% - "tic" (total ion count per pixel)
-% - "sims tic" (total ion count for the entire dataset) 
-% - "RMS" (root mean square) 
-% - "pqn mean"
-% - "pqn median"
-% - "zscore" (z-scoring of each pixel) 
-
+mask = "no mask"; % if mask = "no mask", all pixels are used
 norm_list = [ "no norm", "RMS" ];
 
 
-% !!! Please don't modify the code from here till end of this cell. !!!
+% ! Do not modify the code from here till end of this cell.
 
 % Pre-processing data and saving total spectra
 
@@ -146,54 +173,124 @@ f_saving_datacube( filesToProcess, mask )
 
 f_saving_normalised_data( filesToProcess, mask, norm_list )
 
-%% Multivariate Analysis (MVAs) for each imzML individually
+%% Multivariate Analysis (MVAs) of each imzML individually
+%{
 
-% Please make sure you specify which multivariate analysis to run in 
-% "inputs_file.xlsx". As it is, these 2 function will run and save the
-% outputs of the MVAs using the top N peals specified in the 
-% "inputs_file.xlsx" but they can be used to run MVAs using a specific list
-% of peaks - please check the info at the start of these functions.
+Info:
+If you do not need to run MVAs, please skip this cell.
+
+Actions:
+•	Specify in "inputs_file.xlsx" the top N peaks to use when running the MVAs.
+•	Specify in "inputs_file.xlsx" which MVAs to run.
+•	Execute this cell.
+
+Notes:
+The "inputs_file.xlsx" can be editted at any point in the process.
+You can change the group of peaks to be used in the MVAs by changing the input of the 2 functions below. 
+Read to the help of these functions for help.
+
+%}
 
 
-% !!! Please don't modify the code from here till end of this cell. !!!
+% ! Do not modify the code from here till end of this cell.
 
 f_running_mva( filesToProcess, mask, norm_list ) % running MVAs with the top N peaks (N is specified in "inputs_file.xlsx")
 
 f_saving_mva_outputs( filesToProcess, mask, 0, norm_list ); % saving outputs of MVAs ran with top N peaks (N is specified in "inputs_file.xlsx")
 
 %% Saving single ion images (SIIs) for each imzML individually
+%{
 
-mask_on = 0; % Specify 1 or 0 depending on either the sii are to be masked with the main mask or not.
-sii_peak_list = "all"; % "all" (to save all lists), an array of lists, or n array of hmdb classes or subclasses, or an array of m/z values (less then 1e-10 apart from those saved in the datacube).
-norm_list = "no norm";
+Info:
+If you do not need to save single ion images, please skip this cell.
 
-f_saving_sii( filesToProcess, "no mask", mask_on, norm_list, sii_peak_list );
+Actions:
+•	Specify below if you would like to mask the SIIs with the "main" mask.
+•	Specify below which lists of peaks you want to save SIIs for.
+•	Execute this cell.
 
-%% Manual Mask Creation (e.g.: tissue only, sample A)
+The options for masking are:
+- 0 to avoid the masking
+- 1 to mask
 
-% Step 1 - Please update the variable "file_index" to match the file you need to work from.
+The options for peak lists are:
+- "all" to save SIIs for all lists specified in the "inputs_file.xlsx"
+- a list of strings (e.g. [ "List A", "List B" ]) to save a particular group of peak lists
+- an array of doubles (numbers) representing m/z values (these need to be less than 1e-10 apart from those saved in the datacube (mass channels) or peakDetails (columns 2) variables).
+- a list of strings (e.g. [ "List A", "List B" ]) to save a HMDB classes
 
-file_index = 1; disp(filesToProcess(file_index).name);
+Notes:
+The "main" mask is defined in the pre-processing cell.
+You can only save SIIs for lists of peaks that were originally specified in the "inputs_file.xlsx". 
+If they were not there when the data was saved (at the end of the pre-processing cell), you need to:
+1) edit the "inputs_file.xlsx"
+2) re-run the folowing functions: 
+- f_saving_relevant_lists_assignments
+- f_saving_datacube_peaks_details
+- f_saving_datacube
+- f_saving_normalised_data
 
-% Step 2 - Please define the name of the new mask.
+%}
 
-output_mask = "tissue only"; % Name for the new mask.
+mask_on = 0; % 1 or 0 depending on either the sii are to be masked with the main mask or not
+sii_peak_list = "all"; % [ "List A", "List B" ]
 
-% Step 3 - Please update all variables bellow to match the MVA results you want to use to define the new masks.
 
-mva_reference   = "500 highest peaks";
-input_mask      = "no mask";
-numComponents   = 2;
-mva_type        = "kmeans";
-norm_type       = "no norm";
-vector_set      = [ 2 ]; % Please list here the ids of the clusters that you want to "add" to create the new mask. For example, for "tissue only", list all clusters that overlap with the tissue.
+% ! Do not modify the code from here till end of this cell.
 
-% Step 4 - Please update the number of times you would like to have to define particular regions/areas to keep, and/or to fill.
+f_saving_sii( filesToProcess, mask, mask_on, norm_list, sii_peak_list );
 
-regionsNum2keep = 0; % to keep
-regionsNum2fill = 0; % to fill
+%% Creating masks for each imzML individually
+%{
 
-f_mask_creation( filesToProcess(file_index), input_mask, [], mva_type, mva_reference, numComponents, norm_type, vector_set, regionsNum2keep, regionsNum2fill, output_mask ) % new mask creation
+Info:
+These masks are created using the results of one of the spatial segmentation techniques.
+You can use this cell to create the main mask "tissue only", as well as any other mask. 
+If you do not need to create new masks, please skip this cell.
+
+Actions:
+•	Specify below the index of the imzml you want to work with. 
+•	Specify below the name of the mask you want to create, between " " (the new mask).
+•	Specify below the name of the folder that has the spatial segmentation results you want to use to create the new mask.
+•	Specify below the mask used to run the spatial segmentation.
+•	Specify below the number of clusters used to run the spatial segmentation.
+•	Specify below the name of the mva technique used to run the spatial segmentation.
+•	Specify below the normalisation used to run the spatial segmentation.
+•	Specify below the numbers of the clusters to keep (their union will be the new mask).
+•	Specify below a list with the numbers of the clusters to keep (their union will be the new mask).
+•	Specify below how many areas you would like to cut (and multiple by the clusters area).
+•	Specify below how many areas you would like to fill (and add to the clusters area).
+
+Help:
+- Example 1
+To create the "tissue only" mask, list all clusters that overlap with all tissue samples. 
+Use the histological image as a reference.
+- Example 2
+To create the "tissue X" mask, list all clusters that overlap with all tissue samples, and set regionsNum2keep to 1. 
+This will allow you to isolate the "tissue X" area, and create a more restrictive mask.
+
+Note:
+While the "tissue only" mask is referred to as a "main" mask, the "tissue X" mask is referred to as a "small" mask.
+
+%}
+
+file_index      = 1; % index of the imzml - check filesToProcess 
+output_mask     = "tissue only"; % name for the new mask
+mva_reference   = "mva 500 highest peaks"; % name of the mvas folder to be used
+input_mask      = "no mask"; % name of the mask used to run the mvas
+numComponents   = 2; % number of clusters used
+mva_type        = "kmeans"; % name of the segmentation technique used
+norm_type       = "no norm"; % normalisation used
+vector_set      = [ 1 2 ]; % list the numbers (ids) of the clusters to keep
+regionsNum2keep = 0; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
+regionsNum2fill = 0; % number of areas you would like to fill and keep (these areas will be added to the clusters - union of areas)
+
+
+% ! Do not modify the code from here till end of this cell.
+
+file_name = filesToProcess(file_index).name;
+disp(file_name)
+f_mask_creation( file_name, input_mask, [], mva_type, mva_reference, numComponents, norm_type, vector_set, regionsNum2keep, regionsNum2fill, output_mask ) % new mask creation
 
 %% Grouping datasets to be processed together (using a common m/z axis)
 

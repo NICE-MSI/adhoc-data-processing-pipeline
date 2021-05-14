@@ -11,7 +11,7 @@ csv_inputs = [ filesToProcess(file_index).folder '\inputs_file' ];
 [ ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, outputs_path ] = f_reading_inputs(csv_inputs);
 
 spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
-mva_path                = [ char(outputs_path) '\mva ' char(mva_reference) '\' ];
+mva_path                = [ char(outputs_path) '\' char(mva_reference) '\' ];
 rois_path               = [ char(outputs_path) '\rois\' ];
 
 mkdir(rois_path)
