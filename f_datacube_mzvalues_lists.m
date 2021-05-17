@@ -1,6 +1,7 @@
 function datacube_mzvalues_indexes = f_datacube_mzvalues_lists( mva_molecules_lists_label_list, ppmTolerance, sample_info, datacubeonly_peakDetails )
 
-% Select the mz values of the molecules that belong to the relevant lists (within a given ppm error).
+% This function returns the indices of the m/z values assigned to at least
+% a molecule of interest (mzvalues2keep1) in the datacube.
 
 mini_sample_info_mzvalues_indexes = 0;
 for labeli = mva_molecules_lists_label_list

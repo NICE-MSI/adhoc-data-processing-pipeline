@@ -45,6 +45,7 @@ function f_running_mva( filesToProcess, main_mask_list, norm_list, mva_molecules
 % kmeans - idx, C, optimal_numComponents
 % tsne - rgbData, idx, cmap, loss, tsne_parameters
 % nntsne - rgbData, idx, cmap, outputSpectralContriubtion  
+%
 % See the help of each function for details on its outputs. With the
 % exception of nntsne, Matlab functions are called.
          
@@ -141,7 +142,7 @@ for main_mask = main_mask_list
                     
                     mva_path = [ char(outputs_path) '\mva ' char(num2str(length(mva_mzvalues_vector))) ' adhoc mz values\' ];
                     
-                    % Determine peaks of interest indicies in the datacube
+                    % Determine peaks of interest indices in the datacube
                     
                     datacube_mzvalues_indexes = f_datacube_mzvalues_vector( mva_mzvalues_vector, datacubeonly_peakDetails );
                     
@@ -172,7 +173,7 @@ for main_mask = main_mask_list
                     
                     mva_path = [ char(outputs_path) '\mva ' char(molecules_list) '\' ];
                     
-                    % Determine peaks of interest indicies in the datacube
+                    % Determine peaks of interest indices in the datacube
                     
                     datacube_mzvalues_indexes = f_datacube_mzvalues_lists( molecules_list, pa_max_ppm, relevant_lists_sample_info, datacubeonly_peakDetails );
                     

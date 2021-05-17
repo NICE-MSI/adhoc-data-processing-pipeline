@@ -1,5 +1,7 @@
 
-function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_icr_samples_scheme_info( dataset_name, background, check_datacubes_size )
+function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_icr_samples_scheme_info( dataset_name )
+
+background = 0;
 
 switch dataset_name
     

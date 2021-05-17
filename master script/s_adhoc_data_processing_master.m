@@ -257,9 +257,8 @@ Actions:
 •	Specify below the name of the mva technique used to run the spatial segmentation.
 •	Specify below the normalisation used to run the spatial segmentation.
 •	Specify below the numbers of the clusters to keep (their union will be the new mask).
-•	Specify below a list with the numbers of the clusters to keep (their union will be the new mask).
-•	Specify below how many areas you would like to cut (and multiple by the clusters area).
-•	Specify below how many areas you would like to fill (and add to the clusters area).
+•	Specify below how many areas you would like to cut (and multiply by the clusters based mask).
+•	Specify below how many areas you would like to fill (and add to the clusters based mask).
 
 Help:
 - Example 1
@@ -269,8 +268,9 @@ Use the histological image as a reference.
 To create the "tissue X" mask, list all clusters that overlap with all tissue samples, and set regionsNum2keep to 1. 
 This will allow you to isolate the "tissue X" area, and create a more restrictive mask.
 
-Note:
+Notes:
 While the "tissue only" mask is referred to as a "main" mask, the "tissue X" mask is referred to as a "small" mask.
+While the "main" mask is mostly used to generate the tissue representative spectrum, the small masks are used to combine multiple imzmls.
 
 %}
 
@@ -288,51 +288,78 @@ regionsNum2fill = 0; % number of areas you would like to fill and keep (these ar
 
 % ! Do not modify the code from here till end of this cell.
 
-file_name = filesToProcess(file_index).name;
-disp(file_name)
+file_name = filesToProcess(file_index).name; disp(file_name)
+
 f_mask_creation( file_name, input_mask, [], mva_type, mva_reference, numComponents, norm_type, vector_set, regionsNum2keep, regionsNum2fill, output_mask ) % new mask creation
 
-%% Grouping datasets to be processed together (using a common m/z axis)
+%% Combining imzmls
+%{
 
-% Have you used this script to analyse data from the study you are working on?
-% 
-% If no:
-% - copy and paste the file f_Beatson_samples_scheme_info.m into the same
-% folder (adhoc-data-processing-pipeline);
-% - change the name of the copy to f_{StudyName}_samples_scheme_info;
-% - update the content of the file just saved by replacing the 
-% relevant paths and folder names (these will be specific to your study);
-% 
-% If yes:
-% - check if the file f_{StudyName}_samples_scheme_info has the particular 
-% case / compiled dataset you wish to work on;
-% -- if yes, just change the variable dataset_name below to match the case;
-% -- if no, create a new case;
+Info:
+This cell is used to define which datasets are to be analized together.
 
-% Specify the name of the dataset you want to work on (this will be a
-% spefific combination of the data that is defined in f_{StudyName}_samples_scheme_info).
+Actions:
+•	Make sure you have the required "small" masks saved in the "rois"
+folder. If not, go back to the previous cell and create them.
+•	Create a new function like f_{study name}_samples_scheme_info for your
+study, using "f_testStudy_samples_scheme_info" as a starting point. I 
+recommend having one function per study.
+•	Save the new function in a location of your choice, making sure it is
+in the Matlab path. 
+•	Specify below the name of the "new" (combined) dataset. This needs to 
+match exactly what is written in the body of the function (the case name).
+•	Specify below the name of the function you just created, in place of 
+"f_icr_samples_scheme_info". This needs to match exactly what is written in 
+the body of the function (the case name).
+•	If this is the first time you are combining these imzmls, please set 
+check_datacubes_size to 0. check_datacubes_size can be set to 1 and used to
+check if the datacubes saved have consistent mass axis but this can only be
+done once all datacubes have been saved (which will be true at after
+executing the next cell.
+•	Execute this cell.
 
-dataset_name = "icl neg desi 1458 and 1282 pdx only";
+%}
 
-% Would you like to keep the background in? (this will use the "no mask" as
-% the main mask for the study) 
-
-background = 0; % 0 for no, 1 for yes
-
-% Would you like to check if all the required datacubes are in the same m/z axis?
-
-check_datacubes_size = 1; % 0 for no, 1 for yes
-
-% ! Please don't modify the code from here till end of this cell.
+dataset_name = "4 parts brain";
+check_datacubes_size = 0; % 0 for no, 1 for yes
 
 [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = ...
-    f_icr_samples_scheme_info( dataset_name, background, check_datacubes_size ); 
+    f_icr_samples_scheme_info( dataset_name ); % !!! Update the name of the function called here !!!
 
-filesToProcess = f_unique_extensive_filesToProcess(extensive_filesToProcess); % collects all files that need to have a common m/z axis
+f_check_datacubes_mass_axis(extensive_filesToProcess)
 
-%% Data Pre-Processing (all datasets in filesToProcess are processed together)
+filesToProcess = f_unique_extensive_filesToProcess(extensive_filesToProcess); % reduces the extensive list of files to a list of unique files
 
-mask = "tissue only"; % can be "no mask" to start with (making the whole process quicker because both assigments steps are run only once), "tissue only" to follow
+%% Data pre-Processing of combined imzmls
+%{
+
+Info:
+This cell processes all imzmls listed in filesToProcess as one.
+
+Actions:
+•	Specify below the name of the mask (most common is "tissue only").
+•	Specify below the list of normalisations.
+•	Execute this cell.
+
+The options for normalisation are:
+- "no norm" (no normalisation)
+- "tic" (uses total ion count per pixel)
+- "sims tic" (uses total ion count of the entire dataset) 
+- "RMS" (root mean square) 
+- "pqn mean"
+- "pqn median"
+- "zscore" (z-scoring each pixel)
+
+Note:
+The functions below whose names end with "_ca" are key - they combine the datasets.
+
+%}
+
+mask = "tissue only"; % if mask = "no mask", all pixels are used
+norm_list = [ "no norm", "RMS" ];
+
+
+% ! Do not modify the code from here till end of this cell.
 
 % Pre-processing data and saving total spectra
 
@@ -359,25 +386,6 @@ f_saving_datacube( filesToProcess, mask )
 % Data normalisation (saving a normalised version of the data which is required to later plot normalised SIIs or run MVAs with normalised data)
 
 f_saving_normalised_data( filesToProcess, mask, norm_list )
-
-%% Use MVA results to create new masks (each clustered will be saved as a mask i.e. SA roi struct)
-
-% Important note!!! This function needs to be updated because the MVA results are now a short array of
-% pixels (small masks only pixels). 07 Aug 2020 Teresa
-
-% Please specify the details of the MVAs you want to save the clustering maps for.
-
-mva_list = "tsne"; % kmeans or tsne
-numComponents_list = NaN; % a particular number or NaN (if you want to use the elbow method result)
-norm_list = "pqn median"; % normalisation used
-
-% Please list all the lists you would like to save the clustering maps for, or "all" if you would like to them for all lists considered.    
-
-mva_specifics_list = [ "Fatty Acyls", "Glycerolipids", "Glycerophospholipids" ];
-
-for mva_specifics = mva_specifics_list 
-    f_saving_mva_rois_ca( extensive_filesToProcess, main_mask_list, dataset_name, mva_list, numComponents_list, norm_list, mva_specifics ) % saving masks / rois   
-end
 
 %% Single Ion Images (all datasets are processed together)
 
@@ -408,6 +416,25 @@ mva_molecules_list = string([]);
 f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_molecules_list, mva_classes_list ) % Running MVAs
 
 f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_molecules_list, mva_classes_list ) % Saving MVAs outputs
+
+%% Use MVA results to create new masks (each clustered will be saved as a mask i.e. SA roi struct)
+
+% Important note!!! This function needs to be updated because the MVA results are now a short array of
+% pixels (small masks only pixels). 07 Aug 2020 Teresa
+
+% Please specify the details of the MVAs you want to save the clustering maps for.
+
+mva_list = "tsne"; % kmeans or tsne
+numComponents_list = NaN; % a particular number or NaN (if you want to use the elbow method result)
+norm_list = "pqn median"; % normalisation used
+
+% Please list all the lists you would like to save the clustering maps for, or "all" if you would like to them for all lists considered.    
+
+mva_specifics_list = [ "Fatty Acyls", "Glycerolipids", "Glycerophospholipids" ];
+
+for mva_specifics = mva_specifics_list 
+    f_saving_mva_rois_ca( extensive_filesToProcess, main_mask_list, dataset_name, mva_list, numComponents_list, norm_list, mva_specifics ) % saving masks / rois   
+end
 
 %% Saving ion intensities per small mask table
 
