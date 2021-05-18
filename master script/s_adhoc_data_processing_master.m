@@ -426,9 +426,9 @@ mva_lists = [ "CRUK metabolites", "Immunometabolites", "Structural Lipids", "Fat
 for task = mva_peaks
     if isequal(task,"top"); mva_molecules_list = string([]); end % Using the top peaks specified in the "inputs_file"
     
-    f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists, mva_classes_list ) % Running MVAs
+    f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists ) % Running MVAs
     
-    f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_lists, mva_classes_list ) % Saving MVAs outputs
+    f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_lists ) % Saving MVAs outputs
 end
 
 %% Saving single ion images (SIIs) of combined imzmls
@@ -591,7 +591,7 @@ Actions:
 
 The formats of the inputs are:
 anova.masks - list of strings separated by ,
-each effect is a cell of chars separated by ;
+effectX variable - a cell of chars separated by ;
 anova.labels - a cell of chars separated by ,
 anova.effects - a cell of variables separated by ,
 
@@ -686,43 +686,72 @@ anova.effects = { eday, eblock, evehicle, e2014, e8186, e6244 };
 
 f_anova( filesToProcess, main_mask_list, norm_list, anova ) % saving the anova results table
 
-%% Create a new set of meas m/zs to discard by filtering the ANOVA results
+%% Running multivariate analyses after discardig peaks by filtering the ANOVA results
+%{
 
-norm_list = [ "RMS", "no norm" ];
+Actions:
+•	Specify below the name of the file with the ANOVA results to be used for peak filtering, using the variable "criteria.file".
+•	Specify below the name of the column(s) to be used for peak filtering, using the variable "criteria.column".
+•	Specify below the filtering rule for each column, using the variable "criteria.ths_type".
+•	Specify below a list of filtering threshold(s) for each column, using the variable th_list.
+•	Specify below th rule for columns combination. If using 1 column only, this will be ignored.
+•	Specify below which peaks are to be used when running the MVA, using the variable "mva_peaks". 
+•	Specify below which lists of peaks are to be used, using the variable "mva_lists".
+•	Execute this cell.
+
+The options for filtering rules are:
+- "equal_below"
+- "below"
+- "equal_above"
+- "above"
+
+The options for peaks are:
+- "top" to use the top N peaks specified in "inputs_file.xlsx"
+- "lists" to use one or more of lists of molecules of interest specified in "inputs_file.xlsx"
+
+Help:
+You can run either options by setting mva_peaks = "top" or mva_peaks = "lists", or both by setting mva_peaks = [ "top", "lists" ];
+
+%}  
+
+% Peak filtering details
+
+criteria.file = "anova day block vehicle 2014 8186 6244"; % name of the file with the ANOVA results
+criteria.column = { "p value for day effect (mean)" }; % name of the columns of the ANOVA results to be used for filtering
+criteria.ths_type = { "equal_below" }; % "equal_below", "below", "equal_above", "above"
+th_list = [ 0.01, 0.05 ]; % double between 0 and 1, usually 0.01 or 0.05
+criteria.combination = "or"; % "and", "or"
+
+% Multivariate analyses details
+
+mva_peaks = [ "top", "lists" ];
+mva_lists = [ "CRUK metabolites", "Immunometabolites", "Structural Lipids", "Fatty acid metabolism" ];
+
+
+% ! Do not modify the code from here till end of this cell.
 
 for norm = norm_list
-    
-    for th = [ 0.01, 0.05 ]
+    for th = th_list
         
-        criteria.file = "anova day block vehicle 2014 8186 6244";
-        criteria.column = { "p value for day effect (mean)" }; % select from the anova results file
-        criteria.ths_type = { "equal_below" }; % "equal_below", "below", "equal_above", "above"
-        criteria.ths_value = { th };  % between 0 and 1
-        criteria.combination = "or"; % "and", "or"
+        criteria.ths_value = { th };
         
-        mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mask_list, norm, criteria); % Values to discard are norm specific
-        
-        %%% Run MVAs after discarding the m/zs selected above
-        
+        mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mask_list, norm, criteria); % peaks to discard are normalisation specific
+                
         disp(['# peaks discarded: ', num2str(size(mzvalues2discard,1))])
         
-        % MVAs
-        
-        % mva_peak_list = "Amino Acids";
-        %
-        % f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_peak_list, string([]), mzvalues2discard ) % Running MVAs
-        %
-        % f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_peak_list, string([]), mzvalues2discard ) % Saving MVAs outputs
-        
-        mva_peak_list = string([]); % Top peaks
-        
-        f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm, mva_peak_list, string([]), mzvalues2discard ) % Running MVAs
-        
-        f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm, mva_peak_list, string([]), mzvalues2discard ) % Saving MVAs outputs
-        
+        for task = mva_peaks
+            if isequal(task,"top"); mva_molecules_list = string([]); end % Using the top peaks specified in the "inputs_file"
+            
+            f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm, mva_lists, string([]), mzvalues2discard ) % Running MVAs
+            
+            f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm, mva_lists, string([]), mzvalues2discard) % Saving MVAs outputs
+        end
     end
-    
 end
+
+%% Saving data in a txt file for supervised classification
+
+f_data_4_cnn_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, 'txt' )
 
 %% Plot 2D and 3D PCs plots
 
@@ -762,8 +791,3 @@ smaller_masks_colours = [
 
 f_saving_pca_nmf_scatter_plots_ca( extensive_filesToProcess, mva_list, numComponents_array, component_x, component_y, component_z, main_mask_list, smaller_masks_list, smaller_masks_colours, dataset_name, norm_list, string([]), string([]) )
 
-%% Saving data for supervised classification in Python
-
-% project_id = "icr"; f_data_4_sup_class_ca( filesToProcess, main_mask_list, smaller_masks_list, project_id, dataset_name, "txt" ) % old
-
-f_data_4_cnn_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, 'txt' )
