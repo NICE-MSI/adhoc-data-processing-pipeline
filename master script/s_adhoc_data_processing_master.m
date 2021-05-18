@@ -187,7 +187,7 @@ Actions:
 Notes:
 The "inputs_file.xlsx" can be editted at any point in the process.
 You can change the group of peaks to be used in the MVAs by changing the input of the 2 functions below. 
-Read to the help of these functions for help.
+Read the help of these functions for further information.
 
 %}
 
@@ -217,7 +217,6 @@ The options for peak lists are:
 - "all" to save SIIs for all lists specified in the "inputs_file.xlsx"
 - a list of strings (e.g. [ "List A", "List B" ]) to save a particular group of peak lists
 - an array of doubles (numbers) representing m/z values (these need to be less than 1e-10 apart from those saved in the datacube (mass channels) or peakDetails (columns 2) variables).
-- a list of strings (e.g. [ "List A", "List B" ]) to save a HMDB classes
 
 Notes:
 The "main" mask is defined in the pre-processing cell.
@@ -259,6 +258,7 @@ Actions:
 •	Specify below the numbers of the clusters to keep (their union will be the new mask).
 •	Specify below how many areas you would like to cut (and multiply by the clusters based mask).
 •	Specify below how many areas you would like to fill (and add to the clusters based mask).
+•	Execute this cell.
 
 Help:
 - Example 1
@@ -278,8 +278,8 @@ file_index      = 1; % index of the imzml - check filesToProcess
 output_mask     = "tissue only"; % name for the new mask
 mva_reference   = "mva 500 highest peaks"; % name of the mvas folder to be used
 input_mask      = "no mask"; % name of the mask used to run the mvas
-numComponents   = 2; % number of clusters used
 mva_type        = "kmeans"; % name of the segmentation technique used
+numComponents   = 2; % number of clusters used
 norm_type       = "no norm"; % normalisation used
 vector_set      = [ 1 2 ]; % list the numbers (ids) of the clusters to keep
 regionsNum2keep = 0; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
@@ -299,23 +299,14 @@ Info:
 This cell is used to define which datasets are to be analized together.
 
 Actions:
-•	Make sure you have the required "small" masks saved in the "rois"
-folder. If not, go back to the previous cell and create them.
-•	Create a new function like f_{study name}_samples_scheme_info for your
-study, using "f_testStudy_samples_scheme_info" as a starting point. I 
-recommend having one function per study.
-•	Save the new function in a location of your choice, making sure it is
-in the Matlab path. 
-•	Specify below the name of the "new" (combined) dataset. This needs to 
-match exactly what is written in the body of the function (the case name).
-•	Specify below the name of the function you just created, in place of 
-"f_icr_samples_scheme_info". This needs to match exactly what is written in 
-the body of the function (the case name).
-•	If this is the first time you are combining these imzmls, please set 
-check_datacubes_size to 0. check_datacubes_size can be set to 1 and used to
-check if the datacubes saved have consistent mass axis but this can only be
-done once all datacubes have been saved (which will be true at after
-executing the next cell.
+•	Make sure you have the required "small" masks saved in the "rois" folder. If not, go back to the previous cell and create them.
+•	Create a new function like f_{study name}_samples_scheme_info for your study, using "f_testStudy_samples_scheme_info" as a starting point. I recommend having one function per study.
+•	Save the new function in a location of your choice, making sure it is in the Matlab path. 
+•	Specify below the name of the "new" (combined) dataset. This needs to match exactly what is written in the body of the function (the case name).
+•	Specify below the name of the function you just created, in place of "f_icr_samples_scheme_info". This needs to match exactly what is written in the body of the function (the case name).
+•	If this is the first time you are combining these imzmls, please set check_datacubes_size to 0. 
+"check_datacubes_size" can be set to 1, to check if the datacubes saved have consistent mass axis.
+However, this can only be done once all datacubes have been saved (which will only be true after executing the next cell).
 •	Execute this cell.
 
 %}
@@ -323,8 +314,13 @@ executing the next cell.
 dataset_name = "4 parts brain";
 check_datacubes_size = 0; % 0 for no, 1 for yes
 
+% !!! Update the name of the function called below !!!
+
 [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = ...
-    f_icr_samples_scheme_info( dataset_name ); % !!! Update the name of the function called here !!!
+    f_icr_samples_scheme_info( dataset_name );
+
+
+% ! Do not modify the code from here till end of this cell.
 
 f_check_datacubes_mass_axis(extensive_filesToProcess)
 
@@ -387,66 +383,165 @@ f_saving_datacube( filesToProcess, mask )
 
 f_saving_normalised_data( filesToProcess, mask, norm_list )
 
-%% Single Ion Images (all datasets are processed together)
+%% Multivariate Analysis (MVAs) of combined imzmls
+%{
 
-norm_list = [ "no norm", "pqn median" ]; % Please list the normalisations. For a list of those available, check the function called "f_norm_datacube".
+Info:
+If you do not need to run MVAs, please skip this cell.
 
-sii_peak_list = "Shorter Beatson metabolomics & CRUK list"; % Please list all the lists you would like to save the sii for, or simply "all" if you would like to the sii for all lists considered.
+Actions:
+•	Specify below which peaks are to be used when running the MVA, using the variable "mva_peaks". 
+•	Specify below which lists of peaks are to be used, using the variable "mva_lists".
+•	Execute this cell.
+
+The options for peaks are:
+- "top" to use the top N peaks specified in "inputs_file.xlsx"
+- "lists" to use one or more of lists of molecules of interest specified in "inputs_file.xlsx"
+
+Help:
+You can run either options by setting mva_peaks = "top" or mva_peaks = "lists", or both by setting mva_peaks = [ "top", "lists" ];
+
+Notes:
+When using the top peaks, make sure you specify N in "inputs_file.xlsx".
+When using peak lists, make sure you name them below.
+You can only use lists that were originally specified in the "inputs_file.xlsx". 
+If they were not there when the data was saved (at the end of the pre-processing cell), you need to:
+1) edit the "inputs_file.xlsx"
+2) re-run the folowing functions: 
+- f_saving_relevant_lists_assignments_ca
+- f_saving_datacube_peaks_details_ca
+- f_saving_datacube
+- f_saving_normalised_data 
+You can change the group of peaks to be used in the MVAs by changing the input of the 2 functions below. 
+Read the help of these functions for further information.
+
+%}
+
+mva_peaks = [ "top", "lists" ];
+mva_lists = [ "CRUK metabolites", "Immunometabolites", "Structural Lipids", "Fatty acid metabolism" ];
+
+
+% ! Do not modify the code from here till end of this cell.
+
+for task = mva_peaks
+    if isequal(task,"top"); mva_molecules_list = string([]); end % Using the top peaks specified in the "inputs_file"
+    
+    f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists, mva_classes_list ) % Running MVAs
+    
+    f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_lists, mva_classes_list ) % Saving MVAs outputs
+end
+
+%% Saving single ion images (SIIs) of combined imzmls
+%{
+
+Info:
+If you do not need to save single ion images, please skip this cell.
+
+Actions:
+•	Specify below which lists of peaks you want to save SIIs for.
+•	Execute this cell.
+
+The options for peak lists are:
+- "all" to save SIIs for all lists specified in the "inputs_file.xlsx"
+- a list of strings (e.g. [ "List A", "List B" ]) to save a particular group of peak lists
+- an array of doubles (numbers) representing m/z values (these need to be less than 1e-10 apart from those saved in the datacube (mass channels) or peakDetails (columns 2) variables).
+
+Notes:
+The "main" mask is defined in the pre-processing cell.
+You can only save SIIs for lists of peaks that were originally specified in the "inputs_file.xlsx". 
+If they were not there when the data was saved (at the end of the pre-processing cell), you need to:
+1) edit the "inputs_file.xlsx"
+2) re-run the folowing functions: 
+- f_saving_relevant_lists_assignments
+- f_saving_datacube_peaks_details
+- f_saving_datacube
+- f_saving_normalised_data
+
+%}
+
+sii_peak_list = "all"; % [ "List A", "List B" ]
+
+
+% ! Do not modify the code from here till end of this cell.
 
 f_saving_sii_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, sii_peak_list ) % New function - it can accept hmdb classes, relevant molecules lists names or a vector of meas masses.
 
-%% Multivariate Analysis (all datasets are processed together)
+%% Using MVA results to create new masks
+%{
 
-norm_list = [ "no norm", "pqn median" ]; % Please list the normalisations. For a list of those available, check the function called "f_norm_datacube".
+Info:
+Each cluster is saved as a SpectralAnalysis roi struct in the "rois" folder.
 
-mva_classes_list = string([]);
+Actions:
+•	Specify below the name of the folder that has the spatial segmentation results you want to use to create the new masks.
+•	Specify below the name of the mva technique used to run the spatial segmentation.
+•	Specify below the number of clusters used to run the spatial segmentation.
+•	Specify below the normalisation used to run the spatial segmentation.
+•	Execute this cell.
 
-% Using specific lists of peaks (listed below in the variable "mva_molecules_list").
+%}
 
-mva_molecules_list = [ "CRUK metabolites", "Immunometabolites", "Structural Lipids", "Fatty acid metabolism" ];
+mva_reference   = "mva 500 highest peaks"; % name of the mvas folder to be used
+mva_type        = "kmeans"; % name of the segmentation technique used
+numComponents   = 2; % number of clusters used
+norm_type       = "no norm"; % normalisation used
 
-f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_molecules_list, mva_classes_list ) % Running MVAs
 
-f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_molecules_list, mva_classes_list ) % Saving MVAs outputs
+% ! Do not modify the code from here till end of this cell.
 
-% Using the top peaks specific in the "inputs_file".
+f_saving_mva_rois_ca( extensive_filesToProcess, main_mask_list, dataset_name, mva_type, numComponents, norm_type, mva_reference ) % saving masks / rois   
 
-mva_molecules_list = string([]);
+%% Saving ion intensity for each small mask
+%{
 
-f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_molecules_list, mva_classes_list ) % Running MVAs
+Info:
+This cell saves a txt file with the mean and median intensities of each
+small mask specified in "smaller_masks_list".
 
-f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_molecules_list, mva_classes_list ) % Saving MVAs outputs
+Actions:
+•	Execute this cell.
 
-%% Use MVA results to create new masks (each clustered will be saved as a mask i.e. SA roi struct)
+%}
 
-% Important note!!! This function needs to be updated because the MVA results are now a short array of
-% pixels (small masks only pixels). 07 Aug 2020 Teresa
 
-% Please specify the details of the MVAs you want to save the clustering maps for.
-
-mva_list = "tsne"; % kmeans or tsne
-numComponents_list = NaN; % a particular number or NaN (if you want to use the elbow method result)
-norm_list = "pqn median"; % normalisation used
-
-% Please list all the lists you would like to save the clustering maps for, or "all" if you would like to them for all lists considered.    
-
-mva_specifics_list = [ "Fatty Acyls", "Glycerolipids", "Glycerophospholipids" ];
-
-for mva_specifics = mva_specifics_list 
-    f_saving_mva_rois_ca( extensive_filesToProcess, main_mask_list, dataset_name, mva_list, numComponents_list, norm_list, mva_specifics ) % saving masks / rois   
-end
-
-%% Saving ion intensities per small mask table
-
-norm_list = [ "no norm", "RMS" ];
+% ! Do not modify the code from here till end of this cell.
 
 f_ion_intensities_table( filesToProcess, main_mask_list, smaller_masks_list, norm_list )
 
-%% Univariate analyses (ROC, t-test)
+%% Running univariate analyses (ROC, t-test)
+%{
 
-norm_list = [ "no norm", "RMS" ];
+Actions:
+•	Specify below the groups of rois ought to be compared. Each group is a list of strings (e.g. group_1 = ["roi-1-A","roi-1-B"]).
+•	Specify below the name of the results file, using the variable "groups.name".
+•	Specify below the variables that represent the groups of rois ought to be compared, using the variable "groups.masks".
+•	Specify below the names of the groups of rois ought to be compared, using the variable "groups.names".
+•	Specify below the pairs of groups of rois ought to be compared, using the variable "groups.pairs".
+•	Specify below the univariate analysis to run.
+•	Specify below wether to save SIIs or not, as well as which thresholds to use for the AUC and/or p-value.
 
-% Groups of pixels  (arrays of small masks names)
+Help:
+The options for univariate analyses are:
+- ROC analysis (see the help of the Matlab function "perfcurve" for more information)
+Set univtests.roc to 1 to run the ROC analysis, or to 0 otherwise.
+- t-test (see the help of the Matlab function "ttest" for more information)
+Set univtests.test to 1 to run the t-test, or to 0 otherwise.
+
+The formats of the inputs are:
+groups.name - string
+groups.masks - a cell of variables (, separated)
+groups.names - a cell of strings (, separated)
+groups.pairs - a cell of list with 2 elements only (',' separated)
+univtests.roc - 1 or 0
+univtests.ttest - 1 or 0
+sii.plot - 1 or 0
+sii.mask - 1 or 0
+sii.roc_th - a double between 0 and 0.5, often 0.3
+sii.ttest_th - a double between 0 and 1, often 0.05
+
+%}
+
+% Defining the groups of rois / pixels to compare (lists of small masks names)
 
 vehicle =           [ "b1s24_vehicle","b2s22_vehicle","b3s24_vehicle","b1s19_vehicle","b2s21_vehicle","b3s25_vehicle","b4s24_vehicle","b4s23_vehicle","b3s26_vehicle" ];
 AZD2014 =           [ "b1s24_2014","b2s22_2014","b3s24_2014","b1s19_2014","b2s21_2014","b3s25_2014","b4s23_2014","b3s26_2014" ];
@@ -456,15 +551,13 @@ AZD6244_AZD8186 =   [ "b1s24_6244_8186","b2s22_6244_8186","b3s24_6244_8186","b1s
 AZD6244_AZD2014 =   [ "b1s24_6244_2014","b2s22_6244_2014","b3s24_6244_2014","b1s19_6244_2014","b2s21_6244_2014","b3s25_6244_2014","b3s26_6244_2014" ];
 AZD2014_AZD8186 =   [ "b1s24_2014_8186","b3s24_2014_8186","b1s19_2014_8186","b3s25_2014_8186","b4s23_2014_8186","b3s26_2014_8186" ];
 
-% Pairs of groups of pixels to compare with the univariate analysis
-
-groups.name = "all vs veh and sing vs combi";
+groups.name = "all vs veh and sing vs combi"; % a string with the name of the results file
 
 groups.masks = { vehicle, AZD2014, AZD8186, AZD6244, AZD6244_AZD8186, AZD6244_AZD2014, AZD2014_AZD8186 };
 groups.names = { "vehicle", "AZD2014", "AZD8186", "AZD6244", "AZD6244_AZD8186", "AZD6244_AZD2014", "AZD2014_AZD8186" };
 groups.pairs = { [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [2, 6], [2, 7], [3, 5], [3, 7], [4, 5], [4, 6] }; % [1, 2] will combine vehicle (1st position in the lists above) with AZD2014 (2nd position in the lists above)
 
-% Univariate analysis to perform
+% What univariate analyses?
 
 univtests.roc = 1;
 univtests.ttest = 1;
@@ -473,8 +566,11 @@ univtests.ttest = 1;
 
 sii.plot = 1; % 1 or 0 depending on wether siis are to be plotted or not.
 sii.mask = 1; % 1 or 0 depending on wether siis are to be masked with the main mask or not.
-sii.roc_th = 0.3; % Peacks with AUC below roc_th2plotsii and above 1-roc_th2plotsii will be plotted. e.g.: use 0.3 to plot AUC<0.3 and AUC>0.7
-sii.ttest_th = 0.05; % Peaks with p values below ttest_th2plotsii will be plotted. e.g.: use 0.05 to plot p<0.05
+sii.roc_th = 0.3; % peacks with AUC below sii.roc_th and above 1-sii.roc_th will be plotted. e.g.: use 0.3 to plot AUC<0.3 and AUC>0.7
+sii.ttest_th = 0.05; % peaks with p values below sii.ttest_th will be plotted. e.g.: use 0.05 to plot p<0.05
+
+
+% ! Do not modify the code from here till end of this cell.
 
 sii.dataset_name = dataset_name; % Name of the dataset, which is the name given to the particular combination of small masks to plot.
 sii.extensive_filesToProcess = extensive_filesToProcess; % Extensive lists of files.
@@ -483,14 +579,32 @@ sii.outputs_xy_pairs = outputs_xy_pairs; % Extensive lists of coordenates (one p
 
 f_univariate_analyses( filesToProcess, main_mask_list, groups, norm_list, univtests, sii )
 
-%% ANOVA (N-way)
+%% Running an analysis of variance (N-way ANOVA)
+%{
 
-norm_list = [ "no norm", "RMS" ];
+Actions:
+•	Specify below the groups of pixels (i.e. masks or rois) ought to be considered, using the variable "anova.masks". 
+•	Specify below the effects ought to be modelled. Each effect is a cell of chars (words or number between ' '), separated by ;.
+•	Specify below the names of the effects, using the variable "anova.labels".
+•	Specify below the univariate analysis to run.
+•	Specify below wether to save SIIs or not, as well as which thresholds to use for the AUC and/or p-value.
 
-% Effects
+The formats of the inputs are:
+anova.masks - list of strings separated by ,
+each effect is a cell of chars separated by ;
+anova.labels - a cell of chars separated by ,
+anova.effects - a cell of variables separated by ,
 
-% same b, different s = tecni repl
-% diff b, different s = biol repl
+Help:
+The options for univariate analyses are:
+- ROC analysis (see the help of the Matlab function "perfcurve" for more information)
+Set univtests.roc to 1 to run the ROC analysis, or to 0 otherwise.
+- t-test (see the help of the Matlab function "ttest" for more information)
+Set univtests.test to 1 to run the t-test, or to 0 otherwise.
+
+%}
+
+% Groups of pixels
 
 anova.masks = [ 
     "b1s19_vehicle",    "b1s24_vehicle", 	"b2s21_vehicle",    "b2s22_vehicle",    "b3s24_vehicle",  	"b3s25_vehicle",    "b3s26_vehicle",                    "b4s23_vehicle",    "b4s24_vehicle", ...
@@ -501,6 +615,8 @@ anova.masks = [
     "b1s19_6244_2014",  "b1s24_6244_2014",  "b2s21_6244_2014",  "b2s22_6244_2014",  "b3s24_6244_2014",  "b3s25_6244_2014",  "b3s26_6244_2014", ...
     "b1s19_2014_8186",  "b1s24_2014_8186",                                          "b3s24_2014_8186",  "b3s25_2014_8186",  "b3s26_2014_8186",                  "b4s23_2014_8186"
     ];
+
+% Effects
 
 eday = { 
     '5';    '1';    '5';    '1';  	'3';  	'8'; 	'11';           '10';       '8'; ...
@@ -564,6 +680,9 @@ e6244 = {
 
 anova.labels = {'day', 'block', 'vehicle', '2014', '8186', '6244'};
 anova.effects = { eday, eblock, evehicle, e2014, e8186, e6244 };
+
+
+% ! Do not modify the code from here till end of this cell.
 
 f_anova( filesToProcess, main_mask_list, norm_list, anova ) % saving the anova results table
 

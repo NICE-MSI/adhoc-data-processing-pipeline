@@ -1,4 +1,4 @@
-function f_saving_mva_rois_ca( filesToProcess, main_mask_list, dataset_name, mva_list, numComponents_list, norm_list, mva_specifics )
+function f_saving_mva_rois_ca( filesToProcess, main_mask_list, dataset_name, mva_list, numComponents_list, norm_list, mva_reference )
 
 % Sorting the filesToProcess (and re-organising the related
 % information) to avoid the need to load the data unnecessary times.
@@ -14,7 +14,7 @@ csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
 [ ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, outputs_path ] = f_reading_inputs(csv_inputs);
 
 spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
-mva_path                = [ char(outputs_path) '\mva ' char(mva_specifics) '\' ]; if ~exist(mva_path, 'dir'); mkdir(mva_path); end
+mva_path                = [ char(outputs_path) '\' char(mva_reference) '\' ]; if ~exist(mva_path, 'dir'); mkdir(mva_path); end
 rois_path               = [ char(outputs_path) '\rois\' ];
 
 for main_mask = main_mask_list
