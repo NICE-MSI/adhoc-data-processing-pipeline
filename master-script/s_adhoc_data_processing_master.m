@@ -21,7 +21,7 @@ The "adhoc-data-processing-pipeline" git repository can be downloaded or cloned 
 This repository contains functions and files that you will need to process the data.
 
 Actions:
-•	Download or close the repository, and save it in a location of your choice. I recommend saving a copy in your personal folder (in the T or X drive for instance).
+•	Download or clone the repository, and save it in a location of your choice. I recommend saving a copy in your personal folder (in the T or X drive for instance).
 •	Specify below the complete path to the chosen location  (replace ... between the '').
 •	Execute this cell.
 
