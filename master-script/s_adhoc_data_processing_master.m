@@ -21,13 +21,14 @@ The "adhoc-data-processing-pipeline" git repository can be downloaded or cloned 
 This repository contains functions and files that you will need to process the data.
 
 Actions:
-•	Download or clone the repository, and save it in a location of your choice. I recommend saving a copy in your personal folder (in the T or X drive for instance).
+•	Download or close the repository, and save it in a location of your choice. 
+I recommend saving a copy in your personal folder (in the T or X drive for instance).
 •	Specify below the complete path to the chosen location  (replace ... between the '').
 •	Execute this cell.
 
 %}
 
-sdpp_path = '...'; % complete path to adhoc-data-processing-pipeline
+sdpp_path = 'X:\Teresa\adhoc-data-processing-pipeline-master'; % complete path to adhoc-data-processing-pipeline
 addpath(genpath(sdpp_path))
 
 %% Add "SpectralAnalysis" from git to the Matlab path
@@ -35,16 +36,17 @@ addpath(genpath(sdpp_path))
 
 Info:
 This script works with SpectralAnalysis v1.4.0 (released in Aug 2020)
-"SpectralAnalysis" can be dowloaded or cloned from https://github.com/AlanRace/SpectralAnalysis.
+"SpectralAnalysis" can be dowloaded or cloned from https://github.com/AlanRace/SpectralAnalysis/releases/.
 
 Actions:
-•	Download SpectralAnalysis v1.4.0 and save it in a location of your choice. I recommend saving it in your personal folder (in the T or X drive for instance).
+•	Download the source code of SpectralAnalysis v1.4.0 and save it in a location of your choice. 
+I recommend saving it in your personal folder (in the T or X drive for instance).
 •	Specify below the complete path to the chosen location  (replace ... between the '').
 •	Execute this cell.
 
 %}
 
-sa_path = '...'; % complete path to SpectralAnalysis folder
+sa_path = 'X:\Teresa\SpectralAnalysis-1.4.0'; % complete path to SpectralAnalysis folder
 addpath(genpath(sa_path))
 
 %% Save a master script in a location of your choice

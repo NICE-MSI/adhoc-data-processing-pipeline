@@ -97,18 +97,13 @@ for peak_i = 1:size(peakDetails,1)
             % Saving figs and tif files
             
             if ~isnan(str2double(sample_info(sample_info_i,6)))
-                
-                
                 if length(name_adduct_2plot)>2
                     name = reshape(char(strcat(sample_info(sample_info_i,4), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
                 else
                     name = reshape(char(strcat(sample_info(sample_info_i,4), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
                 end
-                
             else
-                
                 name = reshape([char(sample_info(sample_info_i,1)) '_' char(sample_info(sample_info_i,4))],[],1);
-                
             end
             
             rel_char_i = [];
@@ -121,6 +116,7 @@ for peak_i = 1:size(peakDetails,1)
                     rel_char_ii = [ rel_char_ii; char_i];
                 end
             end
+            
             name(rel_char_i) = '_';
             name(rel_char_ii) = [];
             

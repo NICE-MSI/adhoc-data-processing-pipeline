@@ -10,4 +10,4 @@ end
 
 mzvalues2keep = double(unique(hmdb_sample_info(logical(indexes2keep),4)));
 
-[~, datacube_mzvalues_indexes] = ismembertol(mzvalues2keep,datacubeonly_peakDetails(:,2),1e-12);
+[~, datacube_mzvalues_indexes] = ismembertol(mzvalues2keep,datacubeonly_peakDetails(:,2),1e-10);

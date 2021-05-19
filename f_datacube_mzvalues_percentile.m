@@ -16,7 +16,7 @@ peaks2keep = logical(peak_amplitude >= prctile(peak_amplitude,perc4mva));
 
 % Datacube indexes
 
-[~, datacube_mzvalues_indexes] = ismembertol(mzvalues2keep,datacubeonly_peakDetails(:,2),1e-12);
+[~, datacube_mzvalues_indexes] = ismembertol(mzvalues2keep,datacubeonly_peakDetails(:,2),1e-10);
 
 disp(['!!! # unique mz selected: ' num2str(sum(peaks2keep)) ' vs # unique mz collected: ' num2str(sum(datacube_mzvalues_indexes)) ])
 
