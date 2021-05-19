@@ -68,7 +68,7 @@ Actions:
 
 Notes:
 Make sure the polarity is correct, and the adducts make sense for that polarity.
-Make sure you update the complete path to the folder where the outputs of this processing will be saved.
+Make sure you update the complete path to the folder where the outputs of the processing will be saved.
 Most studies start with pre-processing, peak matching, and running k-means clustering with the aim of defining the "tissue only" mask (a mask for the tissue pixels only).
 
 %}
@@ -76,18 +76,18 @@ Most studies start with pre-processing, peak matching, and running k-means clust
 %{
 
 Actions:
+First:
+•	Copy the file "preprocessingWorkflow.sap" in the folder “required-files” and save it in a location of your choice.
+•	Edit this file based on what you know about the data.
+OR
+•	Use the SpectralAnalysis GUI to create a new SpectralAnalysis pre-processing file (.sap) and save it in a location of your choice.
+Then:
 •	Specify below the complete path to the SpectralAnalysis pre-processing file (.sap) (replace ... between the '')
 •	Execute this cell.
 
-Help:
-An example file can be found in “required-files”. You can save a copy of it in a location of your choice, and edit it in Matlab. 
-Make sure the parameters specified make sense for your particular dataset.
-Alternatively, you can use the SpectralAnalysis GUI to create this file. 
-Make sure you use the "before" and "after" plots available in the GUI to check that the pre-processing works as intended.
-
 %}
 
-preprocessing_file = '...';
+preprocessing_file = 'X:\Teresa\dummy study\preprocessingWorkflow.sap';
 
 %% Specify the data (ibd and imzml files) location
 %{
@@ -106,7 +106,7 @@ Make sure you use the "before" and "after" plots available in the GUI to check t
 
 %}
 
-data_folders = { '...' }; % list of the complete paths to the folders where the data is stored
+data_folders = { 'X:\Teresa\dummy study\neg data\' }; % list of the complete paths to the folders where the data is stored
 dataset_name_portion = { '*' }; % list of the strings that match the names of the files to be analised
 
 
@@ -123,12 +123,10 @@ end
 %{
 
 Info:
-This cell processes each imzml individually. 
-If you would like to combine multiple imzmls (i.e. define a "new" dataset),
-please look for another cell entited "Data Pre-Processing" below. 
+This cell processes each imzml individually. This needs to be done at the start of most studies.  
 
 Actions:
-•	Specify below the name of the mask (use "no mask" to analyse all pixels).
+•	Specify below the name of the mask (most studies will imply setting mask to "no mask", which means analysing all pixels).
 •	Specify below the list of normalisations.
 •	Execute this cell.
 
@@ -144,7 +142,7 @@ The options for normalisation are:
 %}
 
 mask = "no mask"; % if mask = "no mask", all pixels are used
-norm_list = [ "no norm", "RMS" ];
+norm_list = [ "no norm", "tic", "sims tic", "RMS", "pqn mean", "pqn median", "zscore" ];
 
 
 % ! Do not modify the code from here till end of this cell.
@@ -187,9 +185,14 @@ Actions:
 •	Execute this cell.
 
 Notes:
-The "inputs_file.xlsx" can be editted at any point in the process.
-You can change the group of peaks to be used in the MVAs by changing the input of the 2 functions below. 
-Read the help of these functions for further information.
+- The "inputs_file.xlsx" can be editted at any point in the process.
+However, the number of top peaks to be used here (to run the MVAs) needs to 
+be equal or smaller than the number of top peaks you had in the 
+"inputs_file.xlsx" when the datacube and normalised data were saved (i.e. 
+when the previous cell was executed).
+- You can also change the group of peaks to be used in the MVAs by changing 
+the input of the 2 functions below. Read the help of these functions for 
+further information.
 
 %}
 
@@ -328,7 +331,7 @@ f_check_datacubes_mass_axis(extensive_filesToProcess)
 
 filesToProcess = f_unique_extensive_filesToProcess(extensive_filesToProcess); % reduces the extensive list of files to a list of unique files
 
-%% Data pre-Processing of combined imzmls
+%% Data pre-processing of combined imzmls
 %{
 
 Info:
