@@ -1,4 +1,4 @@
-function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_testStudy_samples_scheme_info(dataset_name)
+function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_dummyStudy_samples_scheme_info(dataset_name)
 
 % This function is used to define a "new" dataset which is built by
 % combined multiple imzmls and using "small" masks.
@@ -18,19 +18,23 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 
 switch dataset_name
     
-    case "4 parts brain"
+    case "4 random parts of a brain"
         
         main_mask_list = "tissue only";
-        data_folders = { 'X:\ModelAndReferenceData\' }; % data folder
+        data_folders = { 'X:\Teresa\dummy study\neg data\' }; % data folder
         dataset_name = '*SagittalMouseCerebellum*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
         
         clear extensive_filesToProcess
         
         extensive_filesToProcess(1:4,:) = filesToProcess(1);
         smaller_masks_list = [
-            "top-left-brain"; "top-right-brain"; "2-parts-botom-brain"; "random-shape"
+            "tissue only";  "background"; 
+            "top";          "top 1 part 2 fill"
             ];
         
-        outputs_xy_pairs = [ 1 2; 1 2; 2 1; 2 2 ];
+        outputs_xy_pairs = [ 
+            1 1; 1 2; 
+            2 1; 2 2 
+            ];
         
 end

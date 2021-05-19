@@ -27,7 +27,7 @@ for peak_i = 1:size(peakDetails,1)
             
             fig1 = figure('units','normalized','outerposition',[0 0 1 1]);
             
-            subplot(1,2,1)
+            subplot(1,4,1:3)
             imagesc(sii2plot); colormap(viridis); axis off; axis image; colorbar;
             
             name_adduct_2plot_1 = sample_info(sample_info_i, 1);
@@ -47,7 +47,7 @@ for peak_i = 1:size(peakDetails,1)
                     'Units','normalized','fontsize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle')
             end
             text(.5,1.05,...
-                {strjoin(['theo mz ' sample_info(sample_info_i,2) ' - meas mz ', sample_info(sample_info_i,4)])},...
+                {['theo mz ' num2str(round(double(sample_info(sample_info_i,2)),6)) ' - meas mz ' num2str(round(double(sample_info(sample_info_i,4)),6))]},...
                 'Units','normalized','fontsize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle')
             text(.5,1.025,...
                 {['ppm ' num2str(round(double(sample_info(sample_info_i,5)))) ' - peak intensity ' num2str(round(double(sample_info(sample_info_i,11))))]},...
@@ -70,7 +70,7 @@ for peak_i = 1:size(peakDetails,1)
             window_mzvalues_indexes_centre = logical((totalSpectrum_mzvalues > ppmwindow_xmin).*(totalSpectrum_mzvalues < ppmwindow_xmax));
             ymax = max(totalSpectrum_intensities(1,window_mzvalues_indexes_centre)./pixels_num);
             
-            subplot(1,2,2)
+            subplot(1,4,4)
             hold on
             
             if ~strcmp(sample_info(sample_info_i,7),'not assigned')
@@ -92,18 +92,18 @@ for peak_i = 1:size(peakDetails,1)
                 
             end
             
-            axis([window_xmin window_xmax min(window_intensities) 1.1*ymax]);
+            axis([window_xmin window_xmax min(window_intensities) ymax]);
             
             % Saving figs and tif files
             
             if ~isnan(str2double(sample_info(sample_info_i,6)))
                 if length(name_adduct_2plot)>2
-                    name = reshape(char(strcat(sample_info(sample_info_i,4), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
+                    name = reshape(char(strcat(num2str(round(double(sample_info(sample_info_i,4)),6)), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
                 else
-                    name = reshape(char(strcat(sample_info(sample_info_i,4), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
+                    name = reshape(char(strcat(num2str(round(double(sample_info(sample_info_i,4)),6)), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
                 end
             else
-                name = reshape([char(sample_info(sample_info_i,1)) '_' char(sample_info(sample_info_i,4))],[],1);
+                name = reshape([char(sample_info(sample_info_i,1)) '_' char(num2str(round(double(sample_info(sample_info_i,4)),6)))],[],1);
             end
             
             rel_char_i = [];

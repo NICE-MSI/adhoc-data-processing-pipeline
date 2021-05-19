@@ -137,10 +137,6 @@ if sum(datacube_mzvalues_indexes) > 0
             clustmap = viridis(numComponents);
         end
         
-        if min(idx)==0
-            clustmap = [ 0 0 0; clustmap ]; % adding black to be the colour of 0s
-        end
-        
         for componenti = 1:numComponents
                         
             if ( componenti == 1 )
@@ -156,12 +152,16 @@ if sum(datacube_mzvalues_indexes) > 0
                 fig0 = figure('units','normalized','outerposition',[0 0 .7 .7]); % set(gcf,'Visible', 'off');
 
                 if isequal(char(mva_type),'kmeans') || isequal(char(mva_type),'hierarclustering') || isequal(char(mva_type),'fdc') 
-                    
+                                        
                     % Plotting clustering map
                     
                     image_component = reshape(idx,datacube.width,datacube.height)';
                     imagesc(image_component)            
-                    colormap(clustmap)
+                    if min(idx)==0
+                        colormap([ 0 0 0; clustmap ])
+                    else
+                        colormap(clustmap)
+                    end
                     colorbar
                     axis off
                     axis image
@@ -197,15 +197,18 @@ if sum(datacube_mzvalues_indexes) > 0
                     end
                     
                 elseif isequal(char(mva_type),'tsne')
-                    
+                                        
                     % Plotting clustered t-sne map
-                    
-                    if min(idx)>0; cmap = cmap(2:end,:); end % removing the black row of cmap
-                    
+                                        
                     image_component = reshape(idx,datacube.width,datacube.height)'; 
                     subplot(3,4,[1:3 5:7 9:11]) 
-                    imagesc(image_component) % clustering map      
-                    colormap(cmap)
+                    imagesc(image_component) % clustering map
+                    if min(idx)==0
+                        colormap(cmap)
+                    else
+                        colormap(cmap(2:end,:))
+                        print('here')
+                    end
                     colorbar
                     axis off
                     axis image
@@ -214,11 +217,10 @@ if sum(datacube_mzvalues_indexes) > 0
 
                     % Plotting clustered t-sne embedding space
                     
-                    scatter3_colour_vector = []; for cii = 1:max(idx); scatter3_colour_vector(idx(idx>0)==cii,1:3) = repmat(cmap(cii,:),sum(idx(idx>0)==cii),1); end                    
+                    scatter3_colour_vector = []; for cii = 1:max(idx); scatter3_colour_vector(idx(idx>0)==cii,1:3) = repmat(cmap(cii+1,:),sum(idx(idx>0)==cii),1); end                    
                     
                     subplot(3,4,4)
                     scatter3(rgbData(:,1),rgbData(:,2),rgbData(:,3),1,scatter3_colour_vector); % t-sne embedding space plot
-                    colormap(cmap)
                     colorbar
                     title({'t-sne space'})
                     
@@ -233,8 +235,9 @@ if sum(datacube_mzvalues_indexes) > 0
                     %
                     
                     fig0 = figure('units','normalized','outerposition',[0 0 .7 .7]); % set(gcf,'Visible', 'off');
-                                        rgb_image_component = zeros(size(image_component,1),size(image_component,2),size(rgbData,2)); 
-                    for ci = 1:size(rgbData,2); rgb_image_component(:,:,ci) = reshape(rgbData(:,ci),datacube.width,datacube.height)'; end
+                    
+                    rgb_image_component = zeros(size(image_component,1),size(image_component,2),size(rgbData,2));
+                    for ci = 1:size(rgbData,2); aux_rgbData = 0*idx; aux_rgbData(idx>0,1) = rgbData(:,ci); rgb_image_component(:,:,ci) = reshape(aux_rgbData,datacube.width,datacube.height)'; end
 
                     aux_rgb = logical((sum(rgb_image_component,3)==0)+(isnan(sum(rgb_image_component,3))));
                     
@@ -406,7 +409,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     axis image
                     colorbar
                     set(gca, 'fontsize', 12)
-                    colormap([0 0 0; cmap(componenti,:)])
+                    colormap([0 0 0; cmap(componenti+1,:)])
                     title({['cluster ' num2str(componenti) ' image ' ]})
                     
                     % Cluster spectral signature
@@ -544,19 +547,19 @@ if sum(datacube_mzvalues_indexes) > 0
             
             % Saving single ion images of the highest loadings
             
-            if ~strcmpi(main_mask,'no mask') % && ~strcmpi(mva_type,'tsne')
+            if ~strcmpi(main_mask,'no mask')
                 
                 [ ~, mz_indexes ] = sort(abs(spectral_component),'descend');
                 
                 if numLoadings <= length(mz_indexes)
                     
-                    mva_mzvalues        = datacube.spectralChannels(datacube_mzvalues_indexes);
+                    mva_mzvalues        = datacubeonly_peakDetails(datacube_mzvalues_indexes,2);
                     mva_ion_images      = norm_data(:,datacube_mzvalues_indexes);
                     mva_peakDetails     = datacubeonly_peakDetails(datacube_mzvalues_indexes,:);
                     
                     mini_mzvalues       = mva_mzvalues(mz_indexes(1:numLoadings));
                     mini_ion_images     = mva_ion_images(:,mz_indexes(1:numLoadings));
-                    mini_peakDetails    = mva_peakDetails(mz_indexes(1:numLoadings),:); % Peak details need to be sorted in the intended way (e.g, highest loading peaks first)! Sii will be saved based on it.
+                    mini_peak_details   = mva_peakDetails(mz_indexes(1:numLoadings),:); % Peak details need to be sorted in the intended way (e.g, highest loading peaks first)! Sii will be saved based on it.
                     
                     all_mzvalues        = double(hmdb_sample_info(:,4));
                     
@@ -594,7 +597,7 @@ if sum(datacube_mzvalues_indexes) > 0
                     
                     % Generating the figures and saving them
                     
-                    f_saving_sii_files( outputs_path, mini_sample_info, mini_sample_info_indexes, mini_ion_images, datacube.width, datacube.height, mini_peakDetails, pixels_num, totalSpectrum_intensities, totalSpectrum_mzvalues, fig_ppmTolerance, 1 )
+                    f_saving_sii_files( outputs_path, mini_sample_info, mini_sample_info_indexes, mini_ion_images, datacube.width, datacube.height, mini_peak_details, pixels_num, totalSpectrum_intensities, totalSpectrum_mzvalues, fig_ppmTolerance, 1 )
                     
                 else
                     

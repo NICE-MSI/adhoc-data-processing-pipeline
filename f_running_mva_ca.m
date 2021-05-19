@@ -1,5 +1,7 @@
 function f_running_mva_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_molecules_list0, mva_classes_list0, mzvalues2discard )
 
+if nargin <= 5; mva_molecules_list0 = []; end
+if nargin <= 6; mva_classes_list0 = []; end
 if nargin <= 7; mzvalues2discard = []; end
 
 % Sorting the filesToProcess (and re-organising the related

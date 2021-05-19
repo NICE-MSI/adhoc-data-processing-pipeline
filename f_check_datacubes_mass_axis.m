@@ -1,4 +1,4 @@
-function f_check_datacubes_mass_axis(extensive_filesToProcess)
+function f_check_datacubes_mass_axis(extensive_filesToProcess, check_datacubes_size, main_mask_list)
 
 % This function checks if the datacubes that need to be combined (those specified in extensive_filesToProcess) have the same mass axis.
 % 

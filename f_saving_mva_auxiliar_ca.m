@@ -37,7 +37,7 @@ load('datacube_mzvalues_indexes')
 
 o_numComponents = NaN;
 
-if sum(datacube_mzvalues_indexes) > 0
+if length(datacube_mzvalues_indexes) >= numComponents
     
     % Loading MVA results
     

@@ -237,7 +237,7 @@ If they were not there when the data was saved (at the end of the pre-processing
 %}
 
 mask_on = 0; % 1 or 0 depending on either the sii are to be masked with the main mask or not
-sii_peak_list = "all"; % [ "List A", "List B" ]
+sii_peak_list = "CRUK metabolites"; % [ "List A", "List B" ]
 
 
 % ! Do not modify the code from here till end of this cell.
@@ -281,12 +281,12 @@ While the "main" mask is mostly used to generate the tissue representative spect
 
 file_index      = 1; % index of the imzml - check filesToProcess 
 output_mask     = "tissue only"; % name for the new mask
-mva_reference   = "mva 500 highest peaks"; % name of the mvas folder to be used
+mva_reference   = "mva 100 highest peaks"; % name of the mvas folder to be used
 input_mask      = "no mask"; % name of the mask used to run the mvas
-mva_type        = "kmeans"; % name of the segmentation technique used
-numComponents   = 2; % number of clusters used
+mva_type        = "tsne"; % name of the segmentation technique used
+numComponents   = 6; % number of clusters used
 norm_type       = "no norm"; % normalisation used
-vector_set      = [ 1 2 ]; % list the numbers (ids) of the clusters to keep
+vector_set      = [ 1 3 5 ]; % list the numbers (ids) of the clusters to keep
 regionsNum2keep = 0; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
 regionsNum2fill = 0; % number of areas you would like to fill and keep (these areas will be added to the clusters - union of areas)
 
@@ -295,7 +295,7 @@ regionsNum2fill = 0; % number of areas you would like to fill and keep (these ar
 
 file_name = filesToProcess(file_index).name; disp(file_name)
 
-f_mask_creation( file_name, input_mask, [], mva_type, mva_reference, numComponents, norm_type, vector_set, regionsNum2keep, regionsNum2fill, output_mask ) % new mask creation
+f_mask_creation( filesToProcess(file_index), input_mask, [], mva_type, mva_reference, numComponents, norm_type, vector_set, regionsNum2keep, regionsNum2fill, output_mask ) % new mask creation
 
 %% Combining imzmls
 %{
@@ -316,18 +316,18 @@ However, this can only be done once all datacubes have been saved (which will on
 
 %}
 
-dataset_name = "4 parts brain";
-check_datacubes_size = 0; % 0 for no, 1 for yes
+dataset_name = "4 random parts of a brain";
+check_datacubes_size = 1; % 0 for no, 1 for yes
 
 % !!! Update the name of the function called below !!!
 
 [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = ...
-    f_icr_samples_scheme_info( dataset_name );
+    f_dummyStudy_samples_scheme_info( dataset_name );
 
 
 % ! Do not modify the code from here till end of this cell.
 
-f_check_datacubes_mass_axis(extensive_filesToProcess)
+f_check_datacubes_mass_axis(extensive_filesToProcess, check_datacubes_size, main_mask_list)
 
 filesToProcess = f_unique_extensive_filesToProcess(extensive_filesToProcess); % reduces the extensive list of files to a list of unique files
 
@@ -422,14 +422,14 @@ Read the help of these functions for further information.
 
 %}
 
-mva_peaks = [ "top", "lists" ];
-mva_lists = [ "CRUK metabolites", "Immunometabolites", "Structural Lipids", "Fatty acid metabolism" ];
+mva_peaks = [ "top", "lists" ]; 
+mva_lists = [ "CRUK metabolites", "Marcels Lipid List", "Glycolysis" ];
 
 
 % ! Do not modify the code from here till end of this cell.
 
 for task = mva_peaks
-    if isequal(task,"top"); mva_molecules_list = string([]); end % Using the top peaks specified in the "inputs_file"
+    if isequal(task,"top"); mva_lists = string([]); end % Using the top peaks specified in the "inputs_file"
     
     f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists ) % Running MVAs
     
@@ -745,7 +745,7 @@ for norm = norm_list
         disp(['# peaks discarded: ', num2str(size(mzvalues2discard,1))])
         
         for task = mva_peaks
-            if isequal(task,"top"); mva_molecules_list = string([]); end % Using the top peaks specified in the "inputs_file"
+            if isequal(task,"top"); mva_lists = string([]); end % Using the top peaks specified in the "inputs_file"
             
             f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm, mva_lists, string([]), mzvalues2discard ) % Running MVAs
             

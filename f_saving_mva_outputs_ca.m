@@ -1,5 +1,7 @@
 function f_saving_mva_outputs_ca( filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_molecules_list0, mva_classes_list0, mzvalues2discard )
 
+if nargin <= 6; mva_molecules_list0 = []; end
+if nargin <= 7; mva_classes_list0 = []; end
 if nargin <= 8; mzvalues2discard = []; end
 
 % Sorting the filesToProcess (and re-organising the related
