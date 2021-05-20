@@ -252,9 +252,9 @@ for peak_i = 1:size(peak_details,1)
                 
             end
             
-            if (window_xmin>=window_xmax)||(min(window_intensities)>=1.1*ymax); break; end
+            if (window_xmin>=window_xmax)||(min(window_intensities)>=ymax); break; end
             
-            axis([window_xmin window_xmax min(window_intensities) 1.1*ymax]);
+            axis([window_xmin window_xmax min(window_intensities) ymax]);
             
             % Saving figs and tif files
             

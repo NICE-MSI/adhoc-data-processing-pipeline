@@ -431,7 +431,7 @@ mva_lists = [ "CRUK metabolites", "Marcels Lipid List", "Glycolysis" ];
 for task = mva_peaks
     if isequal(task,"top"); mva_lists = string([]); end % Using the top peaks specified in the "inputs_file"
     
-    f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists ) % Running MVAs
+    %f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists ) % Running MVAs
     
     f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_lists ) % Saving MVAs outputs
 end
@@ -464,7 +464,7 @@ If they were not there when the data was saved (at the end of the pre-processing
 
 %}
 
-sii_peak_list = "all"; % [ "List A", "List B" ]
+sii_peak_list = "all"; % [ "CRUK metabolites", "Marcels Lipid List", "Glycolysis" ]
 
 
 % ! Do not modify the code from here till end of this cell.
@@ -486,9 +486,9 @@ Actions:
 
 %}
 
-mva_reference   = "mva 500 highest peaks"; % name of the mvas folder to be used
-mva_type        = "kmeans"; % name of the segmentation technique used
-numComponents   = 2; % number of clusters used
+mva_reference   = "mva 100 highest peaks"; % name of the mvas folder to be used
+mva_type        = "tsne"; % name of the segmentation technique used
+numComponents   = 6; % number of clusters used
 norm_type       = "no norm"; % normalisation used
 
 

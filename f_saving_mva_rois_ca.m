@@ -74,13 +74,13 @@ for main_mask = main_mask_list
 
                 if isnan(numComponents)
                     
-                    mkdir([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\mva ' char(mva_specifics) '\' ])
-                    cd([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\mva ' char(mva_specifics) '\' ])
+                    mkdir([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\mva ' char(mva_reference) '\' ])
+                    cd([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\mva ' char(mva_reference) '\' ])
                     
                 else
                     
-                    mkdir([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\mva ' char(mva_specifics) '\' ])
-                    cd([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\mva ' char(mva_specifics) '\' ])
+                    mkdir([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\mva ' char(mva_reference) '\' ])
+                    cd([ rois_path char(unique_file_names(coli)) '\mva rois\' char(dataset_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\mva ' char(mva_reference) '\' ])
                     
                 end
                 
