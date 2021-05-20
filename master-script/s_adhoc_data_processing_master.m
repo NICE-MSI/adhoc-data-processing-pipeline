@@ -28,7 +28,7 @@ I recommend saving a copy in your personal folder (in the T or X drive for insta
 
 %}
 
-sdpp_path = 'X:\Teresa\adhoc-data-processing-pipeline-master'; % complete path to adhoc-data-processing-pipeline
+sdpp_path = '...'; % complete path to adhoc-data-processing-pipeline
 addpath(genpath(sdpp_path))
 
 %% Add "SpectralAnalysis" from git to the Matlab path
@@ -46,7 +46,7 @@ I recommend saving it in your personal folder (in the T or X drive for instance)
 
 %}
 
-sa_path = 'X:\Teresa\SpectralAnalysis-1.4.0'; % complete path to SpectralAnalysis folder
+sa_path = '...'; % complete path to SpectralAnalysis folder
 addpath(genpath(sa_path))
 
 %% Save a master script in a location of your choice
@@ -87,7 +87,7 @@ Then:
 
 %}
 
-preprocessing_file = 'X:\Teresa\dummy study\preprocessingWorkflow.sap';
+preprocessing_file = '...';
 
 %% Specify the data (ibd and imzml files) location
 %{
@@ -106,7 +106,7 @@ Make sure you use the "before" and "after" plots available in the GUI to check t
 
 %}
 
-data_folders = { 'X:\Teresa\dummy study\neg data\' }; % list of the complete paths to the folders where the data is stored
+data_folders = { '...' }; % list of the complete paths to the folders where the data is stored
 dataset_name_portion = { '*' }; % list of the strings that match the names of the files to be analised
 
 
@@ -237,7 +237,7 @@ If they were not there when the data was saved (at the end of the pre-processing
 %}
 
 mask_on = 0; % 1 or 0 depending on either the sii are to be masked with the main mask or not
-sii_peak_list = [772.349999995545]; % [ "List A", "List B" ] or [mass1, mass2]
+sii_peak_list = "all"; % [ "List A", "List B" ] or [mass1, mass2]
 
 
 % ! Do not modify the code from here till end of this cell.
@@ -280,14 +280,14 @@ While the "main" mask is mostly used to generate the tissue representative spect
 %}
 
 file_index      = 1; % index of the imzml - check filesToProcess 
-output_mask     = "top-background"; % name for the new mask
+output_mask     = "tissue only"; % name for the new mask
 mva_reference   = "mva 100 highest peaks"; % name of the mvas folder to be used
 input_mask      = "no mask"; % name of the mask used to run the mvas
 mva_type        = "tsne"; % name of the segmentation technique used
 numComponents   = 6; % number of clusters used
 norm_type       = "no norm"; % normalisation used
 vector_set      = [ 2 4 6 ]; % list the numbers (ids) of the clusters to keep
-regionsNum2keep = 1; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
+regionsNum2keep = 0; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
 regionsNum2fill = 0; % number of areas you would like to fill and keep (these areas will be added to the clusters - union of areas)
 
 
@@ -316,13 +316,13 @@ However, this can only be done once all datacubes have been saved (which will on
 
 %}
 
-dataset_name = "brain tissue and background";
+dataset_name = "...";
 check_datacubes_size = 1; % 0 for no, 1 for yes
 
 % !!! Update the name of the function called below !!!
 
 [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = ...
-    f_dummyStudy_samples_scheme_info( dataset_name );
+    f_testStudy_samples_scheme_info( dataset_name );
 
 
 % ! Do not modify the code from here till end of this cell.
