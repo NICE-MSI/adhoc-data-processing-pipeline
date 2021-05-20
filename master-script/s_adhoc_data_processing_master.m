@@ -237,7 +237,7 @@ If they were not there when the data was saved (at the end of the pre-processing
 %}
 
 mask_on = 0; % 1 or 0 depending on either the sii are to be masked with the main mask or not
-sii_peak_list = "CRUK metabolites"; % [ "List A", "List B" ]
+sii_peak_list = [772.349999995545]; % [ "List A", "List B" ] or [mass1, mass2]
 
 
 % ! Do not modify the code from here till end of this cell.
@@ -280,14 +280,14 @@ While the "main" mask is mostly used to generate the tissue representative spect
 %}
 
 file_index      = 1; % index of the imzml - check filesToProcess 
-output_mask     = "tissue only"; % name for the new mask
+output_mask     = "top-background"; % name for the new mask
 mva_reference   = "mva 100 highest peaks"; % name of the mvas folder to be used
 input_mask      = "no mask"; % name of the mask used to run the mvas
 mva_type        = "tsne"; % name of the segmentation technique used
 numComponents   = 6; % number of clusters used
 norm_type       = "no norm"; % normalisation used
-vector_set      = [ 1 3 5 ]; % list the numbers (ids) of the clusters to keep
-regionsNum2keep = 0; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
+vector_set      = [ 2 4 6 ]; % list the numbers (ids) of the clusters to keep
+regionsNum2keep = 1; % number of areas you would like to cut and keep (these areas will be multiplied by the clusters - intersection of areas)
 regionsNum2fill = 0; % number of areas you would like to fill and keep (these areas will be added to the clusters - union of areas)
 
 
@@ -316,7 +316,7 @@ However, this can only be done once all datacubes have been saved (which will on
 
 %}
 
-dataset_name = "4 random parts of a brain";
+dataset_name = "brain tissue and background";
 check_datacubes_size = 1; % 0 for no, 1 for yes
 
 % !!! Update the name of the function called below !!!
@@ -464,7 +464,7 @@ If they were not there when the data was saved (at the end of the pre-processing
 
 %}
 
-sii_peak_list = "all"; % [ "CRUK metabolites", "Marcels Lipid List", "Glycolysis" ]
+sii_peak_list = [ 756.405999995922 ]; % "all"; % [ "CRUK metabolites", "Marcels Lipid List", "Glycolysis" ]
 
 
 % ! Do not modify the code from here till end of this cell.
@@ -511,7 +511,7 @@ Actions:
 
 % ! Do not modify the code from here till end of this cell.
 
-f_ion_intensities_table( filesToProcess, main_mask_list, smaller_masks_list, norm_list )
+f_ion_intensities_table( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list )
 
 %% Running univariate analyses (ROC, t-test)
 %{
@@ -548,19 +548,16 @@ sii.ttest_th - a double between 0 and 1, often 0.05
 
 % Defining the groups of rois / pixels to compare (lists of small masks names)
 
-vehicle =           [ "b1s24_vehicle","b2s22_vehicle","b3s24_vehicle","b1s19_vehicle","b2s21_vehicle","b3s25_vehicle","b4s24_vehicle","b4s23_vehicle","b3s26_vehicle" ];
-AZD2014 =           [ "b1s24_2014","b2s22_2014","b3s24_2014","b1s19_2014","b2s21_2014","b3s25_2014","b4s23_2014","b3s26_2014" ];
-AZD8186 =           [ "b1s24_8186","b2s22_8186","b3s24_8186","b4s20_8186","b1s19_8186","b2s21_8186","b3s25_8186","b4s24_8186","b4s23_8186","b3s26_8186" ];
-AZD6244 =           [ "b1s24_6244","b2s22_6244","b3s24_6244","b4s20_6244","b1s19_6244","b2s21_6244","b3s25_6244","b4s24_6244","b4s23_6244","b3s26_6244" ];
-AZD6244_AZD8186 =   [ "b1s24_6244_8186","b2s22_6244_8186","b3s24_6244_8186","b1s19_6244_8186","b2s21_6244_8186","b3s25_6244_8186","b4s23_6244_8186","b3s26_6244_8186" ];
-AZD6244_AZD2014 =   [ "b1s24_6244_2014","b2s22_6244_2014","b3s24_6244_2014","b1s19_6244_2014","b2s21_6244_2014","b3s25_6244_2014","b3s26_6244_2014" ];
-AZD2014_AZD8186 =   [ "b1s24_2014_8186","b3s24_2014_8186","b1s19_2014_8186","b3s25_2014_8186","b4s23_2014_8186","b3s26_2014_8186" ];
+tissue =        [ "top-tissue", "botom-tissue" ];
+background =    [ "top-background", "botom-background" ];
+top =           [ "top-tissue", "top-background" ];
+botom =         [ "botom-tissue", "botom-background" ];
 
-groups.name = "all vs veh and sing vs combi"; % a string with the name of the results file
+groups.name = "tissue vs background and top vs botom"; % a string with the name of the results file
 
-groups.masks = { vehicle, AZD2014, AZD8186, AZD6244, AZD6244_AZD8186, AZD6244_AZD2014, AZD2014_AZD8186 };
-groups.names = { "vehicle", "AZD2014", "AZD8186", "AZD6244", "AZD6244_AZD8186", "AZD6244_AZD2014", "AZD2014_AZD8186" };
-groups.pairs = { [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [2, 6], [2, 7], [3, 5], [3, 7], [4, 5], [4, 6] }; % [1, 2] will combine vehicle (1st position in the lists above) with AZD2014 (2nd position in the lists above)
+groups.masks = { tissue, background, top, botom };
+groups.names = { "tissue", "background", "top", "botom" };
+groups.pairs = { [1, 2], [3, 4] }; % [1, 2] compares 1st position in the lists above with 2nd position in the lists above
 
 % What univariate analyses?
 
@@ -611,85 +608,20 @@ Set univtests.test to 1 to run the t-test, or to 0 otherwise.
 
 % Groups of pixels
 
-anova.masks = [ 
-    "b1s19_vehicle",    "b1s24_vehicle", 	"b2s21_vehicle",    "b2s22_vehicle",    "b3s24_vehicle",  	"b3s25_vehicle",    "b3s26_vehicle",                    "b4s23_vehicle",    "b4s24_vehicle", ...
-    "b1s19_2014",       "b1s24_2014",       "b2s21_2014",       "b2s22_2014",       "b3s24_2014",      	"b3s25_2014",       "b3s26_2014",                       "b4s23_2014", ...
-    "b1s19_8186",       "b1s24_8186",       "b2s21_8186",       "b2s22_8186",       "b3s24_8186",       "b3s25_8186",       "b3s26_8186",       "b4s20_8186",   "b4s23_8186",       "b4s24_8186", ...
-    "b1s19_6244",       "b1s24_6244",       "b2s21_6244",       "b2s22_6244",       "b3s24_6244",       "b3s25_6244",       "b3s26_6244",       "b4s20_6244",   "b4s23_6244",       "b4s24_6244", ...
-    "b1s19_6244_8186",  "b1s24_6244_8186",  "b2s21_6244_8186",  "b2s22_6244_8186",  "b3s24_6244_8186",  "b3s25_6244_8186",  "b3s26_6244_8186",                  "b4s23_6244_8186", ...
-    "b1s19_6244_2014",  "b1s24_6244_2014",  "b2s21_6244_2014",  "b2s22_6244_2014",  "b3s24_6244_2014",  "b3s25_6244_2014",  "b3s26_6244_2014", ...
-    "b1s19_2014_8186",  "b1s24_2014_8186",                                          "b3s24_2014_8186",  "b3s25_2014_8186",  "b3s26_2014_8186",                  "b4s23_2014_8186"
-    ];
+anova.masks = [ "top-tissue", "top-background", "botom-tissue",  "botom-background" ];
 
 % Effects
 
-eday = { 
-    '5';    '1';    '5';    '1';  	'3';  	'8'; 	'11';           '10';       '8'; ...
-    '5';    '1';    '5';    '1';	'3';  	'8'; 	'11';         	'10'; ...
-    '5';    '1';    '5';    '1'; 	'3';  	'8';   	'11';	'3';    '10';       '8'; ...
-    '5';    '1';    '5';    '1'; 	'3';  	'8';  	'11';	'3';    '10';       '8'; ...
-    '5';    '1';    '5';    '1';	'3';    '8';    '11';         	'10'; ...
-    '5';    '1';    '5';    '1';    '3';    '8';    '11'; ...
-    '5';    '1';                    '3';    '8';    '11';           '10'
-    };
+elocation = { 'top'; 'top'; 'botom'; 'botom' };
+esample = { 'tissue'; 'background'; 'tissue'; 'background' };
 
-eblock = { 
-    '1';    '1';    '2';    '2';  	'3';  	'3'; 	'3';            '4';       '4'; ...
-    '1';    '1';    '2';    '2';	'3';  	'3'; 	'3';         	'4'; ...
-    '1';    '1';    '2';    '2'; 	'3';  	'3';   	'3';	'4';    '4';       '4'; ...
-    '1';    '1';    '2';    '2'; 	'3';  	'3';  	'3';	'4';    '4';       '4'; ...
-    '1';    '1';    '2';    '2';	'3';    '3';    '3';         	'4'; ...
-    '1';    '1';    '2';    '2';    '3';    '3';    '3'; ...
-    '1';    '1';                    '3';    '3';    '3';            '4'
-    };
-
-evehicle = { 
-    '1';    '1';    '1';    '1';  	'1';  	'1'; 	'1';            '1';       '1'; ...
-    '0';    '0';    '0';    '0';	'0';  	'0'; 	'0';            '0'; ...
-    '0';    '0';    '0';    '0'; 	'0';  	'0';	'0';	'0';    '0';       '0'; ...
-    '0';    '0';    '0';    '0'; 	'0';  	'0';  	'0';	'0';    '0';       '0'; ...
-    '0';    '0';    '0';    '0';	'0';    '0';    '0';         	'0'; ...
-    '0';    '0';    '0';    '0';    '0';    '0';    '0'; ...
-    '0';    '0';                    '0';    '0';    '0';            '0'
-    };
-
-e2014 = { 
-    '0';    '0';    '0';    '0';  	'0';  	'0'; 	'0';            '0';       '0'; ...
-    '1';    '1';    '1';    '1';	'1';  	'1'; 	'1';            '1'; ...
-    '0';    '0';    '0';    '0'; 	'0';  	'0';	'0';	'0';    '0';       '0'; ...
-    '0';    '0';    '0';    '0'; 	'0';  	'0';  	'0';	'0';    '0';       '0'; ...
-    '0';    '0';    '0';    '0';	'0';    '0';    '0';         	'0'; ...
-    '1';    '1';    '1';    '1';    '1';    '1';    '1'; ...
-    '1';    '1';                    '1';    '1';    '1';            '1'
-    };
-
-e8186 = { 
-    '0';    '0';    '0';    '0';  	'0';  	'0'; 	'0';            '0';       '1'; ...
-    '0';    '0';    '0';    '0';	'0';  	'0'; 	'0';            '0'; ...
-    '1';    '1';    '1';    '1'; 	'1';  	'1';	'1';	'1';    '1';       '1'; ...
-    '0';    '0';    '0';    '0'; 	'0';  	'0';  	'0';	'0';    '0';       '0'; ...
-    '1';    '1';    '1';    '1';	'1';    '1';    '1';         	'1'; ...
-    '0';    '0';    '0';    '0';    '0';    '0';    '0'; ...
-    '1';    '1';                    '1';    '1';    '1';            '1'
-    };
-
-e6244 = { 
-    '0';    '0';    '0';    '0';  	'0';  	'0'; 	'0';            '0';       '1'; ...
-    '0';    '0';    '0';    '0';	'0';  	'0'; 	'0';            '0'; ...
-    '0';    '0';    '0';    '0'; 	'0';  	'0';	'0';	'0';    '0';       '0'; ...
-    '1';    '1';    '1';    '1'; 	'1';  	'1';  	'1';	'1';    '1';       '1'; ...
-    '1';    '1';    '1';    '1';	'1';    '1';    '1';         	'1'; ...
-    '1';    '1';    '1';    '1';    '1';    '1';    '1'; ...
-    '0';    '0';                    '0';    '0';    '0';            '0'
-    };
-
-anova.labels = {'day', 'block', 'vehicle', '2014', '8186', '6244'};
-anova.effects = { eday, eblock, evehicle, e2014, e8186, e6244 };
+anova.labels = { 'location', 'sample' };
+anova.effects = { elocation, esample };
 
 
 % ! Do not modify the code from here till end of this cell.
 
-f_anova( filesToProcess, main_mask_list, norm_list, anova ) % saving the anova results table
+f_anova( filesToProcess, main_mask_list, dataset_name, norm_list, anova ) % saving the anova results table
 
 %% Running multivariate analyses after discardig peaks by filtering the ANOVA results
 %{
@@ -721,15 +653,15 @@ You can run either options by setting mva_peaks = "top" or mva_peaks = "lists", 
 
 % Peak filtering details
 
-criteria.file = "anova day block vehicle 2014 8186 6244"; % name of the file with the ANOVA results
-criteria.column = { "p value for day effect (mean)" }; % name of the columns of the ANOVA results to be used for filtering
+criteria.file = "anova location sample"; % name of the file with the ANOVA results
+criteria.column = { "p value for sample effect (mean)" }; % name of the columns of the ANOVA results to be used for filtering
 criteria.ths_type = { "equal_below" }; % "equal_below", "below", "equal_above", "above"
-th_list = [ 0.01, 0.05 ]; % double between 0 and 1, usually 0.01 or 0.05
+th_list = [ 0.01 or 0.05 ]; % double between 0 and 1, usually 0.01 or 0.05
 criteria.combination = "or"; % "and", "or"
 
 % Multivariate analyses details
 
-mva_peaks = [ "top", "lists" ];
+mva_peaks = [ "top", "lists" ]; % 
 mva_lists = [ "CRUK metabolites", "Immunometabolites", "Structural Lipids", "Fatty acid metabolism" ];
 
 
@@ -740,7 +672,7 @@ for norm = norm_list
         
         criteria.ths_value = { th };
         
-        mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mask_list, norm, criteria); % peaks to discard are normalisation specific
+        mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mask_list, dataset_name, norm, criteria); % peaks to discard are normalisation specific
                 
         disp(['# peaks discarded: ', num2str(size(mzvalues2discard,1))])
         
@@ -754,9 +686,9 @@ for norm = norm_list
     end
 end
 
-%% Saving data in a txt file for supervised classification
+%% Saving data in a txt file with labels for each pixel based on the small masks
 
-f_data_4_cnn_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, 'txt' )
+f_saving_labelled_data_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, 'txt' )
 
 %% Plot 2D and 3D PCs plots
 

@@ -1,4 +1,4 @@
-function mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mask_list, norm_type, criteria)
+function mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mask_list, dataset_name, norm_type, criteria)
 
 filesToProcess = f_unique_extensive_filesToProcess(filesToProcess); % This function collects all files that need to have a common axis.
 
@@ -6,7 +6,7 @@ csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
 
 [ ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, outputs_path ] = f_reading_inputs(csv_inputs);
 
-anova_path = [ char(outputs_path) '\anova\' ]; if ~exist(anova_path, 'dir'); mkdir(anova_path); end
+anova_path = [ char(outputs_path) '\anova\' filesep char(dataset_name) filesep ];
 
 for main_mask = main_mask_list
     

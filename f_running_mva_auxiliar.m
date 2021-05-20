@@ -43,7 +43,7 @@ cd(path)
 
 save('datacube_mzvalues_indexes','datacube_mzvalues_indexes','-v7.3')
 
-if length(datacube_mzvalues_indexes) >= numComponents % if there are more then 3 peaks in the curated data
+if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents) % if there are more then 3 peaks in the curated data
     
     % Running MVA
     

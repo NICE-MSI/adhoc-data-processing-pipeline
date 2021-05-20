@@ -1,4 +1,4 @@
-function f_ion_intensities_table( filesToProcess, main_mask_list, smaller_masks_list, norm_list )
+function f_ion_intensities_table( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list )
 
 disp(' ')
 disp('! Please make sure that every small mask has a unique name.')
@@ -16,7 +16,7 @@ csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
 spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
 peak_assignments_path   = [ char(outputs_path) '\peak assignments\' ];
 rois_path               = [ char(outputs_path) '\rois\' ];
-table_path              = [ char(outputs_path) '\ion intensities table\' ]; if ~exist(table_path, 'dir'); mkdir(table_path); end
+table_path              = [ char(outputs_path) '\ion intensities table\' char(dataset_name) filesep ]; if ~exist(table_path, 'dir'); mkdir(table_path); end
 
 for main_mask = main_mask_list
     
@@ -85,7 +85,7 @@ for main_mask = main_mask_list
         
         disp('! Computing mean and median intensities for each small mask...')
         
-        table = [ "meas mz", "molecule", "mono mz", "adduct", "ppm", "database (by mono mz)", col_mean, col_median ];
+        table = [ "meas mz", "molecule", "mono mz", "adduct", "ppm", "database (by mono mz)", "kingdom", "super class", "class", "subclass", col_mean, col_median ];
         
         for mzi = 1:size(datacubeonly_peakDetails(:,2),1)
             

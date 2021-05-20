@@ -37,4 +37,24 @@ switch dataset_name
             2 1; 2 2 
             ];
         
+    case "brain tissue and background"
+        
+        main_mask_list = "tissue only";
+        data_folders = { 'X:\Teresa\dummy study\neg data\' }; % data folder
+        dataset_name = '*SagittalMouseCerebellum*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        
+        clear extensive_filesToProcess
+        
+        extensive_filesToProcess(1:4,:) = filesToProcess(1);
+        smaller_masks_list = [
+            "top-tissue";       "top-background"; 
+            "botom-tissue";     "botom-background"; 
+            ];
+        
+        outputs_xy_pairs = [ 
+            1 1; 1 2;
+            2 1; 2 2 
+            ];     
+        
+        
 end

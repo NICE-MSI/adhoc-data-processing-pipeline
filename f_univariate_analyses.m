@@ -250,7 +250,7 @@ if univtests.roc || univtests.ttest
                 % Adding peak assigments information
                 
                 if mzi == 1
-                    table_row1 = [ table_row1, "meas mz", "molecule", "mono mz", "adduct", "ppm", "database (by mono mz)" ];
+                    table_row1 = [ table_row1, "meas mz", "molecule", "mono mz", "adduct", "ppm", "database (by mono mz)", "kingdom", "super class", "class", "subclass" ];
                 end
                 
                 indexes2add = (abs(datacubeonly_peakDetails(mzi,2)-double(new_hmdb_sample_info(:,3))) < 1e-10);
@@ -266,7 +266,7 @@ if univtests.roc || univtests.ttest
                     
                     table_moving_row = [...
                         [ table_moving_row num2str(datacubeonly_peakDetails(mzi,2),'%1.12f') ],...
-                        repmat("not assigned",1,5),...
+                        repmat("not assigned",1,size(new_hmdb_sample_info(indexes2add,[1:2 4:end]),2)),...
                         ];
                     
                 end

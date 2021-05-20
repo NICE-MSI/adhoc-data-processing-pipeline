@@ -1,4 +1,4 @@
-function f_anova( filesToProcess, main_mask_list, norm_list, anova )
+function f_anova( filesToProcess, main_mask_list, dataset_name, norm_list, anova )
 
 disp(' ')
 disp('! Please make sure that every small mask has a unique name.')
@@ -15,7 +15,7 @@ csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
 
 spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
 peak_assignments_path   = [ char(outputs_path) '\peak assignments\' ];
-anova_path              = [ char(outputs_path) '\anova\' ]; if ~exist(anova_path, 'dir'); mkdir(anova_path); end
+anova_path              = [ char(outputs_path) '\anova\' filesep char(dataset_name) filesep ]; if ~exist(anova_path, 'dir'); mkdir(anova_path); end
 rois_path               = [ char(outputs_path) '\rois\' ];
 
 for main_mask = main_mask_list
