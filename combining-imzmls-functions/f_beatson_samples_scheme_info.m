@@ -1,5 +1,8 @@
 function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_beatson_samples_scheme_info( dataset_name )
 
+% This function is used to define "new" datasets for the Beatson studies,
+% which are built by combining multiple imzmls and using small masks.
+
 switch dataset_name
     
     case "neg DESI all vbh"

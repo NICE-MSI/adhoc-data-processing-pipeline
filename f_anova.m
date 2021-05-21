@@ -4,7 +4,7 @@ function f_anova( filesToProcess, main_mask_list, dataset_name, norm_list, anova
 % using the effects and groups of pixels (small masks) specified in 
 % the input "anova". In particular, it tests if there is a statistical 
 % relationship between the mean (and median) counts of every small mask 
-% and each one of the effects of interest.
+% and the effects of interest.
 %
 % Inputs:
 % filesToProcess - Matlab struct created by matlab function dir,
@@ -18,7 +18,7 @@ function f_anova( filesToProcess, main_mask_list, dataset_name, norm_list, anova
 % used to run the ANOVA
 %
 % Output:
-% - a txt file where each row is related to a mass channel, which shows 
+% anova X Y.txt - a txt file where each row is related to a mass channel, which shows 
 % the p- and F- values for every effect of interest, some information 
 % regarding potential peak assigments, and the mean (and median) counts 
 % for each one of the groups of pixels i.e. small masks.

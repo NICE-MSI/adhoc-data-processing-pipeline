@@ -1,6 +1,14 @@
 function datacube_mzvalues_indexes = f_datacube_mzvalues_highest_peaks( numPeaks4mva, peakDetails, datacubeonly_peakDetails )
 
-% Select the mz values of the peaks that show the highest counts in the total spectrum.
+% This function returns the indices of the top numPeaks4mva (most intense in the total spectrum) peaks.
+%
+% Inputs:
+% numPeaks4mva - number of top (most intense) peaks to keep
+% peakDetails - Matlab matrix with details for all peaks found in the total spectrum
+% datacubeonly_peakDetails - Matlab matrix with details for the peaks saved in the data cube
+%
+% Outputs:
+% datacube_mzvalues_indexes - indices of the top numPeaks4mva peaks
 
 if ~isempty(numPeaks4mva)
     [ ~, mzvalues_highest_peaks_indexes ] = sort(peakDetails(:,4),'descend');

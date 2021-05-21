@@ -1,7 +1,7 @@
 function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_testStudy_samples_scheme_info(dataset_name)
 
-% This function is used to define a "new" dataset which is built by
-% combined multiple imzmls and using "small" masks.
+% This function is used to define "new" datasets which are built by
+% combining multiple imzmls and using small masks.
 %
 % Inputs:
 % dataset_name - name of the "new" (combined) dataset
@@ -20,17 +20,16 @@ switch dataset_name
     
     case "4 parts brain"
         
-        main_mask_list = "tissue only";
-        data_folders = { 'X:\ModelAndReferenceData\' }; % data folder
-        dataset_name = '*SagittalMouseCerebellum*'; filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        main_mask_list = "tissue only"; % the main mask i.e. that used to create the representative spectrum that was peak picked
+        data_folders = { 'X:\ModelAndReferenceData\' }; % path to the folder with the data
+        dataset_name = '*SagittalMouseCerebellum*'; % string to search for when collecting the imzmls in the folder above
+        filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
         
         clear extensive_filesToProcess
         
-        extensive_filesToProcess(1:4,:) = filesToProcess(1);
-        smaller_masks_list = [
-            "top-left-brain"; "top-right-brain"; "2-parts-botom-brain"; "random-shape"
-            ];
+        extensive_filesToProcess(1:4,:) = filesToProcess(1); % creating an extensive struct with all imzml file names (it has to be an imzml file per small mask)
+        smaller_masks_list = [ "top-left-brain"; "top-right-brain"; "2-parts-botom-brain"; "random-shape" ]; % listing the small masks
         
-        outputs_xy_pairs = [ 1 2; 1 2; 2 1; 2 2 ];
+        outputs_xy_pairs = [ 1 2; 1 2; 2 1; 2 2 ]; % list of x and y coordinates that will be used to plot the small masks in a grid (x is horizontal, y is vertical)
         
 end

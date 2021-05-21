@@ -206,7 +206,7 @@ for main_mask = main_mask_list
                     
                     mva_path = [ char(outputs_path) '\mva ' char(num2str(numPeaks4mva)) ' highest peaks\' ];
                     
-                    % Determine peaks of interest indicies in the datacube
+                    % Determine peaks of interest indices in the datacube
                     
                     datacube_mzvalues_indexes = f_datacube_mzvalues_highest_peaks( numPeaks4mva, peakDetails, datacubeonly_peakDetails );
                     
@@ -237,7 +237,7 @@ for main_mask = main_mask_list
                     
                     mva_path = [ char(outputs_path) '\mva percentile ' char(num2str(perc4mva)) ' peaks\' ];
                     
-                    % Determine peaks of interest indicies in the datacube
+                    % Determine peaks of interest indices in the datacube
                     
                     datacube_mzvalues_indexes = f_datacube_mzvalues_highest_peaks_percentile( perc4mva, peakDetails, datacubeonly_peakDetails );
                     
@@ -272,7 +272,7 @@ for main_mask = main_mask_list
                         
                         mva_path = [ char(outputs_path) '\mva ' char(num2str(numPeaks4mva)) ' highest peaks + ' char(num2str(amplratio4mva)) ' ampls ratio\' ];
                         
-                        % Determine peaks of interest indicies in the datacube
+                        % Determine peaks of interest indices in the datacube
                         
                         datacube_mzvalues_indexes = f_datacube_mzvalues_ampl_ratio_highest_peaks( amplratio4mva, numPeaks4mva, peakDetails, datacubeonly_peakDetails, totalSpectrum_intensities );
                         
@@ -303,7 +303,7 @@ for main_mask = main_mask_list
                         
                         mva_path = [ char(outputs_path) '\mva percentile ' char(num2str(perc4mva)) ' peaks + ' char(num2str(amplratio4mva)) ' ampls ratio\' ];
                         
-                        % Determine peaks of interest indicies in the datacube
+                        % Determine peaks of interest indices in the datacube
                         
                         datacube_mzvalues_indexes = f_datacube_mzvalues_ampl_ratio_highest_peaks_percentile( amplratio4mva, perc4mva, peakDetails, datacubeonly_peakDetails, totalSpectrum_intensities );
                         
@@ -334,6 +334,8 @@ for main_mask = main_mask_list
                 
                 if ~isempty(mva_classes_list)
                     
+                    % Reading the kingdom
+                    
                     molecules_classes_specification_path = [ filesToProcess(1).folder '\molecules_classes_specification' ];
                     
                     if isfile(molecules_classes_specification_path)
@@ -346,13 +348,13 @@ for main_mask = main_mask_list
                 
                 for classes_list = mva_classes_list
                     
-                    for classi = 2:size(classes_info,1)
+                    for classi = 2:size(classes_info,1) % iterating through the rows of the cell classes_info (each row is one group of peaks of interest)
                         
                         if strcmpi(classes_list,classes_info{classi,1})==1
                             
                             mva_path = [ char(outputs_path) '\mva ' char(classes_info{classi,1}) '\' ];
                             
-                            % Determine peaks of interest indicies in the datacube
+                            % Determine peaks of interest indices in the datacube
                             
                             datacube_mzvalues_indexes = f_datacube_mzvalues_classes( classes_info, classi, hmdb_sample_info, datacubeonly_peakDetails );
                             
@@ -387,7 +389,7 @@ for main_mask = main_mask_list
                         
                         mva_path = [ char(outputs_path) '\mva ' char(classes_info{classi,1}) '\' ];
                         
-                        % Determine peaks of interest indicies in the datacube
+                        % Determine peaks of interest indices in the datacube
                         
                         datacube_mzvalues_indexes = f_datacube_mzvalues_classes( classes_info, classi, hmdb_sample_info, datacubeonly_peakDetails );
                         

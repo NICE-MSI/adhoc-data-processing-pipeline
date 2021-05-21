@@ -21,7 +21,7 @@ if check_datacubes_size==1
     
     for file_index = 1:length(filesToProcess)
         
-        % Printing the name of the current file being loaded
+        % Printing the name of the file being loaded
         
         disp(filesToProcess(file_index).name(1,1:end-6))
         
@@ -33,7 +33,7 @@ if check_datacubes_size==1
         
         spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
         
-        % Loading datacube
+        % Loading details for all peaks saved in the data cube
         
         load([ spectra_details_path filesToProcess(file_index).name(1,1:end-6) '\' char(main_mask_list) '\datacubeonly_peakDetails' ])
         

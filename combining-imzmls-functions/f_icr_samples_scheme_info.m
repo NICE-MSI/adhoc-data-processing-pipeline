@@ -1,6 +1,10 @@
 
 function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_icr_samples_scheme_info( dataset_name )
 
+% This function is used to define "new" datasets for the ICR project,
+% which are built by combining multiple imzmls and using small masks.
+
+
 background = 0;
 
 switch dataset_name

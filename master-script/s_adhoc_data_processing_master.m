@@ -317,7 +317,7 @@ However, this can only be done once all datacubes have been saved (which will on
 %}
 
 dataset_name = "...";
-check_datacubes_size = 1; % 0 for no, 1 for yes
+check_datacubes_size = 0; % 0 for no, 1 for yes
 
 % !!! Update the name of the function called below !!!
 
@@ -431,7 +431,7 @@ mva_lists = [ "CRUK metabolites", "Marcels Lipid List", "Glycolysis" ];
 for task = mva_peaks
     if isequal(task,"top"); mva_lists = string([]); end % Using the top peaks specified in the "inputs_file"
     
-    %f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists ) % Running MVAs
+    f_running_mva_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_lists ) % Running MVAs
     
     f_saving_mva_outputs_ca( extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_lists ) % Saving MVAs outputs
 end

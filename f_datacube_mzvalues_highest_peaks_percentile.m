@@ -1,6 +1,15 @@
 function datacube_mzvalues_indexes = f_datacube_mzvalues_highest_peaks_percentile( perc4mva, peakDetails, datacubeonly_peakDetails )
 
-% Select the mz values of the peaks that show the highest counts in the total spectrum.
+% This function returns the indices of the peaks in the percentile perc4mva
+% (most intense in the total spectrum).
+%
+% Inputs:
+% perc4mva - percentile of the peaks to keep (double)
+% peakDetails - Matlab matrix with details for all peaks found in the total spectrum
+% datacubeonly_peakDetails - Matlab matrix with details for the peaks saved in the data cube
+%
+% Outputs:
+% datacube_mzvalues_indexes - indices of the peaks in the percentile perc4mva
 
 if ~isempty(perc4mva)
     mzvalues2keep2 = peakDetails(logical(peakDetails(:,4)>=prctile(peakDetails(:,4),perc4mva)),2);

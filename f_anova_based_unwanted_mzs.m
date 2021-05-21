@@ -17,7 +17,7 @@ function mzvalues2discard = f_anova_based_unwanted_mzs( filesToProcess, main_mas
 % * criteria.combination - string defining the rule to combine the multiple filtering criteria (options: "and", "or")
 %
 % Output:
-% mzvalues2discard - a list of masses (peaks) that survived the filtering criteria
+% mzvalues2discard - a list of masses (peaks) that survive the filtering criteria
 
 filesToProcess = f_unique_extensive_filesToProcess(filesToProcess); % collecting the unique imzmls that need to be loaded
 

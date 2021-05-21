@@ -1,7 +1,18 @@
 function datacube_mzvalues_indexes = f_datacube_mzvalues_lists( mva_molecules_lists_label_list, ppmTolerance, sample_info, datacubeonly_peakDetails )
 
-% This function returns the indices of the m/z values assigned to at least
-% a molecule of interest (mzvalues2keep1) in the datacube.
+% This function returns the indices of the peaks assigned to at least one
+% of the lists of molecules of interest.
+%
+% Inputs:
+% mva_molecules_lists_label_list - list of lists of molecules of interest
+% ppmTolerance - maximum error for the assigments
+% sample_info - information about peak assigments
+% datacubeonly_peakDetails - Matlab matrix with details for the peaks saved in the data cube
+%
+% Outputs:
+% datacube_mzvalues_indexes - indices of the peaks assigned to at least one
+% of the lists of molecules of interest
+
 
 mini_sample_info_mzvalues_indexes = 0;
 for labeli = mva_molecules_lists_label_list
