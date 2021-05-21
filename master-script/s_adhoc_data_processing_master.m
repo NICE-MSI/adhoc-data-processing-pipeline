@@ -653,11 +653,11 @@ You can run either options by setting mva_peaks = "top" or mva_peaks = "lists", 
 
 % Peak filtering details
 
-criteria.file = "anova location sample"; % name of the file with the ANOVA results
-criteria.column = { "p value for sample effect (mean)" }; % name of the columns of the ANOVA results to be used for filtering
-criteria.ths_type = { "equal_below" }; % "equal_below", "below", "equal_above", "above"
-th_list = [ 0.01 or 0.05 ]; % double between 0 and 1, usually 0.01 or 0.05
-criteria.combination = "or"; % "and", "or"
+criteria.file = "anova location sample"; % string with the name of the file with the ANOVA results
+criteria.column = { "p value for sample effect (mean)" }; % cell of strings which match the names of the columns of the ANOVA results to be used for filtering
+criteria.ths_type = { "equal_below" }; % cell of strings with the rules for filtering (options: "equal_below", "below", "equal_above", "above")
+th_list = [ 0.01 or 0.05 ]; % list of doubles between 0 and 1, usually 0.01 or 0.05
+criteria.combination = "or"; % string defining the rule to combine the multiple filtering criteria (options: "and", "or")
 
 % Multivariate analyses details
 
