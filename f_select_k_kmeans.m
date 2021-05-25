@@ -1,5 +1,19 @@
-
 function eva = f_select_k_kmeans(data, max_clusters_num, distance_metric)
+
+% This function computes the optimal number of clusters using:
+% Elbow Method
+% CalinskiHarabasz criterium
+% DaviesBouldin criterium
+%
+% Inputs:
+% data - ion counts for each pixel (row) and mass channel (column)
+% max_clusters_num - the largest k considered for the Elbow method
+% distance_metric - a string specifying the distance metric
+%
+% Outputs:
+% eva - a Matlab struct with the optimal number of clusters, clustering
+% map, and other information depending of the number of clusters selection
+% criterium
 
 % stream = RandStream('mlfg6331_64');  % Random number stream
 % options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);
@@ -15,8 +29,8 @@ disp('Elbow-method...')
 wcsd = zeros(1,max_clusters_num);
 all_idx = zeros(size(data,1),max_clusters_num);
 for k = 1:max_clusters_num   
-    [ idx, ~, sumd, ~ ] = myfunc(data, k);
-    wcsd(1,k) = sum(sumd);
+    [ idx, ~, sumd, ~ ] = myfunc(data, k); % running k-means
+    wcsd(1,k) = sum(sumd); % sum of intracluster distances (sumd)
     all_idx(:,k) = idx;
 end
 
@@ -24,9 +38,9 @@ end
 
 cutoff = 0.95;
 
-var = wcsd(1:end-1)-wcsd(2:end); % calculate %variance explained
-pc = cumsum(var)/(wcsd(1)-wcsd(end));
-optimalK = 1+find(pc>cutoff,1,'first');
+var = wcsd(1:end-1)-wcsd(2:end); % calculating the variance explained
+pc = cumsum(var)/(wcsd(1)-wcsd(end)); % calculating the percentage of variance explained
+optimalK = 1+find(pc>cutoff,1,'first'); % finding the optimal number of clusters
 
 eva.elbowMethod.OptimalK = optimalK;
 eva.elbowMethod.OptimalY = all_idx(:,optimalK);

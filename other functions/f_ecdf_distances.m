@@ -1,4 +1,21 @@
-function f_ecdf_distances( filesToProcess, main_mask_list, groups, norm_list, dataset_name )
+function f_ecdf_distances( filesToProcess, main_mask_list, dataset_name, groups, norm_list )
+
+% This function computes the Wasserstein distance between 2 groups of
+% pixels, and for every mass channel in the data cube. The groups of pixels
+% used (small masks) are specified in the input "groups".
+% 
+% Inputs:
+% filesToProcess - Matlab struct created by matlab function dir,
+% containing the list of files to process and their locations / paths
+% main_mask_list - array with names of the main masks i.e. those used to
+% generate the representative spectrum
+% dataset_name - the name of the combined dataset
+% norm_list - list of strings specifying the normalisations of interest
+%
+% Outputs:
+% - a txt file and a mat file that contain the Wasserstein distance for every mass
+% channel in the datacube and between every pair of groups of pixels in
+% "groups".
 
 disp(' ')
 disp('! Please make sure that every small mask has a unique name.')
@@ -13,11 +30,10 @@ csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
 
 [ ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, outputs_path ] = f_reading_inputs(csv_inputs);
 
-spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
-peak_assignments_path   = [ char(outputs_path) '\peak assignments\' ];
-if ~exist([ char(outputs_path) '\similarity analysis\' ], 'dir'); mkdir([ char(outputs_path) '\uva\' ]); end
-results_path            = [ char(outputs_path) '\similarity analysis\' char(dataset_name) '\' ]; if ~exist(results_path, 'dir'); mkdir(results_path); end
-rois_path               = [ char(outputs_path) '\rois\' ];
+spectra_details_path = [ char(outputs_path) '\spectra details\' ];
+peak_assignments_path = [ char(outputs_path) '\peak assignments\' ];
+rois_path = [ char(outputs_path) '\rois\' ];
+results_path = [ char(outputs_path) '\similarity analysis\' char(dataset_name) filesep ]; if ~exist(results_path, 'dir'); mkdir(results_path); end
 
 for main_mask = main_mask_list
     
@@ -91,6 +107,8 @@ for main_mask = main_mask_list
             [ relevant_lists_sample_info, repmat("",size( relevant_lists_sample_info,1),size(hmdb_sample_info,2)-size(relevant_lists_sample_info,2))]
             ];
         
+        % Curating the HMDB assigments information
+        
         new_hmdb_sample_info = f_saving_curated_hmdb_info( extended_hmdb_sample_info, relevant_lists_sample_info );
         
         % ECDF-based Distance Measure Estimation
@@ -100,13 +118,15 @@ for main_mask = main_mask_list
         table_row1 = string([]);
         table_moving_row = string([]);
         
-        for groupi = 1:length(groups.pairs)
+        for groupi = 1:length(groups.pairs) % iterating through rge pairs of groups os pixels (i.e. ROIs)
             
             XX = data4stats(pixels_per_model(:,groups.pairs{groupi}(1))>0,:);
             YY = data4stats(pixels_per_model(:,groups.pairs{groupi}(2))>0,:);
             
             WS_Dist = Wasserstein_Dist(XX,YY);
             WS_Dist_Xaviers = Wasserstein_Dist_Xaviers(XX,YY);
+            
+            % Bulding the table with the distances
             
             table_row1 = [ table_row1, ...
                 ['WS dist (' char(groups.names{groups.pairs{groupi}(2)}) ' vs ' char(groups.names{groups.pairs{groupi}(1)}) ')'],...
