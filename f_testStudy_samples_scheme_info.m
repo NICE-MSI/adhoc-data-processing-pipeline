@@ -23,7 +23,7 @@ switch dataset_name
         main_mask_list = "tissue only"; % the main mask i.e. that used to create the representative spectrum that was peak picked
         data_folders = { 'X:\ModelAndReferenceData\' }; % path to the folder with the data
         dataset_name = '*SagittalMouseCerebellum*'; % string to search for when collecting the imzmls in the folder above
-        filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name '.imzML']) ]; end
+        filesToProcess = []; for i = 1:length(data_folders); filesToProcess = [ filesToProcess; dir([data_folders{i} filesep dataset_name '.imzML']) ]; end
         
         clear extensive_filesToProcess
         
