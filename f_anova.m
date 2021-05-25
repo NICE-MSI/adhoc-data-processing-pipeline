@@ -24,10 +24,12 @@ function f_anova( filesToProcess, main_mask_list, dataset_name, norm_list, anova
 % for each one of the groups of pixels i.e. small masks.
 
 disp(' ')
-disp('! Please make sure that every small mask (group of pixels) has a unique name.')
-disp(' ')
+disp('! Please make sure that every small mask has a unique name.')
 disp('This script works by searching for each individual small mask, within the rois folder of each individual imzml.')
 disp('Masks with the same name (even if for different imzmls) will be combined.')
+disp(' ')
+disp('! Please make sure that all small masks are mostly exclusive i.e. do not fully overlap with each other.')
+disp('This script discards any pixel that belongs to more than one small mask.')
 disp(' ')
 
 filesToProcess = f_unique_extensive_filesToProcess(filesToProcess); % collecting all files that need to have a common axis

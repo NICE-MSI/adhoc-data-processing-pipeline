@@ -22,9 +22,11 @@ function f_ion_intensities_table( filesToProcess, main_mask_list, smaller_masks_
 
 disp(' ')
 disp('! Please make sure that every small mask has a unique name.')
-disp(' ')
 disp('This script works by searching for each individual small mask, within the rois folder of each individual imzml.')
 disp('Masks with the same name (even if for different imzmls) will be combined.')
+disp(' ')
+disp('! Please make sure the all small masks are mostly exclusive i.e. do not fully overlap with each other.')
+disp('This script discards any pixel that belongs to more than one small mask.')
 disp(' ')
 
 % Reducing the list of small masks that need to be considered to each unique values
@@ -97,7 +99,7 @@ for main_mask = main_mask_list % iterating through main masks
         end
         
         disp(join(['! total # pixels (per group): ' num2str(sum(pixels_per_model>0))]))
-              
+                
         % Loading assigments information (HMDB and relevant lists)
         
         load([ peak_assignments_path filesToProcess(1).name(1,1:end-6) '\' char(main_mask) '\hmdb_sample_info' ])
