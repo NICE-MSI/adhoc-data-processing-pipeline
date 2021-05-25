@@ -8,10 +8,13 @@ function [ adductMasses ] = f_makeAdductMassList( adducts, databaseMasses, polar
 % adducts - list of strings of the shape -H, Cl for example
 % databaseMasses - array of monoisopic masses
 % polarity - chars 'positive' or 'negative'
+%
+% Outputs:
+% adductMasses - theoretical masses for all adducts listed in adducts
 
 adductMasses = zeros(size(databaseMasses,1), length(adducts));
 for i = 1:length(adducts)
-    [isotopes] = f_stringToFormula(adducts{i});
+    [isotopes] = f_stringToFormula(adducts{i}); % converting a chemical formula string into a structure suitable for the isotopicdist function
     adductIsotopes = isotopicdist(isotopes);
     [~, l] = max(adductIsotopes(:,2));
     adductMass = adductIsotopes(1,l);

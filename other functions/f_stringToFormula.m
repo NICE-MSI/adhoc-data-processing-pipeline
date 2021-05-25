@@ -3,7 +3,7 @@ function [ formula ] = f_stringToFormula( formulaString )
 % This function converts a chemical formula string into a structure suitable
 % for the isotopicdist function.
 % Note: Placing - or + at the beginning of the string signifies loss or 
-% addition; no symbol signifies addition.
+% addition. No symbol signifies addition.
 
 asciiString = double(formulaString);
 element = [];
