@@ -352,7 +352,7 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                     rgb_image_component = zeros(size(image_component,1),size(image_component,2),size(rgbData,2));
                     for ci = 1:size(rgbData,2); aux_rgbData = 0*idx; aux_rgbData(idx>0) = rgbData(:,ci); rgb_image_component(:,:,ci) = f_mva_output_collage( aux_rgbData, data_cell, outputs_xy_pairs ); end
                     
-                    subplot(3,4,[1:3 5:7 9:11])
+                    subplot(3,5,[1:3 5:7 9:11])
                     imagesc(image_component)
                     colormap(cmap)
                     axis off; axis image; colorbar; set(gca, 'fontsize', 12);
@@ -365,7 +365,7 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                     
                     scatter3_colour_vector = []; for cii = min(idx)+1:max(idx); scatter3_colour_vector(idx(idx>0)==cii,1:3) = repmat(cmap(cii+1,:),sum(idx(idx>0)==cii),1); end
                     
-                    subplot(3,4,4)
+                    subplot(3,5,4:5)
                     scatter3(rgbData(:,1),rgbData(:,2),rgbData(:,3),1,scatter3_colour_vector); colorbar;
                     title({'t-sne space'})
                     
