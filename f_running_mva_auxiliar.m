@@ -1,6 +1,6 @@
 function f_running_mva_auxiliar( mva_type, mva_path, dataset_name, main_mask, norm_type, data4mva, mask4mva, numComponents, datacube_mzvalues_indexes )
 
-% This function runs the multivariate analysis - mva_type - on the curated data - data4mva.
+% Runs a specific multivariate analysis (mva_type) on the data (data4mva).
 %
 % Inputs:
 % mva_type - string specifying which MVA to run

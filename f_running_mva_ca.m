@@ -1,20 +1,63 @@
 function f_running_mva_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, norm_list, mva_molecules_list0, mva_classes_list0, mzvalues2discard )
 
+% Runs the multivariate analyses specified in "inputs_file.xlsx", and it 
+% saves their standard outputs (which differ from algorithm to algorithm).
+% This is done using data from all imzmls specified in filesToProcess 
+% (the common mass axis aproach). 
+%
+% Notes: 
+% 
+% Each MVA can be run using one of the following groups of peaks:
+% - the top N peaks (in terms of total intensity)
+% - the top percentil P (in terms of total intensity)
+% - those beloging to one of the lists of molecules of interest
+% 
+% This set of peaks can be further curated using the results of an ANOVA, 
+% which can be used to define a particular set of peaks to discarded.
+%
+% If mva_molecules_list0 or mva_classes_list0 are not empty, 
+% the top peaks (specified in "inputs_file.xlsx") are not used.
+%
+% Inputs:
+% filesToProcess - Matlab structure created by matlab function dir,
+% containing the list of files to process and their locations / paths
+% mask_list - array with names of masks to be used (sequentially) to reduce
+% data to a particular group of pixels
+% norm_list - list of strings specifying the normalisations of interest,
+% which can be one or more of the following options: "no norm", "tic", "RMS",
+% "pqn mean", "pqn median", "zscore"
+% mva_molecules_list0 - an array of strings listing the names of the lists
+% of the molecules of interest, or an array of doubles specifying which m/z
+% are to be included in the analysis
+% mva_classes_list0 - an array with strings listing the classes of
+% molecules of interest
+% mzvalues2discard - an array of doubles (a Matlab vector) specifying which
+% m/z are to be discarded from the analysis
+%
+% Outputs:
+% pca - firstCoeffs, firstScores, explainedVariance
+% nnmf - W, H
+% ica - z, model
+% kmeans - idx, C, optimal_numComponents
+% tsne - rgbData, idx, cmap, loss, tsne_parameters
+% nntsne - rgbData, idx, cmap, outputSpectralContriubtion  
+%
+% See the help of each function for details on its outputs. With the
+% exception of nntsne, Matlab functions are called.
+
 if nargin <= 5; mva_molecules_list0 = []; end
 if nargin <= 6; mva_classes_list0 = []; end
 if nargin <= 7; mzvalues2discard = []; end
 
-% Sorting the filesToProcess (and re-organising the related
-% information) to avoid the need to load the data unnecessary times.
+% Sorting filesToProcess and re-organising related small masks and grid
+% coordinates information to avoid loading data unnecessary times
 
 file_names = []; for i = 1:size(filesToProcess,1); file_names = [ file_names; string(filesToProcess(i).name) ]; end
 [~, files_indicies] = sort(file_names);
 filesToProcess = filesToProcess(files_indicies);
 smaller_masks_list = smaller_masks_list(files_indicies);
 
-%
-
-for main_mask = main_mask_list
+for main_mask = main_mask_list % iterating through the main masks
        
     csv_inputs = [ filesToProcess(1).folder '\inputs_file' ];
     
@@ -79,7 +122,7 @@ for main_mask = main_mask_list
     for file_index = 1:length(filesToProcess)
         
         % Loading information about the peaks, the mz values saved as a
-        % dacube cube and the matching of the dataset with a set of lists
+        % datacube cube and the matching of the dataset with a set of lists
         % of relevant molecules, and hmdb
         
         if file_index == 1
@@ -98,8 +141,6 @@ for main_mask = main_mask_list
         smaller_masks_cell{file_index} = logical(reshape(roi.pixelSelection',[],1));
         
     end
-    
-    %%
     
     for norm_type = norm_list
         

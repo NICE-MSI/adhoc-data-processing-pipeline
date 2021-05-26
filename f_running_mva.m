@@ -1,21 +1,21 @@
 function f_running_mva( filesToProcess, main_mask_list, norm_list, mva_molecules_list0, mva_classes_list0, mzvalues2discard )
 
-% This function runs the multivariate analyses specified in
-% "inputs_file.xlsx", or as specified by the inputs (mva_molecules_list0,
-% mva_classes_list0, and mzvalues2discard). If mva_molecules_list0 or
-% mva_classes_list0 are specified as inputs, the top peaks (as specified
-% in the "inputs_file.xlsx") are not used. This function saves the standard
-% of the available MVAs (which differ from algorithm to algorithm) as
-% Matlab files.
-% The multivariate analyses can be run using a predefined set of peaks:
+% Runs the multivariate analyses specified in "inputs_file.xlsx", and it 
+% saves their standard outputs (which differ from algorithm to algorithm).
+% This is done imzml by imzml.
+%
+% Notes: 
+% 
+% Each MVA can be run using one of the following groups of peaks:
 % - the top N peaks (in terms of total intensity)
 % - the top percentil P (in terms of total intensity)
 % - those beloging to one of the lists of molecules of interest
-% - those beloging to one of the kingdoms, super-class, class, or subclass
-% specified in a partcular file (this functionality is incomplete at the
-% moment 21 Sept 2020)
-% This set of peaks can be curated using the results of univariate analysis
-% (ANOVA) to define an array of m/s to be discarded.
+% 
+% This set of peaks can be further curated using the results of an ANOVA, 
+% which can be used to define a particular set of peaks to discarded.
+%
+% If mva_molecules_list0 or mva_classes_list0 are not empty, 
+% the top peaks (specified in "inputs_file.xlsx") are not used.
 %
 % Inputs:
 % filesToProcess - Matlab structure created by matlab function dir,
@@ -33,11 +33,6 @@ function f_running_mva( filesToProcess, main_mask_list, norm_list, mva_molecules
 % mzvalues2discard - an array of doubles (a Matlab vector) specifying which
 % m/z are to be discarded from the analysis
 %
-% Note:
-% The masks in mask_list can be “no mask” (all pixels of the imzml file are
-% used), or names of folders saved in the outputs folder “rois” (created as
-% part of the pipeline)
-%
 % Outputs:
 % pca - firstCoeffs, firstScores, explainedVariance
 % nnmf - W, H
@@ -48,14 +43,15 @@ function f_running_mva( filesToProcess, main_mask_list, norm_list, mva_molecules
 %
 % See the help of each function for details on its outputs. With the
 % exception of nntsne, Matlab functions are called.
+
          
 if nargin < 4; mva_molecules_list0 = []; mva_classes_list0 = []; mzvalues2discard = []; end
 if nargin < 5; mva_classes_list0 = []; mzvalues2discard = []; end
 if nargin < 6; mzvalues2discard = []; end
 
-for main_mask = main_mask_list
+for main_mask = main_mask_list % iterating through the main masks
     
-    for file_index = 1:length(filesToProcess)
+    for file_index = 1:length(filesToProcess) % iterating through the imzmls
         
         % Read relevant information from "inputs_file.xlsx"
         

@@ -1,6 +1,6 @@
 function norm_data = f_norm_datacube( datacube, norm_type )
 
-% This function performs one the following normalisations:
+% Performs one the following normalisations:
 % none - "no norm"
 % total ion count per pixel - "tic"
 % total ion count for the entire dataset - "sims tic"

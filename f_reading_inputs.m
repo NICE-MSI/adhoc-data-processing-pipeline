@@ -18,11 +18,11 @@ function [ ...
     outputs_path ...
     ] = f_reading_inputs(csv_inputs)
 
-% This function reads the "inputs_file.xlsx" and outputs agroup of
-% variables that will be used across the entire dataprocessing pipeline.
+% Reads the "inputs_file.xlsx" and outputs a group of variables that are 
+% used across the entire ad hoc data processing pipeline.
 %
 % Inputs: 
-% csv_inputs - complete path to "inputs_file.xlsx"
+% csv_inputs (string) - complete path to "inputs_file.xlsx"
 %
 % Outputs:
 % modality - e.g. MALSI, DESI
