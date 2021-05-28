@@ -1,5 +1,45 @@
 function f_saving_mva_outputs_ca( filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, mva_molecules_list0, mva_classes_list0, mzvalues2discard )
 
+% Saves the results of the multivariate analyses specified in 
+% "inputs_file.xlsx". This is done using data from all imzmls specified in 
+% filesToProcess (the common mass axis aproach). 
+%
+% Note: 
+% If mva_molecules_list0 or mva_classes_list0 are not empty, 
+% the top peaks (specified in "inputs_file.xlsx") are not used.
+%
+% Inputs:
+% filesToProcess - Matlab structure created by matlab function dir,
+% containing the list of files to process and their locations / paths
+% main_mask_list - array with names of masks to be used (sequentially) to 
+% reduce data to a particular group of pixels
+% smaller_masks_list (string, 1D array) - names of the small masks that are
+% to be combined with the imzmls in filesToProcess
+% dataset_name (string) - name od the composite dataset 
+% norm_list - list of strings specifying the normalisations of interest,
+% which can be one or more of the following options: "no norm", "tic", "RMS",
+% "pqn mean", "pqn median", "zscore"
+% mva_molecules_list0 - an array of strings listing the names of the lists
+% of the molecules of interest, or an array of doubles specifying which m/z
+% are to be included in the analysis
+% mva_classes_list0 - an array with strings listing the classes of
+% molecules of interest
+% mzvalues2discard - an array of doubles (a Matlab vector) specifying which
+% m/z are to be discarded from the analysis
+%
+% Outputs:
+% pca - top PC images and their spectral signatures
+% nnmf - factors images and their spectral signatures
+% ica - IC images and their spectral signatures
+% kmeans - clustering map (all clusters), individual clusters and their
+% spectral signatures
+% tsne - t-sne map and 3D plots of the t-sne embedding space (for both 
+% continuous and clustered embedding spaces) 
+% Dendrograms and cluster occupancy tables for all methods that result in
+% some clustering form. Images and potential assigments for the top 
+% loadings for all methods available.
+
+
 if nargin <= 6; mva_molecules_list0 = []; end
 if nargin <= 7; mva_classes_list0 = []; end
 if nargin <= 8; mzvalues2discard = []; end

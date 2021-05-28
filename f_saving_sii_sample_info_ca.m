@@ -1,5 +1,7 @@
 function f_saving_sii_sample_info_ca( filesToProcess, main_mask, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, sample_info )
-% Saving sii given a curated sample_info matrix.
+
+% Loads the data required to plot single ion images, and calls f_saving_sii_files_ca.
+
 
 % Sorting filesToProcess (and re-organising the related information) to avoid the need to load data unnecessary times
 
@@ -111,6 +113,8 @@ for norm_type = norm_list
         data_cell{file_index}.height = height;
         
     end
+    
+    % Plotting single ion images and related mean peaks
     
     f_saving_sii_files_ca( ...
         outputs_path, ...

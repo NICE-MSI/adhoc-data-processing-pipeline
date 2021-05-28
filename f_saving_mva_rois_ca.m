@@ -1,5 +1,10 @@
 function f_saving_mva_rois_ca( filesToProcess, main_mask_list, dataset_name, mva_list, numComponents_list, norm_list, mva_reference )
 
+% Saves the results of the clusters resulting for running k-means or t-sne
+% as 'roi' ie as SpectralAnalysis regions of interest, which can then be
+% used as either main or small masks.
+
+
 % Sorting the filesToProcess (and re-organising the related
 % information) to avoid the need to load the data unnecessary times.
 
@@ -93,13 +98,7 @@ for main_mask = main_mask_list
                     
                     roi = RegionOfInterest(width,height);
                     roi.addPixels(roi_image)
-                    
-%                     figure();
-%                     
-%                     imagesc(roi.pixelSelection); axis image
-%                     colormap gray;
-%                     title({['component ' num2str(idx_i)]})
-                    
+                                        
                     mkdir(['component ' num2str(idx_i)])
                     cd(['component ' num2str(idx_i)])
                     

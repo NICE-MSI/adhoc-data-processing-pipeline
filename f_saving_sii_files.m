@@ -1,34 +1,40 @@
 function f_saving_sii_files( outputs_path, sample_info, sample_info_indexes, ion_images, image_width, image_height, peakDetails, pixels_num, totalSpectrum_intensities, totalSpectrum_mzvalues, fig_ppmTolerance, isitloadings )
 
-for peak_i = 1:size(peakDetails,1)
+% Plots and saves the single ion images of the peaks in sample_info, as well as the mean peak related to each image.
+
+
+for peak_i = 1:size(peakDetails,1) % iterating thorugh the peaks
     
     sample_info_i0 = sample_info_indexes(peak_i);
     
     sample_info_i1 = logical(sample_info(:,4)==sample_info(sample_info_i0,4));
     
-    for databasei = unique(sample_info(sample_info_i1,7))'
+    for databasei = unique(sample_info(sample_info_i1,7))' % iterating through the lists of relevant molecules
         
         if isitloadings
-            sample_info_i3 = find(sample_info_i1.*logical(sample_info(:,7)==databasei),1,'first');
+            sample_info_i3 = find(sample_info_i1.*logical(sample_info(:,7)==databasei),1,'first'); % only 1 image is saved for each mass when saving the loadings images
         else
             sample_info_i3 = find(sample_info_i1.*logical(sample_info(:,7)==databasei))';
         end
         
-        for sample_info_i = sample_info_i3
+        for sample_info_i = sample_info_i3 % iterating through the multiple assigments of each peak
             
-            % Organising the outputs
+            % Creating outputs folder
             
             mkdir([ outputs_path '\' char(sample_info(sample_info_i,7)) '\' ])
             cd([ outputs_path '\' char(sample_info(sample_info_i,7)) '\' ])
             
             % Creating the figure
-            
-            sii2plot = reshape(ion_images(:,peak_i),image_width,image_height)';
-            
+           
             fig1 = figure('units','normalized','outerposition',[0 0 1 1]);
+             
+            sii2plot = reshape(ion_images(:,peak_i),image_width,image_height)';
             
             subplot(1,4,1:3)
             imagesc(sii2plot); colormap(viridis); axis off; axis image; colorbar;
+            
+            % Creating the strings that are required for the title of the
+            % ion image
             
             name_adduct_2plot_1 = sample_info(sample_info_i, 1);
             name_adduct_2plot_2 = sample_info(sample_info_i, 3);
@@ -37,6 +43,8 @@ for peak_i = 1:size(peakDetails,1)
             name_adduct_2plot   = cat(2, name_adduct_2plot_1, name_adduct_2plot_2, name_adduct_2plot_3);
             name_adduct_2plot   = reshape(name_adduct_2plot',[],1);
             name_adduct_2plot   = name_adduct_2plot(1:end-1,1)';
+            
+            % Printing the title of ion image
             
             text(.5,1.09,...
                 {strjoin(name_adduct_2plot(1:min(9,length(name_adduct_2plot))))},...
@@ -52,6 +60,8 @@ for peak_i = 1:size(peakDetails,1)
             text(.5,1.025,...
                 {['ppm ' num2str(round(double(sample_info(sample_info_i,5)))) ' - peak intensity ' num2str(round(double(sample_info(sample_info_i,11))))]},...
                 'Units','normalized','fontsize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle')
+            
+            % Finding the variables required to plot the mean peak
             
             theo_mz = str2double(sample_info(sample_info_i,2));
             window_centre = str2double(sample_info(sample_info_i,4));
@@ -69,6 +79,8 @@ for peak_i = 1:size(peakDetails,1)
             
             window_mzvalues_indexes_centre = logical((totalSpectrum_mzvalues > ppmwindow_xmin).*(totalSpectrum_mzvalues < ppmwindow_xmax));
             ymax = max(totalSpectrum_intensities(1,window_mzvalues_indexes_centre)./pixels_num);
+            
+            % Plotting the mean peak
             
             subplot(1,4,4)
             hold on
@@ -106,6 +118,9 @@ for peak_i = 1:size(peakDetails,1)
                 name = reshape([char(sample_info(sample_info_i,1)) '_' char(num2str(round(double(sample_info(sample_info_i,4)),6)))],[],1);
             end
             
+            % Creating the strings that are required for the names of the
+            % figures
+            
             rel_char_i = [];
             rel_char_ii = [];
             for char_i = 1:length(name)
@@ -127,6 +142,8 @@ for peak_i = 1:size(peakDetails,1)
                 figname_char = [ name(1:min(70,length(name)))' '.fig' ];
                 tifname_char = [ name(1:min(70,length(name)))' '.png' ];
             end
+            
+            % Saving the figures
             
             savefig(fig1,figname_char,'compact')
             saveas(fig1,tifname_char)

@@ -69,7 +69,7 @@ for file_index = 1:length(filesToProcess)
         
         if file_index == 1
             
-            %%% Loading information from hmdb database
+            % Loading information from hmdb database
             
             [~, indexes ] = unique(complete_hmdb_info_strings(:,3));
             molecules_hmdb_info_strings = complete_hmdb_info_strings(indexes,3:end);
@@ -78,7 +78,7 @@ for file_index = 1:length(filesToProcess)
             hmdb_mzvalues = double(molecules_hmdb_info_strings(:,3)); % monoisotopic masses
             hmdb_other = molecules_hmdb_info_strings(:,[ 2 4:8 ]); % HMDB id and molceular classes information
             
-            %%% Search for assigments
+            % Search for assigments
             
             tic
             

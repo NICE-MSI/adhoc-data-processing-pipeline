@@ -6,9 +6,11 @@ function [ reduced_x, loss, tsne_parameters ] = f_tsne( x )
 % 
 % Inputs:
 % x - data
+%
 % Outputs:
 % reduced_x - data in the 3D space (in the reduced space)
 % loss - m
+
 
 % Run t-sne for a set of different combinations of parameters
 

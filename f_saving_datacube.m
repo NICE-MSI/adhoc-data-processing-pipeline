@@ -1,35 +1,35 @@
 function f_saving_datacube( filesToProcess, mask_list )
 
-% This function creates images for all peaks of interest i.e. that will be
-% required in any of the following steps of the data processing (e.g. 
-% univariate or multivariate analyses, plotting of single ion images). The
-% image of each peak is created by integrating all m/z between its start
-% and end (both estimated with the gradient method and stored in the 
+% Creates images for all peaks of interest i.e. that will be required in 
+% any of the following steps of the data processing (e.g. univariate and/or 
+% multivariate analyses, single ion images).
+% The image of each peak is created by integrating all m/z between its 
+% start and end, both estimated with the gradient method and stored in the 
 % peakDetails variable.
 % 
 % Inputs:
-% filesToProcess - Matlab structure created by matlab function dir, 
-% containing the list of files to process and their locations / paths
-% mask_list - array with names of masks to be used (sequentially) to reduce 
-% data to a particular group of pixels
+% filesToProcess (struct) - Matlab structure created by Matlab 
+% function dir, containing the list of files to process and their paths
+% mask_list (string, 1D array) - names of the main masks to be used 
+% (sequentially) to reduce data to a particular group of pixels
 %
 % Note: 
-% The masks in mask_list can be “no mask” (all pixels of the imzml file are
-% used), or names of folders saved in the outputs folder “rois” (created as
-% part of the pipeline)
+% The masks in mask_list can be “no mask” (all pixels are used), or names 
+% of folders saved in the outputs folder “rois” (created as part of the 
+% pipeline)
 % 
 % Outputs:
-% datacube – Spectral Analysis dataRepresentation type of variable
-% width - width of the image
-% height - height of the image
-% pixels_coord - coordenates of pixels in the image
+% datacube (struct) – Spectral Analysis dataRepresentation type of variable
+% width (double) - width of the image
+% height (double) - height of the image
+% pixels_coord (double, 2D array) - coordenates of pixels in the image
 %
-% Note: The data saved in each datacube is not masked by the binary mask 
+% Note: The data in the datacube struct is not masked by the binary mask in
 % "mask_type".
 
-for mask_type = mask_list
+for mask_type = mask_list % iterating through main masks
         
-    for file_index = 1:length(filesToProcess)
+    for file_index = 1:length(filesToProcess) % iterating through imzmls
 
         % Read relevant information from "inputs_file.xlsx"
         
@@ -46,12 +46,12 @@ for mask_type = mask_list
         
         load([ spectra_details_path filesToProcess(file_index).name(1,1:end-6) '\' char(mask_type) '\datacubeonly_peakDetails.mat' ])
         
-        % Load total spectrum
+        % Load total spectrum information
         
         load([ spectra_details_path filesToProcess(file_index).name(1,1:end-6) '\' char(mask_type) '\totalSpectrum_mzvalues.mat' ])
         load([ spectra_details_path filesToProcess(file_index).name(1,1:end-6) '\' char(mask_type) '\totalSpectrum_intensities.mat' ])
         
-        %%% Generating the data cube
+        % Generating the data cube
         
         disp(['! Generating data cube with ' num2str(size(datacubeonly_peakDetails,1)) ' peaks...'])
         
@@ -76,7 +76,7 @@ for mask_type = mask_list
 
         originalSpectrum = SpectralData(totalSpectrum_mzvalues, totalSpectrum_intensities); % Continuous total spectrum
         
-        for i = 1:size(datacubeonly_peakDetails,1)
+        for i = 1:size(datacubeonly_peakDetails,1) % iterating through peaks
             
             % Peak() arguments: spectralData, centroid, intensity, minSpectralChannel, maxSpectralChannel
             

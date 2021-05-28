@@ -21,7 +21,8 @@ function f_saving_normalised_data( filesToProcess, mask_list, norm_list )
 % 
 % Outputs:
 % data.mat - Matlab matrix with normalised data (dimentions: pixels (rows) 
-% by mass channels (columns)) 
+% by mass channels (columns))
+
 
 for mask_type = mask_list
     

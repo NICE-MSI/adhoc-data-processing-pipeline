@@ -1,5 +1,33 @@
 function f_saving_relevant_lists_assignments_ca( filesToProcess, mask_list )
 
+% Searches for tentative assignments for every peak in the total spectrum. 
+% All molecules beloging to at least one of the predefined lists of 
+% molecules of interest are considered in this search.
+% Measured mass (peak centroid) is compared with theoretical mass (for 
+% predefined set of adducts). If the difference between these masses is 
+% below the predefined ppm error, the assigment is stored.
+%
+% Note: Set of adducts to be considered and maximum ppm error accepted are 
+% specified in the excel file “inputs_file” (saved in the data folder).
+% 
+% Inputs:
+% filesToProcess - Matlab structure created by matlab function dir, 
+% containing the list of files to process and their locations / paths
+% mask_list - array with names of masks to be used (sequentially) to reduce 
+% data to a particular group of pixels
+%
+% Note: 
+% The masks in mask_list can be “no mask” (all pixels of the imzml file are
+% used), or names of folders saved in the outputs folder “rois” (created as
+% part of the pipeline)
+% 
+% Outputs:
+% relevant_lists_assignments.mat – matrix of strings with information regarding all 
+% potential assignments
+% relevant_lists_assignments.txt – txt file with information regarding all potential 
+% assignments
+
+
 for file_index = 1:length(filesToProcess)
     
     csv_inputs = [ filesToProcess(file_index).folder '\inputs_file' ];
@@ -18,7 +46,7 @@ for file_index = 1:length(filesToProcess)
         
         % Loading dataset peak details
         
-        if file_index == 1
+        if file_index == 1 % ! peaks details are the same for all imzmls because peak detection was done in the sum of their total spectra
             
             load([ spectra_details_path filesToProcess(file_index).name(1,1:end-6) '\' char(mask_type) '\peakDetails.mat'])
             sample_peaks_mzvalues = peakDetails(:,2);

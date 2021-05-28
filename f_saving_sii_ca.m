@@ -1,5 +1,8 @@
 function f_saving_sii_ca( filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs, dataset_name, norm_list, sii_peak_list )
 
+% Loads the peak assigments details required to plot single ion images, and calls f_saving_sii_sample_info_ca.
+
+
 csv_inputs = [ filesToProcess(1).folder filesep 'inputs_file' ]; % The outputs folder is the same for all files in filesToProcess so it needs to be defined just once.
 
 [ ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, outputs_path ] = f_reading_inputs(csv_inputs);

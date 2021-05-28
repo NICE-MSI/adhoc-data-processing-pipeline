@@ -1,5 +1,18 @@
 function f_saving_mva_auxiliar_ca( paths, plots_info, data_cell )
 
+% This function:
+% (1) reads the outputs of the MVA
+% (2) creates and saves images (fig and png files) of the 
+% (2.1) clustering maps or representations of the lower dimentions space
+% (2.2) individual clusters or components, and their spectral signatures
+% (3) creates a dendrogram that relates the clusters found
+% (4) creates a table that showns the percentage of each small mask
+% occupied by each cluster
+% (5) saves a table that shows how many clusters exist in each small mask
+% (6) creates and saves the ion images for the top loadings of each cluster
+% or component
+% (6.1) saves a table with peak assignment information for the top loadings 
+
 mva_path = paths.mva_path;
 dataset_name = paths.dataset_name;
 main_mask = paths.main_mask;
@@ -352,7 +365,7 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                     rgb_image_component = zeros(size(image_component,1),size(image_component,2),size(rgbData,2));
                     for ci = 1:size(rgbData,2); aux_rgbData = 0*idx; aux_rgbData(idx>0) = rgbData(:,ci); rgb_image_component(:,:,ci) = f_mva_output_collage( aux_rgbData, data_cell, outputs_xy_pairs ); end
                     
-                    subplot(3,5,[1:3 5:7 9:11])
+                    subplot(3,5,[1:3 6:8 11:13])
                     imagesc(image_component)
                     colormap(cmap)
                     axis off; axis image; colorbar; set(gca, 'fontsize', 12);
@@ -795,6 +808,10 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                                 aux_string_left string(mzi) aux_string_right
                                 ];
                         end
+                        
+                        % Updating the table with the cluster and loading
+                        % ids, as well as the assignments information
+                        
                         table =    [
                             table
                             [ repmat([ string(componenti) string(ii) ],length(find(abs(mzi-double(mini_sample_info(:,4)))<th_mz_diff)),1) mini_sample_info(logical(abs(mzi-double(mini_sample_info(:,4)))<th_mz_diff),[1 12 2 4 3 8 11 14:size(mini_sample_info,2)]) ]

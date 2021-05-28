@@ -1,6 +1,7 @@
 function f_saving_sii_sample_info(filesToProcess, mask_list, norm_list, sample_info, mask_on )
 
-% Saving sii given a curated sample_info matrix.
+% Loads the data required to plot single ion images, and calls f_saving_sii_files.
+
 
 for file_index = 1:length(filesToProcess)
     
@@ -66,6 +67,8 @@ for file_index = 1:length(filesToProcess)
             if mask_on
                 data_sii(~mask,:) = NaN;
             end
+            
+            % Plotting single ion images and related mean peaks
             
             f_saving_sii_files( outputs_path, sample_info, sample_info_indexes, data_sii, image_width, image_height, peak_details, pixels_num, totalSpectrum_intensities, totalSpectrum_mzvalues, fig_ppmTolerance, 0 )
             

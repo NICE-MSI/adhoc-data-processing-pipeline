@@ -1,5 +1,22 @@
 function f_saving_labelled_data_ca( filesToProcess, main_mask_list, smaller_masks_list, dataset_name, txt_or_mat )
 
+% Creates a table of data (intensity for every pixel and mass), where
+% each pixel is labelled based on the imzml, main, and small mask it
+% comes from.
+%
+% Inputs:
+% filesToProcess (string) - names and path to the imzmls
+% main_mask_list (string, 1D array) - names of the main masks 
+% smaller_masks_list (sting, 1D array) - names of the smaller masks (one
+% for each file in filesToProcess)
+% dataset_name (string) - name of the composite dataset
+% txt_or_mat (string) - type of file to save (txt or mat)
+%
+% Outputs:
+% a txt or mat file with a table of data (intensity for every pixel and mass), where
+% each pixel is labelled based on the imzml, main, and small mask it comes from
+
+
 for main_mask = main_mask_list
     
     % Main mask - Mask used at the preprocessing step (usually tissue only).
@@ -13,7 +30,7 @@ for main_mask = main_mask_list
         
         [ ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~, outputs_path ] = f_reading_inputs(csv_inputs);
         
-        % Defining all the paths needed.
+        % Defining all the paths needed
         
         spectra_details_path    = [ char(outputs_path) '\spectra details\' ];
         rois_path               = [ char(outputs_path) '\rois\' ];
@@ -81,7 +98,7 @@ for main_mask = main_mask_list
         
     end
     
-    % Results
+    % Save labelled data table (txt and mat files)
     
     mkdir([ data4sup_class_path filesep char(dataset_name) filesep ])
     cd([ data4sup_class_path filesep char(dataset_name) filesep ])

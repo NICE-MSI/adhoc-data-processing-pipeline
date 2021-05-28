@@ -1,7 +1,7 @@
-
 function f_saving_spectra_details( filesToProcess, preprocessing_file, mask_list)
 
-% This function performs data pre-processing and computes the total spectrum.
+% Performs data pre-processing and computes the total spectrum. This is
+% done imzml by imzml.
 %
 % Inputs:
 % filesToProcess - Matlab structure created by matlab function dir, 
@@ -19,6 +19,7 @@ function f_saving_spectra_details( filesToProcess, preprocessing_file, mask_list
 % totalSpectrum_intensities - total spectrum counts (per imzml and mask)
 % totalSpectrum_mzvalues - total spectrum mass channels (per imzml and mask)
 % pixels_num - number of pixels of interest (per imzml and mask)
+
 
 for file_index = 1:length(filesToProcess)
     

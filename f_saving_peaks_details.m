@@ -1,7 +1,8 @@
 
 function f_saving_peaks_details( filesToProcess, mask_list)
 
-% This function performs peak detection in the total spectrum.
+% Performs peak detection in the total spectrum and saved details for all
+% peaks found. This is done for each imzml.
 %
 % Inputs:
 % filesToProcess - Matlab structure created by matlab function dir, 
@@ -17,6 +18,7 @@ function f_saving_peaks_details( filesToProcess, mask_list)
 % Outputs:
 % peakDetails - matlab variable with the start, centroid and end of each 
 % peak in terms of m/z values, and amplitude at the centroid of the peak
+
 
 for mask_type = mask_list
             

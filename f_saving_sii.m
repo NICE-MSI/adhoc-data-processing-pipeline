@@ -1,5 +1,8 @@
 function f_saving_sii( filesToProcess, main_mask_list, mask_on, norm_list, sii_peak_list )
 
+% Loads the peak assigments details required to plot single ion images, and calls f_saving_sii_sample_info.
+
+
 measmz_col = 4;
 abs_ppm_col = 5;
 database_col = 7;

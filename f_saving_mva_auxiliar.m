@@ -1,18 +1,26 @@
 function f_saving_mva_auxiliar( file_name, main_mask, mva_type, mva_path, norm_type, norm_data, numComponents, numLoadings, datacube, datacubeonly_peakDetails, hmdb_sample_info, totalSpectrum_intensities, totalSpectrum_mzvalues, pixels_num, fig_ppmTolerance)
 
+% This function:
+% (1) reads the outputs of the MVA
+% (2) creates and saves images (fig and png files) of the 
+% (2.1) clustering maps or representations of the lower dimentions space
+% (2.2) individual clusters or components, and their spectral signatures
+% (3) creates a dendrogram that relates the clusters found
+% (4) creates a table that showns the percentage of each small mask
+% occupied by each cluster
+% (5) saves a table that shows how many clusters exist in each small mask
+% (6) creates and saves the ion images for the top loadings of each cluster
+% or component
+% (6.1) saves a table with peak assignment information for the top loadings 
+
 if numComponents > 0
-    
     path = [ mva_path char(file_name) '\' char(main_mask) '\' char(mva_type) ' ' num2str(numComponents) ' components\' char(norm_type) '\'];
-    
 elseif isnan(numComponents)
-    
     path = [ mva_path char(file_name) '\' char(main_mask) '\' char(mva_type) '\' char(norm_type) '\'];
-    
 end
 
 mkdir(path)
 cd(path)
-
 load('datacube_mzvalues_indexes')
 
 o_numComponents = NaN;
@@ -120,8 +128,11 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
             
     end
     
+    % Plotting clustering and data dimentionality reduction maps,
+    % individual clusters or components and their top loadings
+    
     if numComponents > numComponentsSaved
-        disp('!!! ERROR !!! The currently saved MVA results do not comprise all the information you want to look at! Please run the function f_running_mva again.')
+        disp('!!! ERROR !!! The currently saved MVA results do not comprise all the information you want to look at. Please run the function f_running_mva again.')
         return
     else
         
@@ -137,9 +148,9 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
             clustmap = viridis(numComponents);
         end
         
-        for componenti = 1:numComponents
+        for componenti = 1:numComponents % iterating through the clusters / components 
                         
-            if ( componenti == 1 )
+            if ( componenti == 1 ) % the clustering map (all clusters together) is saved only once
                 
                 %  Clustering maps
                 
@@ -232,7 +243,7 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                     close all
                     clear fig0
                     
-                    %
+                    % Plotting t-sne map
                     
                     fig0 = figure('units','normalized','outerposition',[0 0 .7 .7]); % set(gcf,'Visible', 'off');
                     
@@ -246,8 +257,6 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                         image_component(aux_rgb) = 1;
                         rgb_image_component(:,:,ci) = image_component;
                     end
-                    
-                    % Plotting t-sne map
                     
                     subplot(3,4,[1:3 5:7 9:11])
                     image(rgb_image_component)
@@ -553,6 +562,9 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                 
                 if numLoadings <= length(mz_indexes)
                     
+                    % Finding which peaks need to be saved (i.e. the masses of the top loadings) 
+                    % and the information related to their potential assignments
+                    
                     mva_mzvalues        = datacubeonly_peakDetails(datacube_mzvalues_indexes,2);
                     mva_ion_images      = norm_data(:,datacube_mzvalues_indexes);
                     mva_peakDetails     = datacubeonly_peakDetails(datacube_mzvalues_indexes,:);
@@ -595,7 +607,7 @@ if (length(datacube_mzvalues_indexes)>=numComponents) || isnan(numComponents)
                         end
                     end
                     
-                    % Generating the figures and saving them
+                    % Generating and saving the images
                     
                     f_saving_sii_files( outputs_path, mini_sample_info, mini_sample_info_indexes, mini_ion_images, datacube.width, datacube.height, mini_peak_details, pixels_num, totalSpectrum_intensities, totalSpectrum_mzvalues, fig_ppmTolerance, 1 )
                     

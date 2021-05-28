@@ -1,9 +1,9 @@
 function eva = f_select_k_kmeans(data, max_clusters_num, distance_metric)
 
-% This function computes the optimal number of clusters using:
-% Elbow Method
-% CalinskiHarabasz criterium
-% DaviesBouldin criterium
+% Computes the optimal number of clusters using:
+% - Elbow Method
+% - CalinskiHarabasz criterium
+% - DaviesBouldin criterium
 %
 % Inputs:
 % data - ion counts for each pixel (row) and mass channel (column)
@@ -14,6 +14,7 @@ function eva = f_select_k_kmeans(data, max_clusters_num, distance_metric)
 % eva - a Matlab struct with the optimal number of clusters, clustering
 % map, and other information depending of the number of clusters selection
 % criterium
+
 
 % stream = RandStream('mlfg6331_64');  % Random number stream
 % options = statset('UseParallel', 1, 'UseSubstreams', 1, 'Streams', stream);

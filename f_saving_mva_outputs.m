@@ -1,27 +1,42 @@
 function f_saving_mva_outputs( filesToProcess, main_mask_list, mask_on, norm_list, mva_molecules_list0, mva_classes_list0, mzvalues2discard )
 
-% This function runs the multivariate analysis specified in , and
-% saves a data matrix that will be required at any further down the line 
-% step using normalised data (e.g. univariate or multivariate analyses, 
-% plotting of single ion images).
-% 
-% Inputs:
-% filesToProcess - Matlab structure created by matlab function dir, 
-% containing the list of files to process and their locations / paths
-% mask_list - array with names of masks to be used (sequentially) to reduce 
-% data to a particular group of pixels
-% norm_list - list of strings specifying the normalisations of interest,
-% which can be one or more of the following options: "no norm", "tic", "RMS", 
-% "pqn mean", "pqn median", "zscore"
+% Saves the results of the multivariate analyses specified in 
+% "inputs_file.xlsx". This is done imzml by imzml.
 %
-% Note: 
-% The masks in mask_list can be “no mask” (all pixels of the imzml file are
-% used), or names of folders saved in the outputs folder “rois” (created as
-% part of the pipeline)
-% 
+% Note:
+% If mva_molecules_list0 or mva_classes_list0 are not empty, 
+% the top peaks (specified in "inputs_file.xlsx") are not used.
+%
+% Inputs:
+% filesToProcess - Matlab structure created by matlab function dir,
+% containing the list of files to process and their locations / paths
+% main_mask_list - array with names of masks to be used (sequentially) to reduce
+% data to a particular group of pixels
+% mask_on - 1 or 0 depending on if the results are to be masked with the
+% main mask in main_mask_list
+% norm_list - list of strings specifying the normalisations of interest,
+% which can be one or more of the following options: "no norm", "tic", "RMS",
+% "pqn mean", "pqn median", "zscore"
+% mva_molecules_list0 - an array of strings listing the names of the lists
+% of the molecules of interest, or an array of doubles specifying which m/z
+% are to be included in the analysis
+% mva_classes_list0 - an array with strings listing the classes of
+% molecules of interest
+% mzvalues2discard - an array of doubles (a Matlab vector) specifying which
+% m/z are to be discarded from the analysis
+%
 % Outputs:
-% data.mat - Matlab matrix with normalised data (dimentions: pixels (rows) 
-% by mass channels (columns)) 
+% pca - top PC images and their spectral signatures
+% nnmf - factors images and their spectral signatures
+% ica - IC images and their spectral signatures
+% kmeans - clustering map (all clusters), individual clusters and their
+% spectral signatures
+% tsne - t-sne map and 3D plots of the t-sne embedding space (for both 
+% continuous and clustered embedding spaces) 
+% Dendrograms and cluster occupancy tables for all methods that result in
+% some clustering form. Images and potential assigments for the top 
+% loadings for all methods available.
+
 
 if nargin < 5; mva_molecules_list0 = []; mva_classes_list0 = []; mzvalues2discard = []; end
 if nargin < 6; mva_classes_list0 = []; mzvalues2discard = []; end

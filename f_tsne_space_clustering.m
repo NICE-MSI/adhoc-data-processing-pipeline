@@ -13,6 +13,7 @@ function [ idx, tsne_colomap, optimal_numComponents, evaluation ] = f_tsne_space
 % evaluation - a few metrics regarding the selection of the optimal number
 % of clusters
 
+
 % Clustering the t-sne space
 
 [ idx, C, optimal_numComponents, evaluation ] = f_kmeans( reduced_x, clusters_num, 'sqeuclidean' );

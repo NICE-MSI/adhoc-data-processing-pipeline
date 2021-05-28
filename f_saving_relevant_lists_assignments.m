@@ -1,8 +1,8 @@
 function f_saving_relevant_lists_assignments( filesToProcess, mask_list )
 
-% This function searches for tentative assignments for every peak in the 
-% total spectrum. All molecules beloging to at least one of the predefined
-% lists of molecules of interest are considered in this search.
+% Searches for tentative assignments for every peak in the total spectrum. 
+% All molecules beloging to at least one of the predefined lists of 
+% molecules of interest are considered in this search.
 % Measured mass (peak centroid) is compared with theoretical mass (for 
 % predefined set of adducts). If the difference between these masses is 
 % below the predefined ppm error, the assigment is stored.
@@ -26,6 +26,7 @@ function f_saving_relevant_lists_assignments( filesToProcess, mask_list )
 % potential assignments
 % relevant_lists_assignments.txt – txt file with information regarding all potential 
 % assignments
+
 
 for file_index = 1:length(filesToProcess)
     

@@ -42,7 +42,7 @@ function f_running_mva( filesToProcess, main_mask_list, norm_list, mva_molecules
 % nntsne - rgbData, idx, cmap, outputSpectralContriubtion  
 %
 % See the help of each function for details on its outputs. With the
-% exception of nntsne, Matlab functions are called.
+% exception of nntsne, Matlab functions are called. 
 
          
 if nargin < 4; mva_molecules_list0 = []; mva_classes_list0 = []; mzvalues2discard = []; end

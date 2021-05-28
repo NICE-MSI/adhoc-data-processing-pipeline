@@ -27,6 +27,7 @@ function f_saving_hmdb_assignments( filesToProcess, mask_list )
 % hmdb_assignments.txt – txt file with information regarding all potential 
 % assignments
 
+
 % Load HMDB information (e.g.: molecules names, monoisotopic masses, kingdom, superclass, class, subclass and others)
 
 load('\\datasvr1\MALDI_AMBIENT_DATA\2020_Scripts for Data Processing\Git Repository (March 2020)\databases-mat-files\complete_hmdb_info_strings.mat') % hmdb database information
@@ -73,7 +74,7 @@ for file_index = 1:length(filesToProcess)
         hmdb_mzvalues = double(molecules_hmdb_info_strings(:,3)); % monoisotopic masses
         hmdb_other = molecules_hmdb_info_strings(:,[ 2 4:8 ]); % HMDB id and molceular classes information
                 
-        %%% Search for assigments
+        % Search for assigments
         
         tic
         

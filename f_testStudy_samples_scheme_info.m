@@ -1,7 +1,7 @@
 function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs_xy_pairs ] = f_testStudy_samples_scheme_info(dataset_name)
 
-% This function is used to define "new" datasets which are built by
-% combining multiple imzmls and using small masks.
+% Defines "new" datasets which are built by combining multiple imzmls and 
+% using small masks.
 %
 % Inputs:
 % dataset_name - name of the "new" (combined) dataset
@@ -15,6 +15,7 @@ function [ extensive_filesToProcess, main_mask_list, smaller_masks_list, outputs
 %
 % The number of rows of extensive_filesToProcess, smaller_masks_list, and
 % outputs_xy_pairs is the same.
+
 
 switch dataset_name
     

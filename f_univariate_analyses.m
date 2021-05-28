@@ -1,5 +1,39 @@
 function f_univariate_analyses( filesToProcess, main_mask_list, groups, norm_list, univtests, sii )
 
+% Runs univariate analysis which compare the groups os pixels defined in
+% "groups", saves a table the results of these as well as single ion images
+% for the peaks found to be within the intervals of interest (eg AUC>=0.7 or
+% p-value<=0.05).
+%
+% The options for univariate analyses are:
+% - ROC analysis if univtests.roc = 1
+% (see the help of the Matlab function "perfcurve" for more information)
+% - t-test if univtests.test = 1
+% (see the help of the Matlab function "ttest" for more information)
+% 
+% Inputs:
+% groups (struct) with the fields:
+% - groups.name (string)
+% - groups.masks (cell of 1D arrays of strings, ',' separated)
+% - groups.names (cell of strings, ',' separated)
+% - groups.pairs (cell of 1D arrays of 2 doubles, ',' separated)
+% univtests (struct) with the fields:
+% - univtests.roc (double) - 1 or 0
+% - univtests.ttest (double) - 1 or 0
+% sii (struct) with the fields:
+% - sii.plot (double) - 1 or 0
+% - sii.mask (double) - 1 or 0
+% - sii.roc_th (double) - between 0 and 0.5, often 0.3
+% - sii.ttest_th (double) - between 0 and 1, often 0.05
+%
+% Outputs:
+% a table (txt and mat files) with the results of the univariate tests
+% (AUC for ROC, p-value for t-tests) as well as the mean and median counts
+% per small masks
+% single ion images for peaks found to be within the intervals of interest 
+% (eg AUC>=0.7 or p-value<=0.05)
+
+
 disp(' ')
 disp('! Please make sure that every small mask has a unique name.')
 disp(' ')
