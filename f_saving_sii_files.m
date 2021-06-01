@@ -110,12 +110,12 @@ for peak_i = 1:size(peakDetails,1) % iterating thorugh the peaks
             
             if ~isnan(str2double(sample_info(sample_info_i,6)))
                 if length(name_adduct_2plot)>2
-                    name = reshape(char(strcat(num2str(round(double(sample_info(sample_info_i,4)),6)), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
+                    name = reshape(char(strcat(num2str(round(double(sample_info(sample_info_i,2)),6)), " ", name_adduct_2plot(1), name_adduct_2plot(2), " or other"))',[],1);
                 else
-                    name = reshape(char(strcat(num2str(round(double(sample_info(sample_info_i,4)),6)), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
+                    name = reshape(char(strcat(num2str(round(double(sample_info(sample_info_i,2)),6)), " ", name_adduct_2plot(1), name_adduct_2plot(2)))',[],1);
                 end
             else
-                name = reshape([char(sample_info(sample_info_i,1)) '_' char(num2str(round(double(sample_info(sample_info_i,4)),6)))],[],1);
+                name = reshape([char(sample_info(sample_info_i,1)) '_' char(num2str(round(double(sample_info(sample_info_i,2)),6)))],[],1);
             end
             
             % Creating the strings that are required for the names of the
