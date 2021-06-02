@@ -68,7 +68,7 @@ for file_index = 1:length(filesToProcess)
             
             roiList = RegionOfInterestList;
             roiList.add(roi);
-            spectrumGeneration.postProcessEntireDataset(false);
+            spectrumGeneration.postProcessEntireDataset(false); % this needs to be set to false so that it uses the roi in roiList only
             spectrumGeneration.setRegionOfInterestList(roiList);
             
             pixels_num = sum(sum(roi.pixelSelection));
