@@ -38,29 +38,17 @@ This pipeline can be run using the MATLAB script called s_adhoc_data_processing_
 
 An overview of the steps that can be done using this script is given below.
 
-##### 1
+##### 1	DESI, MALSI, SIMS or REIMS data pre-processing (using SpectralAnalysis functions)
 
-DESI, MALSI, SIMS or REIMS data pre-processing (using SpectralAnalysis functions)
+##### 2	Peak detection on total spectrum (using SpectralAnalysis functions)
 
-##### 2
+##### 3	Assignment of peaks detected in the total spectrum, using HMDB as well as a group of lists of molecules of interest defined by the user
 
-Peak detection on total spectrum (using SpectralAnalysis functions)
+##### 4	Creating and saving a datacube (SpectralAnalysis DataRepresentation struct) for each imzml of interest (using SpectralAnalysis functions)
 
-##### 3
+##### 5	Creating and saving a data matrix for each imzml and normalisation algorithm of interest
 
-Assignment of peaks detected in the total spectrum, using HMDB as well as a group of lists of molecules of interest defined by the user
-
-##### 4
-
-Creating and saving a datacube (SpectralAnalysis DataRepresentation struct) for each imzml of interest (using SpectralAnalysis functions)
-
-##### 5
-
-Creating and saving a data matrix for each imzml and normalisation algorithm of interest
-
-##### 6
-
-Multivariate Analysis (e.g. PCA, NMF, k-means clustering, t-SNE, fast density clustering) using:
+##### 6	Multivariate Analysis (e.g. PCA, NMF, k-means clustering, t-SNE, fast density clustering) using:
 
 * N most intense peaks detected in the representative spectrum
 
@@ -69,20 +57,13 @@ Multivariate Analysis (e.g. PCA, NMF, k-means clustering, t-SNE, fast density cl
 * One or more lists of molecules of interest defined by the user
 
 * One or more superclass, class, or subclass of molecules (as defined by HMDB)
-
 * A list of m/z values
 
-###### 6.1
+###### 6.1	Running MVAs
 
-Running MVAs
+###### 6.2	Saving MVAs results
 
-###### 6.2
-
-Saving MVAs results
-
-##### 7
-
-Saving single ion images for:
+##### 7	Saving single ion images for:
 
 * One or more lists of molecules of interest defined by the user
 
@@ -90,49 +71,27 @@ Saving single ion images for:
 
 * A lists of m/z values
 
-##### 8      
+##### 8	Creating masks for regions of interest (SpectralAnalysis RegionsOfInterest struct) by combining (adding and/or multiplying) the results of k-means clustering, t-SNE, or fast density clustering, with any areas of the entire image, which are interactively chosen by the user.
 
-Creating masks for regions of interest (SpectralAnalysis RegionsOfInterest struct) by combining (adding and/or multiplying) the results of k-means clustering, t-SNE, or fast density clustering, with any areas of the entire image, which are interactively chosen by the user.
+##### 9	Defining a “new” dataset by combining a group of (often masked) imzmls files.
 
-##### 9
+###### 9.1 	Specifying a group of imzmls files that need to be combined
 
-Defining a “new” dataset by combining a group of (often masked) imzmls files.
+###### 9.2	Specifying one or more masks to be used for each imzml (defining in 8), which reduce each image (imzml) to one or more smaller group of pixels of interest
 
-###### 9.1
+###### 9.3	The position to be occupied by each sample/tissue (i.e. small mask or group of pixels of interest) in a 2D grid of images that will represent the new “dataset”
 
-Specifying a group of imzmls files that need to be combined
+##### 10	Saving k-means or t-SNE space clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest struct) when the clustering was done for the entire “new” data set. These regions of interest can be used in any subsequent analyses (note: the have to be moved and rename according to what makes sense for the study in particular).
 
-###### 9.2
+##### 11	Saving a table of mean and median ion intensities per region of interest or mask.
 
-Specifying one or more masks to be used for each imzml (defining in 8), which reduce each image (imzml) to one or more smaller group of pixels of interest
+##### 12	Running and saving the results of univariate analyses (e.g.: t-test, ranksum test, ROC analysis), which compare mean, median, and the whole samples of ion intensities, of two user defined groups of regions of interest (masks). These tests are done mass by mass.
 
-###### 9.3
+##### 13	Running and saving the results of an ANOVA using N user defined groups of regions of interest (masks), which should relate to “conditions” or “effects” of interest for the study (e.g. data acquisition date, glass slide number, sample ID, tissue type, etc).
 
-The position to be occupied by each sample/tissue (i.e. small mask or group of pixels of interest) in a 2D grid of images that will represent the new “dataset”
+##### 14	Discarding groups of ions found using the ANOVA (13) before running the MVAs (6).
 
-##### 10
-
-Saving k-means or t-SNE space clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest struct) when the clustering was done for the entire “new” data set. These regions of interest can be used in any subsequent analyses (note: the have to be moved and rename according to what makes sense for the study in particular).
-
-##### 11
-
-Saving a table of mean and median ion intensities per region of interest or mask.
-
-##### 12
-
-Running and saving the results of univariate analyses (e.g.: t-test, ranksum test, ROC analysis), which compare mean, median, and the whole samples of ion intensities, of two user defined groups of regions of interest (masks). These tests are done mass by mass.
-
-##### 13
-
-Running and saving the results of an ANOVA using N user defined groups of regions of interest (masks), which should relate to “conditions” or “effects” of interest for the study (e.g. data acquisition date, glass slide number, sample ID, tissue type, etc).
-
-##### 14
-
-Discarding groups of ions found using the ANOVA (13) before running the MVAs (6).
-
-##### 15
-
-Saving the data from an original imzml or a new “dataset” (defining in 9) in a csv file. Each row represents a pixel. This file contains ion intensity for all mass values in the datacube, pixel coordinates in the related imzml space, the name of the imzml file, the name of the main mask, and the name of the small mask.
+##### 15	Saving the data from an original imzml or a new “dataset” (defining in 9) in a csv file. Each row represents a pixel. This file contains ion intensity for all mass values in the datacube, pixel coordinates in the related imzml space, the name of the imzml file, the name of the main mask, and the name of the small mask.
 
 ## Requirements
 
@@ -154,7 +113,7 @@ Saving the data from an original imzml or a new “dataset” (defining in 9) in
 
 f_saving_spectra_details
 
-​	f_reading_inputs 
+​		f_reading_inputs 
 
 ##### 2	Peak detection (uses SpectralAnalysis functions)
 
@@ -162,7 +121,7 @@ For an imzml file at a time:
 
 f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (for a combination of imzmls)
 
-​	f_reading_inputs
+​		f_reading_inputs
 
 ##### 3	Peak assignments
 
@@ -170,23 +129,23 @@ f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (fo
 
 f_saving_hmdb_assignments (for an imzml at a time) or f_saving_hmdb_assignments_ca (for a combination of imzmls)
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_makeAdductMassList
+​		f_makeAdductMassList
 
-​		f_stringToFormula
+​				f_stringToFormula
 
 ###### 3.2	Lists of molecules of interest defined by the user
 
 f_saving_relevant_lists_assignments (for an imzml at a time) or f_saving_relevant_lists_assignments_ca (for a combination of imzmls)
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_molecules_list_mat
+​		f_molecules_list_mat
 
-​	f_makeAdductMassList
+​		f_makeAdductMassList
 
-​		f_stringToFormula
+​				f_stringToFormula
 
 ##### 4	Datacube
 
@@ -194,25 +153,25 @@ f_saving_relevant_lists_assignments (for an imzml at a time) or f_saving_relevan
 
 f_saving_datacube_peaks_details (for an imzml at a time) or f_saving_datacube_peaks_details_ca (for a combination of imzmls)
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_peakdetails4datacube
+​		f_peakdetails4datacube
 
 ###### 4.2	Datacube itself (i.e. SpectralAnalysis DataRepresentation struct) (uses SpectralAnalysis functions)
 
 f_saving_datacube
 
-​	f_reading_inputs
+​		f_reading_inputs
 
 ##### 5	Data matrix for each normalisation
 
 f_saving_normalised_data
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_norm_datacube
+​		f_norm_datacube
 
-​		f_crukNormalise
+​				f_crukNormalise
 
 ##### 6	Multivariate Analysis
 
@@ -220,81 +179,81 @@ f_saving_normalised_data
 
 f_running_mva (for an imzml at a time) or f_running_mva_ca (for a combination of imzmls)
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_datacube_mzvalues_vector
+​		f_datacube_mzvalues_vector
 
-​	f_black_peaks_list_removal
+​		f_black_peaks_list_removal
 
-​	f_datacube_mzvalues_lists
+​		f_datacube_mzvalues_lists
 
-​	f_datacube_mzvalues_highest_peaks
+​		f_datacube_mzvalues_highest_peaks
 
-​	f_datacube_mzvalues_highest_peaks_percentile
+​		f_datacube_mzvalues_highest_peaks_percentile
 
-​	f_datacube_mzvalues_ampl_ratio_highest_peaks
+​		f_datacube_mzvalues_ampl_ratio_highest_peaks
 
-​	f_datacube_mzvalues_ampl_ratio_highest_peaks_percentile
+​		f_datacube_mzvalues_ampl_ratio_highest_peaks_percentile
 
-​	f_datacube_mzvalues_classes
+​		f_datacube_mzvalues_classes
 
-​	f_running_mva_auxiliar
+​		f_running_mva_auxiliar
 
-​		f_kmeans
+​				f_kmeans
 
-​        	f_select_k_kmeans
+​        				f_select_k_kmeans
 
-​		f_tsne
+​				f_tsne
 
-​		f_tsne_space_clustering
+​				f_tsne_space_clustering
 
-​        	f_kmeans
+​        				f_kmeans
 
-​				f_select_k_kmeans
+​								f_select_k_kmeans
 
-​		f_densityParam
+​				f_densityParam
 
-​		f_densityClust
+​				f_densityClust
 
-​			f_decisionGraph
+​						f_decisionGraph
 
 ###### 6.2	Saving MVAs results
 
 f_saving_mva_outputs (for an imzml at a time) or f_saving_mva_outputs_ca (for a combination of imzmls)
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_saving_mva_auxiliar (for an imzml at a time) or f_saving_mva_auxiliar_ca (for a combination of imzmls)
+​		f_saving_mva_auxiliar (for an imzml at a time) or f_saving_mva_auxiliar_ca (for a combination of imzmls)
 
-​		f_40colourscheme
+​				f_40colourscheme
 
-​		f_mva_output_collage (for a combination of imzmls only)
+​				f_mva_output_collage (for a combination of imzmls only)
 
-​		f_mva_output_table (for a combination of imzmls only)
+​				f_mva_output_table (for a combination of imzmls only)
 
-​		f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
+​				f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
 
-​		f_saving_curated_top_loadings_info (for a combination of imzmls only)
+​				f_saving_curated_top_loadings_info (for a combination of imzmls only)
 
 ##### 7	Saving single ion images
 
 f_saving_sii (for an imzml at a time) or f_saving_sii_ca (for a combination of imzmls)
 
-​	f_reading_inputs
-
-​	f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
-
 ​		f_reading_inputs
 
-​		f_unique_extensive_filesToProcess (for a combination of imzmls only)
+​		f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
 
-​		f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
+​				f_reading_inputs
+
+​				f_unique_extensive_filesToProcess (for a combination of imzmls only)
+
+​				f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
 
 ##### 8	Creating regions of interest / masks
 
 f_mask_creation
 
-​	f_reading_inputs
+​		f_reading_inputs
 
 ##### 9	Defining a “new” dataset
 
@@ -302,59 +261,59 @@ f_*ReplaceByStudyName*_samples_scheme_info
 
 f_check_datacubes_mass_axis
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_unique_extensive_filesToProcess
+​		f_unique_extensive_filesToProcess
 
 ##### 10	Saving k-means or t-SNE space clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest struct) when the clustering for the “new” dataset.
 
 f_saving_mva_rois_ca
 
-​	f_reading_inputs
+​		f_reading_inputs
 
 ##### 11	Saving a table of mean and median ion intensities per region of interest or mask.
 
 f_ion_intensities_table
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_saving_curated_hmdb_info
+​		f_saving_curated_hmdb_info
 
 ##### 12	Univariate Analyses
 
 f_univariate_analyses
 
-​	f_unique_extensive_filesToProcess
-
-​	f_reading_inputs
-
-​	f_saving_curated_hmdb_info
-
-​	f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
+​		f_unique_extensive_filesToProcess
 
 ​		f_reading_inputs
 
-​		f_unique_extensive_filesToProcess (for a combination of imzmls only)
+​		f_saving_curated_hmdb_info
 
-​		f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
+​		f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
+
+​				f_reading_inputs
+
+​				f_unique_extensive_filesToProcess (for a combination of imzmls only)
+
+​				f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
 
 ##### 13	ANOVA
 
 f_anova
 
-​	f_unique_extensive_filesToProcess
+​		f_unique_extensive_filesToProcess
 
-​	f_reading_inputs
+​		f_reading_inputs
 
-​	f_saving_curated_hmdb_info
+​		f_saving_curated_hmdb_info
 
 ##### 14	Discarding groups of ions found using the ANOVA before running the MVAs.
 
 f_anova_based_unwanted_mzs
 
-​	f_unique_extensive_filesToProcess
+​		f_unique_extensive_filesToProcess
 
-​	f_reading_inputs
+​		f_reading_inputs
 
 *All function in* *6*
 
@@ -362,7 +321,7 @@ f_anova_based_unwanted_mzs
 
 f_saving_labelled_data_ca
 
-​	f_reading_inputs
+​		f_reading_inputs
 
 
 
