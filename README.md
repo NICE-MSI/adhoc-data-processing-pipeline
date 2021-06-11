@@ -127,7 +127,7 @@ For an imzml file at a time:
 
 ###### 3.1	HMDB
 
-f_saving_hmdb_assignments (for an imzml at a time) or f_saving_hmdb_assignments_ca (for a combination of imzmls)
+> f_saving_hmdb_assignments (for an imzml at a time) or f_saving_hmdb_assignments_ca (for a combination of imzmls)
 
 > > f_reading_inputs
 
