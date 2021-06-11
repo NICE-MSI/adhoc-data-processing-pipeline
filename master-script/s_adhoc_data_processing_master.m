@@ -15,7 +15,7 @@ Help:
 •	You can execute a selected cell (i.e. a cell you have the cursor in) by clicking "shift" followed by "enter".
 •	You can execute a group of selected code lines (i.e. a group of code lines highlighted by you) by clicking "F9".
 
-People that can also help:
+People that can help you:
 •	Ariadna and Chelsea - pipeline structure and how to use it
 •	Alex - Spectral Analysis related issues
 
