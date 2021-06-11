@@ -111,17 +111,17 @@ An overview of the steps that can be done using this script is given below.
 
 ##### 1	Data pre-processing (uses SpectralAnalysis functions)
 
-f_saving_spectra_details
+> f_saving_spectra_details
 
-> f_reading_inputs 
+> > f_reading_inputs 
 
 ##### 2	Peak detection (uses SpectralAnalysis functions)
 
 For an imzml file at a time:
 
-f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (for a combination of imzmls)
+> f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (for a combination of imzmls)
 
-> f_reading_inputs
+> > f_reading_inputs
 
 ##### 3	Peak assignments
 
@@ -129,199 +129,199 @@ f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (fo
 
 f_saving_hmdb_assignments (for an imzml at a time) or f_saving_hmdb_assignments_ca (for a combination of imzmls)
 
-> f_reading_inputs
+> > f_reading_inputs
 
-> f_makeAdductMassList
+> > f_makeAdductMassList
 
-> > f_stringToFormula
+> > > f_stringToFormula
 
 ###### 3.2	Lists of molecules of interest defined by the user
 
-f_saving_relevant_lists_assignments (for an imzml at a time) or f_saving_relevant_lists_assignments_ca (for a combination of imzmls)
+> f_saving_relevant_lists_assignments (for an imzml at a time) or f_saving_relevant_lists_assignments_ca (for a combination of imzmls)
 
-> f_reading_inputs
+> > f_reading_inputs
 
-> f_molecules_list_mat
+> > f_molecules_list_mat
 
-> f_makeAdductMassList
+> > f_makeAdductMassList
 
-> > f_stringToFormula
+> > > f_stringToFormula
 
 ##### 4	Datacube
 
 ###### 4.1	Datacube specific peak details
 
-f_saving_datacube_peaks_details (for an imzml at a time) or f_saving_datacube_peaks_details_ca (for a combination of imzmls)
+> f_saving_datacube_peaks_details (for an imzml at a time) or f_saving_datacube_peaks_details_ca (for a combination of imzmls)
 
-__ f_reading_inputs
+> > f_reading_inputs
 
-____ f_peakdetails4datacube
+> > f_peakdetails4datacube
 
 ###### 4.2	Datacube itself (i.e. SpectralAnalysis DataRepresentation struct) (uses SpectralAnalysis functions)
 
-f_saving_datacube
+> f_saving_datacube
 
-​			f_reading_inputs
+> > f_reading_inputs
 
 ##### 5	Data matrix for each normalisation
 
-f_saving_normalised_data
+> f_saving_normalised_data
 
-​			f_reading_inputs
+> > f_reading_inputs
 
-​			f_norm_datacube
+> > f_norm_datacube
 
-​						f_crukNormalise
+> > > f_crukNormalise
 
 ##### 6	Multivariate Analysis
 
 ###### 6.1	Running MVAs
 
-f_running_mva (for an imzml at a time) or f_running_mva_ca (for a combination of imzmls)
+> f_running_mva (for an imzml at a time) or f_running_mva_ca (for a combination of imzmls)
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_datacube_mzvalues_vector
+> > f_datacube_mzvalues_vector
 
-​		f_black_peaks_list_removal
+> > f_black_peaks_list_removal
 
-​		f_datacube_mzvalues_lists
+> > f_datacube_mzvalues_lists
 
-​		f_datacube_mzvalues_highest_peaks
+> > f_datacube_mzvalues_highest_peaks
 
-​		f_datacube_mzvalues_highest_peaks_percentile
+> > f_datacube_mzvalues_highest_peaks_percentile
 
-​		f_datacube_mzvalues_ampl_ratio_highest_peaks
+> > f_datacube_mzvalues_ampl_ratio_highest_peaks
 
-​		f_datacube_mzvalues_ampl_ratio_highest_peaks_percentile
+> > f_datacube_mzvalues_ampl_ratio_highest_peaks_percentile
 
-​		f_datacube_mzvalues_classes
+> > f_datacube_mzvalues_classes
 
-​		f_running_mva_auxiliar
+> > f_running_mva_auxiliar
 
-​				f_kmeans
+> > > f_kmeans
 
-​        				f_select_k_kmeans
+> > > > f_select_k_kmeans
 
-​				f_tsne
+> > > f_tsne
 
-​				f_tsne_space_clustering
+> > > f_tsne_space_clustering
 
-​        				f_kmeans
+> > > > f_kmeans
 
-​								f_select_k_kmeans
+> > > > > f_select_k_kmeans
 
-​				f_densityParam
+> > > f_densityParam
 
-​				f_densityClust
+> > > f_densityClust
 
-​						f_decisionGraph
+> > > > f_decisionGraph
 
 ###### 6.2	Saving MVAs results
 
-f_saving_mva_outputs (for an imzml at a time) or f_saving_mva_outputs_ca (for a combination of imzmls)
+> f_saving_mva_outputs (for an imzml at a time) or f_saving_mva_outputs_ca (for a combination of imzmls)
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_saving_mva_auxiliar (for an imzml at a time) or f_saving_mva_auxiliar_ca (for a combination of imzmls)
+> > f_saving_mva_auxiliar (for an imzml at a time) or f_saving_mva_auxiliar_ca (for a combination of imzmls)
 
-​				f_40colourscheme
+> > > f_40colourscheme
 
-​				f_mva_output_collage (for a combination of imzmls only)
+> > > f_mva_output_collage (for a combination of imzmls only)
 
-​				f_mva_output_table (for a combination of imzmls only)
+> > > f_mva_output_table (for a combination of imzmls only)
 
-​				f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
+> > > f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
 
-​				f_saving_curated_top_loadings_info (for a combination of imzmls only)
+> > > f_saving_curated_top_loadings_info (for a combination of imzmls only)
 
 ##### 7	Saving single ion images
 
-f_saving_sii (for an imzml at a time) or f_saving_sii_ca (for a combination of imzmls)
+> f_saving_sii (for an imzml at a time) or f_saving_sii_ca (for a combination of imzmls)
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
+> > f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
 
-​				f_reading_inputs
+> > > f_reading_inputs
 
-​				f_unique_extensive_filesToProcess (for a combination of imzmls only)
+> > > f_unique_extensive_filesToProcess (for a combination of imzmls only)
 
-​				f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
+> > > f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
 
 ##### 8	Creating regions of interest / masks
 
-f_mask_creation
+> f_mask_creation
 
-​		f_reading_inputs
+> > f_reading_inputs
 
 ##### 9	Defining a “new” dataset
 
-f_*ReplaceByStudyName*_samples_scheme_info
+> f_*ReplaceByStudyName*_samples_scheme_info
 
-f_check_datacubes_mass_axis
+> f_check_datacubes_mass_axis
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_unique_extensive_filesToProcess
+> > f_unique_extensive_filesToProcess
 
 ##### 10	Saving k-means or t-SNE space clustering maps as regions of interest (SpectralAnalysis RegionsOfInterest struct) when the clustering for the “new” dataset.
 
-f_saving_mva_rois_ca
+> f_saving_mva_rois_ca
 
-​		f_reading_inputs
+> > f_reading_inputs
 
 ##### 11	Saving a table of mean and median ion intensities per region of interest or mask.
 
-f_ion_intensities_table
+> f_ion_intensities_table
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_saving_curated_hmdb_info
+> > f_saving_curated_hmdb_info
 
 ##### 12	Univariate Analyses
 
-f_univariate_analyses
+> f_univariate_analyses
 
-​		f_unique_extensive_filesToProcess
+> > f_unique_extensive_filesToProcess
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_saving_curated_hmdb_info
+> > f_saving_curated_hmdb_info
 
-​		f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
+> > f_saving_sii_sample_info (for an imzml at a time) or f_saving_sii_sample_info_ca (for a combination of imzmls)
 
-​				f_reading_inputs
+> > > f_reading_inputs
 
-​				f_unique_extensive_filesToProcess (for a combination of imzmls only)
+> > > f_unique_extensive_filesToProcess (for a combination of imzmls only)
 
-​				f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
+> > > f_saving_sii_files (for an imzml at a time) or f_saving_sii_files_ca (for a combination of imzmls)
 
 ##### 13	ANOVA
 
-f_anova
+> f_anova
 
-​		f_unique_extensive_filesToProcess
+> > f_unique_extensive_filesToProcess
 
-​		f_reading_inputs
+> > f_reading_inputs
 
-​		f_saving_curated_hmdb_info
+> > f_saving_curated_hmdb_info
 
 ##### 14	Discarding groups of ions found using the ANOVA before running the MVAs.
 
-f_anova_based_unwanted_mzs
+> f_anova_based_unwanted_mzs
 
-​		f_unique_extensive_filesToProcess
+> > f_unique_extensive_filesToProcess
 
-​		f_reading_inputs
+> > f_reading_inputs
 
 *All function in* *6*
 
 ##### 15	Saving the data from an original imzml or a new “dataset” (defining in 9) in a csv file.
 
-f_saving_labelled_data_ca
+> f_saving_labelled_data_ca
 
-​		f_reading_inputs
+> > f_reading_inputs
 
 
 
