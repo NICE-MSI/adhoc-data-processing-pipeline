@@ -113,7 +113,7 @@ An overview of the steps that can be done using this script is given below.
 
 f_saving_spectra_details
 
-​			f_reading_inputs 
+> f_reading_inputs 
 
 ##### 2	Peak detection (uses SpectralAnalysis functions)
 
@@ -121,7 +121,7 @@ For an imzml file at a time:
 
 f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (for a combination of imzmls)
 
-​			f_reading_inputs
+> f_reading_inputs
 
 ##### 3	Peak assignments
 
@@ -129,23 +129,23 @@ f_saving_peaks_details (for an imzml at a time) or f_saving_peaks_details_ca (fo
 
 f_saving_hmdb_assignments (for an imzml at a time) or f_saving_hmdb_assignments_ca (for a combination of imzmls)
 
-​			f_reading_inputs
+> f_reading_inputs
 
-​			f_makeAdductMassList
+> f_makeAdductMassList
 
-​						f_stringToFormula
+> > f_stringToFormula
 
 ###### 3.2	Lists of molecules of interest defined by the user
 
 f_saving_relevant_lists_assignments (for an imzml at a time) or f_saving_relevant_lists_assignments_ca (for a combination of imzmls)
 
-​			f_reading_inputs
+> f_reading_inputs
 
-​			f_molecules_list_mat
+> f_molecules_list_mat
 
-​			f_makeAdductMassList
+> f_makeAdductMassList
 
-​						f_stringToFormula
+> > f_stringToFormula
 
 ##### 4	Datacube
 
