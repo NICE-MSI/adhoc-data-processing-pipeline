@@ -2,6 +2,16 @@
 
 Semi-automated, modular pipeline to analyze Mass Spectrometry (MS) data developed by Teresa Murta.
 
+
+
+The following people can help you with it:
+
+* Ariadna and Chelsea for questions regarding the pipeline structure and how to use it.
+
+* Alex for questions regarding Spectral Analysis (functions, issues).
+
+  
+
 This documentation is organized as follows:
 
 * Overview

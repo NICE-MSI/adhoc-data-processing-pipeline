@@ -1,7 +1,10 @@
 %{
 
-This script contains a modular mass spectrometry imaging (MSI) data analysis pipeline. 
-Please refer to the documentation saved in the folder "documentation" for further information regarding the overall structure and steps of this pipeline, as well as the requirements, inputs, and outputs of each function.
+This script contains a modular mass spectrometry imaging (MSI) data analysis pipeline.
+
+Please refer to the "read me" file in the main folder of the "adhoc-data-processing-pipeline" git repository (see next cell), 
+and to the documents available in the folder "documentation" of the same git repository, for further information regarding 
+the overall structure and steps of this pipeline, as well as the requirements to be able to run it.
 
 By Teresa Murta, June 2021
 
@@ -11,6 +14,10 @@ How to start using this script:
 Help:
 •	You can execute a selected cell (i.e. a cell you have the cursor in) by clicking "shift" followed by "enter".
 •	You can execute a group of selected code lines (i.e. a group of code lines highlighted by you) by clicking "F9".
+
+People that can also help:
+•	Ariadna and Chelsea - pipeline structure and how to use it
+•	Alex - Spectral Analysis related issues
 
 %}
 %% Add the "adhoc-data-processing-pipeline" repository from git to the Matlab path
