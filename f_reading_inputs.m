@@ -309,7 +309,7 @@ for i = 1:length(inputs_info_reshaped)
                 aux_vector = [ str2num(char(inputs_info_reshaped(i+4))) ];
                 mva_list = [ mva_list, repmat("kmeans",1,size(aux_vector,2)) ];
                 numComponents_array = [ numComponents_array, aux_vector ];
-                numLoadings_array = [ numLoadings_array, repmat(10,1,size(aux_vector,2)) ];
+                numLoadings_array = [ numLoadings_array, repmat(10,1,size(aux_vector,2)) ]; % change 10 to change the number of loadings saved
                 if isnan(str2num(char(inputs_info_reshaped(i+4))))
                     disp("Undefined number of componenets for k-means!")
                     break
