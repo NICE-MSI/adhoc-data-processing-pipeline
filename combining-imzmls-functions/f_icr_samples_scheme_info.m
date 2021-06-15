@@ -9,6 +9,64 @@ background = 0;
 
 switch dataset_name
     
+    case "neg desi primary bc 23 only"
+        
+        data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
+        
+        dataset_name = {'*23_1*','*23_2*'};
+        
+        filesToProcess = []; for i = 1:length(data_folders); for ii = 1:length(dataset_name); filesToProcess = [ filesToProcess; dir([data_folders{i} dataset_name{ii} '.imzML']) ]; end; end
+        
+        if background == 1
+            
+            % with background
+            
+            main_mask_list = "no mask";
+            
+        else
+            
+            % tissue only
+            
+            main_mask_list = "tissue only";
+            
+            %
+            
+            extensive_filesToProcess(1:13,1) = filesToProcess(1,1);
+            smaller_masks_list = [
+                "pt-23-1-1";
+                "pt-23-1-2";
+                "pt-23-1-3";
+                "pt-23-1-4";
+                "pt-23-1-6";
+                "pt-23-1-7";
+                "pt-23-1-8";
+                "pt-23-1-9";
+                "pt-23-1-10";
+                "pt-23-1-11";
+                "pt-23-1-12";
+                "pt-23-1-13";
+                "pt-23-1-14";
+                ];
+            extensive_filesToProcess(14:18,1) = filesToProcess(2,1);
+            smaller_masks_list = [
+                smaller_masks_list;
+                "pt-23-2-15";
+                "pt-23-2-18";
+                "pt-23-2-19";
+                "pt-23-2-21";
+                "pt-23-2-22";
+                ];
+            
+        end
+        
+        %
+        
+        outputs_xy_pairs = [
+            1 1; 1 2; 1 3; 1 4; 1 5; 1 6; 1 7;
+            2 1; 2 2; 2 3; 2 4; 2 5; 2 6;
+            3 1; 3 2; 3 3; 3 4; 3 5;
+            ];
+    
     case "cell pellets"
         
         data_folders = { 'X:\ICR Breast PDX\Data\neg DESI\' };
